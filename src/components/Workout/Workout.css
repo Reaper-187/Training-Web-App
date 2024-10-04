@@ -1,0 +1,45 @@
+.workoutContainer{
+  display: flex;
+  justify-content: space-evenly;
+  padding: 2rem 0;
+}
+
+.workoutView{
+  max-width: 70vw;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.workoutCardContainer{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.workoutCard{
+  border: solid 1px black;
+  padding: 1rem;
+  width: 25vw;
+  border-radius: 10px;
+}
+
+.workoutCard span{
+  background-color: rgba(0, 255, 255, 0.336);
+  padding: .25rem;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: medium;
+}
+
+.workoutCard p{
+  font-size: medium;
+  border: solid 1px red;
+  border-radius: 10px;
+  width: fit-content;
+  padding: .5rem;
+}
+
+
+.calenderContainer{
+  margin: 5rem 0;
+}

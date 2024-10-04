@@ -5,14 +5,14 @@ export const WorkoutContext = createContext();
 
 // WorkoutProvider-Komponente
 export const WorkoutProvider = ({ children }) => {
-  const [safeSelected, setSafeSelected] = useState([]);
+  const [selectWorkouts, setSelectWorkouts] = useState([]);
 
   const addWorkout = (workout) => {
-    setWorkouts([...workouts, workout]);
+    setSelectWorkouts([...selectWorkouts, workout]);
   };
   
   return (
-    <WorkoutContext.Provider value={{ safeSelected, setSafeSelected }}>
+    <WorkoutContext.Provider value={{ selectWorkouts, addWorkout }}>
       {children} {/* Achte darauf, dass children hier nur ein Element oder eine Funktion sind */}
     </WorkoutContext.Provider>
   );

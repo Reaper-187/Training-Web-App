@@ -18,9 +18,9 @@ import {ErrorPage} from './components/ErrorPage';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: 
+    element:
     <WorkoutProvider>
-      <App/>,
+      <App/>
     </WorkoutProvider>,    
     errorElement: <ErrorPage />, // Seite für Fehlerfälle
     children: [
