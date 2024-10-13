@@ -1,35 +1,36 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-
+import { PieCountContext } from '../../../WorkoutContext';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-
-
-
 export const PieChart = () => {
+  const { pieCount } = useContext(PieCountContext);
 
   const data = {
-    labels: ['Chest', 'Legs', 'Shoulders', 'Back', 'Biceps', 'Trieceps'],
+    labels: ['Chest', 'Legs', 'Shoulders', 'Back', 'Biceps', 'Triceps', 'Booty', 'Abs', 'Cardio'],
     datasets: [
       {
-        data:[2, 4, 6, 8, 10],
-        backgroundColor: ['aqua', 'green','orangered','yellow','blue']
-      }
-    ]
-  }
+        data: [
+          pieCount.Chest,
+          pieCount.Legs,
+          pieCount.Shoulders,
+          pieCount.Back,
+          pieCount.Biceps,
+          pieCount.Triceps,
+          pieCount.Booty,
+          pieCount.Abs,
+          pieCount.Cardio,
+        ],
+        backgroundColor: ['aqua', 'green', 'orange', 'yellow', 'blue', 'lightgreen', 'purple', 'red', 'pink'],
+      },
+    ],
+  };
 
-  const options = {
-
-  }
-
+  const options = {};
   return (
     <div>
-      <Pie
-      data = {data}
-      options={options}
-      ></Pie>  
+    <Pie key={JSON.stringify(data)} data={data} options={options} />
     </div>
-  )
-}
-
+  );
+};

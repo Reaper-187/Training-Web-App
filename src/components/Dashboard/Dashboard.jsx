@@ -14,7 +14,7 @@ export const Dashboard = () => {
       <div className='card-container'>
         <CaloriesBurnedCard/>
 
-        <WorkoutsCard/>
+        <WorkoutsCard />
 
         <CaloriesAverageBruned/>
       </div>

@@ -22,6 +22,24 @@
   width: 25vw;
   border-radius: 10px;
 }
+.topElements{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.removeCardBtn{
+  scale: 0.8;
+  cursor: pointer;
+  fill: black;
+  transition: ease .2s;
+}
+
+.removeCardBtn:hover{
+  scale: 1;
+  fill: red;
+  transform: rotate(180deg);
+}
 
 .workoutCard span{
   background-color: rgba(0, 255, 255, 0.336);

@@ -1,23 +1,31 @@
 import React, {useState, useContext}  from 'react'
-import './SelectScreen.css'
 import {ToastContainer, toast} from 'react-toastify'
+import { WorkoutContext, CaloriesContext, PieCountContext } from '../../../../../WorkoutContext';
+import { fetchCalories } from '../../../../../apiService';
+import { calculateStrengthCalories } from '../../../../../strengthService';
 import 'react-toastify/dist/ReactToastify.css';
-import { WorkoutContext } from '../../../../../WorkoutContext';
-import { checkboxClasses } from '@mui/material';
+import './SelectScreen.css'
 
 
 export const SelectScreen = () => {
 
+  // const [currentId, setCurrentId] = useState(1)
   const [typeOfTraining, setTypeOfTraining] = useState(null);
   const [selectedMuscleValue, setSelectedMuscleValue] = useState("");
-  const { addWorkout } = useContext(WorkoutContext);
 
+  const { addWorkout } = useContext(WorkoutContext);
+  
+  const { setCurrentId } = useContext(WorkoutContext);
+  
+  const { updateCalories } = useContext(CaloriesContext);
+
+  const { increasePieCount } = useContext(PieCountContext);
+  
   const [selectedWorkoutValue, setSelectedWorkoutValue] = useState("");
   const [setsValue, setSetsValue] = useState("");
   const [repsValue, setRepsValue] = useState("");
   const [weightValue, setWeightValue] = useState("");
   const [timeValue, setTimeValue] = useState("")
-
 
   
   
@@ -31,8 +39,12 @@ export const SelectScreen = () => {
     }
   }
   
-  const handleAddWorkout = () => {
+  const handleAddWorkout = async () => {
+
+    setCurrentId((prevId) => prevId + 1);
+
     const workoutData = {
+      id: setCurrentId + 1,
       type: typeOfTraining,
       name: selectedMuscleValue,
       exsize: selectedWorkoutValue,
@@ -41,9 +53,30 @@ export const SelectScreen = () => {
       weight: weightValue || '-',
       time: timeValue || '-',
     };
-    addWorkout(workoutData);
+  
+    let caloriesData;
+    let caloriesBurned;
+    let muscleGroup = workoutData.name
+    console.log(muscleGroup);
+    
+    
+    if (typeOfTraining === 'Cardio') {
+      caloriesData = await fetchCalories(`${selectedMuscleValue} for ${timeValue} minutes.`);
+      const apiCalories = caloriesData.exercises[0].nf_calories;
+      updateCalories(apiCalories);
+    } else {
+      caloriesBurned = calculateStrengthCalories(weightValue, setsValue, repsValue)
+      updateCalories(caloriesBurned)      
+    }
+  
+    if (caloriesData || caloriesBurned) {
+      addWorkout({ ...workoutData, calories: caloriesData, caloriesBurned});
+      increasePieCount(muscleGroup)
+    } else {
+      console.log('Fehler bei Kalorienberechnung');
+    }
   };
-
+  
 
   function displayOptions() {
     if (typeOfTraining === 'Cardio') {
@@ -64,7 +97,7 @@ export const SelectScreen = () => {
           <h4>Type of Training</h4>
           <select className='cardioTrainings' onChange={(e) => setSelectedMuscleValue(e.target.value)}>
             <option value=""></option>
-            <option value="Lafuband">Laufband</option>
+            <option value="running">running</option>
             <option value="Stepper">Stepper</option>
             <option value="Seilspringen">Seilspringen</option>
             <option value="Fahrrad">Fahrrad</option>
@@ -78,7 +111,7 @@ export const SelectScreen = () => {
             <input type="number" value={timeValue} onInput={e => setTimeValue(e.target.value)} />   
           </div>
         </div>
-        <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid)}}><span>Add to!</span></a>
+        <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid);handleAddWorkout()}}><span>Add to!</span></a>
         <ToastContainer/>
         </div>
       );
@@ -107,7 +140,7 @@ export const SelectScreen = () => {
               <option value="Chest">Chest</option>
               <option value="Back">Back</option>
               <option value="Biceps">Biceps</option>
-              <option value="Trieceps">Trieceps</option>
+              <option value="Triceps">Triceps</option>
               <option value="Legs">Legs</option>
               <option value="Shoulders">Shoulders</option>
               <option value="Booty">Booty</option>
@@ -160,7 +193,7 @@ export const SelectScreen = () => {
             </select>
           </div>
         
-          <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid)}}><span>Add to!</span></a>
+          <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid);handleAddWorkout()}}><span>Add to!</span></a>
           <ToastContainer/>
         </div>
       );
@@ -168,7 +201,7 @@ export const SelectScreen = () => {
 
     return null; //wenn nichts dann nichts
   }
-
+  
   
 
   return (
@@ -187,4 +220,4 @@ export const SelectScreen = () => {
         
     </>
   )
-}
+};

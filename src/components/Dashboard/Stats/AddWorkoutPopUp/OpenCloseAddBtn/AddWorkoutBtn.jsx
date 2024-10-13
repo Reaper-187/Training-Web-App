@@ -19,11 +19,7 @@ export const AddWorkoutBtn = () => {
   const closeAddBtn = () => {
     setOpenAddWorkout(false)
   }
-  
-  // const submitWorkoutBtn = () => {
-    
-  // }
-  
+
   return (
     <>
     <div className={openAddWorkout ? 'hiddenScreen.active' : 'hiddenScreen'}>

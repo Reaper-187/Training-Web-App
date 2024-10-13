@@ -1,6 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
+
+import { CaloriesContext } from '../../../../WorkoutContext'
+
+
 
 export const CaloriesBurnedCard = () => {
+  const { calories } = useContext(CaloriesContext);
   return (
     <>
     <div className="card calories-burned">
@@ -10,7 +15,7 @@ export const CaloriesBurnedCard = () => {
       </div>
       
       <div className='card-info'>
-        <p>{`00000.00 kcal (+10%)`}</p>
+        <p>{calories} kcal </p>
         <p>Total calories burned today</p>
       </div>
     </div>

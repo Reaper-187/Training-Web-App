@@ -1,7 +1,7 @@
 import React from 'react'
 import './Stats.css'
-import { BarChart } from './BarChart';
 import { PieChart } from './PieChart';
+import { BarChart } from './BarChart';
 import { AddWorkoutBtn } from './AddWorkoutPopUp/OpenCloseAddBtn/AddWorkoutBtn';
 
 

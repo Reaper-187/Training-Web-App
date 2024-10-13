@@ -1,24 +1,26 @@
-import React from 'react'
-import './App.css'
+import React from 'react';
+import './App.css';
 
-import { Header } from './components/Header/Header'
-import { WorkoutProvider } from './WorkoutContext'
+import { Header } from './components/Header/Header';
+import { WorkoutProvider, CaloriesProvider, PieCountProvider } from './WorkoutContext';
 import { Outlet } from 'react-router-dom';
-
 
 function App() {
   
   return (
   <>
-    <Header/>
-    <main>
+  <CaloriesProvider>   {/* Hier beide Provider nebeneinander */}
+    <PieCountProvider>
       <WorkoutProvider>
-        <Outlet/>
+      <Header/>
+        <main>
+          <Outlet/>
+        </main>
       </WorkoutProvider>
-    </main>
+    </PieCountProvider>
+  </CaloriesProvider>
   </>
   )
 }
 
-export default App
-
+export default App;
