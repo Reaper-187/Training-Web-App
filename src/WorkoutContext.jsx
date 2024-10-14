@@ -43,7 +43,7 @@ export const WorkoutProvider = ({ children }) => {
   };
 
   return (
-    <WorkoutContext.Provider value={{ selectWorkouts, addWorkout, currentId, setCurrentId}}>
+    <WorkoutContext.Provider value={{ selectWorkouts, setSelectWorkouts, addWorkout, currentId, setCurrentId}}>
       {children}
     </WorkoutContext.Provider>
   );
@@ -97,10 +97,17 @@ export const PieCountProvider = ({ children }) => {
   });
 
   const increasePieCount = (muscleGroup) => {
-    setPieCount((prevCounts) => ({
-      ...prevCounts,
-      [muscleGroup]: prevCounts[muscleGroup] += 1,
-    }));
+    setPieCount((prevCounts) => {
+      const targetGroup = muscleGroup === '' ? 'Cardio' : muscleGroup;
+  
+      const newCounts = {
+        ...prevCounts,
+        [targetGroup]: prevCounts[targetGroup] + 0.5,
+      };
+  
+      console.log('Neuer pieCount:', newCounts);  // Prüfen, ob "Cardio" korrekt erhöht wird
+      return newCounts;
+    });
   };
 
   return (

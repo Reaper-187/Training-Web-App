@@ -5,17 +5,21 @@ import { Calender } from './Calender'
 import { WorkoutContext } from '../../WorkoutContext'
 
 
+
 export const Workout = () => {
 
   
-  // const [deleteBtn, setDeletBtn] = useState(true)
-
-
+  
+  
   
   const WorkoutList = () => {
     
-    const { selectWorkouts } = useContext(WorkoutContext);
+    const { selectWorkouts, setSelectWorkouts  } = useContext(WorkoutContext);
     
+    function setDeletBtn(id){
+      const newList = selectWorkouts.filter(workout => workout.id !== id)
+        setSelectWorkouts(newList)
+    }
     
   return (
     <>
@@ -33,7 +37,7 @@ export const Workout = () => {
               <div className='workoutCard' key={index} id={workout.id}>
                 <div className='topElements'>
                   <span>{workout.type}</span>
-                  {/* <svg onClick={() => setDeletBtn(deleteBtn =='')} className='removeCardBtn' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg> */}
+                  <svg onClick={() => setDeletBtn(workout.id)} className='removeCardBtn' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                 </div>
                 <h3>{workout.name}</h3> 
                 <h3>{workout.exsize}</h3> 

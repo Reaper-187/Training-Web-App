@@ -9,7 +9,6 @@ import './SelectScreen.css'
 
 export const SelectScreen = () => {
 
-  // const [currentId, setCurrentId] = useState(1)
   const [typeOfTraining, setTypeOfTraining] = useState(null);
   const [selectedMuscleValue, setSelectedMuscleValue] = useState("");
 
@@ -57,13 +56,13 @@ export const SelectScreen = () => {
     let caloriesData;
     let caloriesBurned;
     let muscleGroup = workoutData.name
-    console.log(muscleGroup);
     
     
     if (typeOfTraining === 'Cardio') {
-      caloriesData = await fetchCalories(`${selectedMuscleValue} for ${timeValue} minutes.`);
+      caloriesData = await fetchCalories(`${selectedWorkoutValue} for ${timeValue} minutes.`);
       const apiCalories = caloriesData.exercises[0].nf_calories;
       updateCalories(apiCalories);
+      setTypeOfTraining(typeOfTraining == '')
     } else {
       caloriesBurned = calculateStrengthCalories(weightValue, setsValue, repsValue)
       updateCalories(caloriesBurned)      
@@ -82,8 +81,8 @@ export const SelectScreen = () => {
     if (typeOfTraining === 'Cardio') {
 
       const checkIfFieldEmpty = () => {
-        if (selectedMuscleValue !== "" && timeValue !== "") {
-          handleAddWorkout(selectedMuscleValue);
+        if (selectedWorkoutValue !== "" && timeValue !== "") {
+          handleAddWorkout(selectedWorkoutValue);
           return true
         } else {
           return false
@@ -95,12 +94,12 @@ export const SelectScreen = () => {
 
         <div>
           <h4>Type of Training</h4>
-          <select className='cardioTrainings' onChange={(e) => setSelectedMuscleValue(e.target.value)}>
+          <select className='cardioTrainings' onChange={(e) => setSelectedWorkoutValue(e.target.value)}>
             <option value=""></option>
             <option value="running">running</option>
-            <option value="Stepper">Stepper</option>
+            <option value="stepper">Stepper</option>
             <option value="Seilspringen">Seilspringen</option>
-            <option value="Fahrrad">Fahrrad</option>
+            <option value="cycling">Fahrrad</option>
             <option value="Rudern">Rudern</option>
           </select>
         </div>
