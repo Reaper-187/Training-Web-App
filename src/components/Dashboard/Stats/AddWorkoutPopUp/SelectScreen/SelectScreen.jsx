@@ -62,7 +62,6 @@ export const SelectScreen = () => {
       caloriesData = await fetchCalories(`${selectedWorkoutValue} for ${timeValue} minutes.`);
       const apiCalories = caloriesData.exercises[0].nf_calories;
       updateCalories(apiCalories);
-      setTypeOfTraining(typeOfTraining == '')
     } else {
       caloriesBurned = calculateStrengthCalories(weightValue, setsValue, repsValue)
       updateCalories(caloriesBurned)      
@@ -70,6 +69,7 @@ export const SelectScreen = () => {
   
     if (caloriesData || caloriesBurned) {
       addWorkout({ ...workoutData, calories: caloriesData, caloriesBurned});
+      console.log('Workout hinzugefügt');
       increasePieCount(muscleGroup)
     } else {
       console.log('Fehler bei Kalorienberechnung');
@@ -81,11 +81,13 @@ export const SelectScreen = () => {
     if (typeOfTraining === 'Cardio') {
 
       const checkIfFieldEmpty = () => {
-        if (selectedWorkoutValue !== "" && timeValue !== "") {
-          handleAddWorkout(selectedWorkoutValue);
-          return true
+        if (
+          selectedWorkoutValue !== "" && 
+          (typeOfTraining === "Cardio" ? timeValue !== "" : true)
+        ) {
+          return true;
         } else {
-          return false
+          return false;
         }
       };
 
@@ -110,7 +112,7 @@ export const SelectScreen = () => {
             <input type="number" value={timeValue} onInput={e => setTimeValue(e.target.value)} />   
           </div>
         </div>
-        <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid);handleAddWorkout()}}><span>Add to!</span></a>
+        <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid);if(isValid){handleAddWorkout()}}}><span>Add to!</span></a>
         <ToastContainer/>
         </div>
       );
@@ -118,16 +120,12 @@ export const SelectScreen = () => {
 
       const checkIfFieldEmpty = () => {
         if (
-          selectedMuscleValue !== "" &&
           selectedWorkoutValue !== "" &&
-          weightValue !== "" &&
-          repsValue !== "" &&
-          setsValue !== "" 
+          (typeOfTraining === "Krafttraining" ? (weightValue !== "" && repsValue !== "" && setsValue !== "" && selectedMuscleValue !== "") : true)
         ) {
-          handleAddWorkout(selectedMuscleValue);
           return true;
         } else {
-          return false
+          return false;
         }
       };
       return (
@@ -192,7 +190,7 @@ export const SelectScreen = () => {
             </select>
           </div>
         
-          <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid);handleAddWorkout()}}><span>Add to!</span></a>
+          <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid);if(isValid){handleAddWorkout()}}}><span>Add to!</span></a>
           <ToastContainer/>
         </div>
       );
