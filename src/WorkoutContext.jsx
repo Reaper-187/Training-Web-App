@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 
 
 export const WorkoutContext = createContext();
@@ -20,9 +20,9 @@ export const WorkoutProvider = ({ children }) => {
     localStorage.setItem('workouts', JSON.stringify(selectWorkouts));
   }, [selectWorkouts]);
 
-const [currentId, setCurrentId] = useState(() => {
+  const [currentId, setCurrentId] = useState(() => {
     const savedId = localStorage.getItem('currentId');
-    return savedId ? JSON.parse(savedId) : 0; // Setze Standardwert auf 1
+    return savedId ? JSON.parse(savedId) : 0;
     // return null
   });
   
@@ -46,8 +46,6 @@ const [currentId, setCurrentId] = useState(() => {
     </WorkoutContext.Provider>
   );
 };
-
-
 
 export const CaloriesContext  = createContext()
 
@@ -77,14 +75,10 @@ export const CaloriesProvider = ({ children }) => {
   );
 };
 
-
-
 export const PieCountContext = createContext();
 
 export const PieCountProvider = ({ children }) => {
   const { selectWorkouts } = useContext(WorkoutContext); // Zugriff auf die Workouts
-
-
 
   const initialPieCount = JSON.parse(localStorage.getItem('pieCount')) || {
     Chest: 0,
@@ -101,8 +95,6 @@ export const PieCountProvider = ({ children }) => {
   const [pieCount, setPieCount] = useState(initialPieCount);
 
   const increasePieCount = (muscleGroup) => {
-
-
     const lengthCategory = {
       Chest: 0,
       Legs: 0,
@@ -115,42 +107,42 @@ export const PieCountProvider = ({ children }) => {
       Cardio: 0,
     };
   
-  for (let i = 0; i < selectWorkouts.length; i++) {
-    const muscleGroup = selectWorkouts[i];
-  
-    switch (muscleGroup) {
-      case 'Chest':
-        lengthCategory.Chest += 1;
-        break;
-      case 'Legs':
-        lengthCategory.Legs += 1;
-        break;
-      case 'Shoulders':
-        lengthCategory.Shoulders += 1;
-        break;
-      case 'Back':
-        lengthCategory.Back += 1;
-        break;
-      case 'Biceps':
-        lengthCategory.Biceps += 1;
-        break;
-      case 'Triceps':
-        lengthCategory.Triceps += 1;
-        break;
-      case 'Booty':
-        lengthCategory.Booty += 1;
-        break;
-      case 'Abs':
-        lengthCategory.Abs += 1;
-        break;
-      case 'Cardio':
-        lengthCategory.Cardio += 1;
-        break;
-      default:
-        // Optional: Handle any unknown workout types
-        console.log('Unknown workout type:', lengthCategory);
+    for (let i = 0; i < selectWorkouts.length; i++) {
+      const muscleGroup = selectWorkouts[i];
+    
+      switch (muscleGroup) {
+        case 'Chest':
+          lengthCategory.Chest += 1;
+          break;
+        case 'Legs':
+          lengthCategory.Legs += 1;
+          break;
+        case 'Shoulders':
+          lengthCategory.Shoulders += 1;
+          break;
+        case 'Back':
+          lengthCategory.Back += 1;
+          break;
+        case 'Biceps':
+          lengthCategory.Biceps += 1;
+          break;
+        case 'Triceps':
+          lengthCategory.Triceps += 1;
+          break;
+        case 'Booty':
+          lengthCategory.Booty += 1;
+          break;
+        case 'Abs':
+          lengthCategory.Abs += 1;
+          break;
+        case 'Cardio':
+          lengthCategory.Cardio += 1;
+          break;
+        default:
+          // Optional: Handle any unknown workout types
+          console.log('Unknown workout type:', lengthCategory);
+      }
     }
-  }
 
     setPieCount((prevCounts) => {
       const targetGroup = muscleGroup === '' ? 'Cardio' : muscleGroup;
@@ -163,12 +155,36 @@ export const PieCountProvider = ({ children }) => {
       localStorage.setItem('pieCount', JSON.stringify(newCounts));
       
       console.log('Neuer pieCount:', newCounts);
+  
       return newCounts;
     });
   };
 
+  const decreasePieCount = (workout) => {
+    const muscleGroup = workout.name || 'Cardio'
+    if (pieCount[muscleGroup] > 0) {
+      setPieCount((prevCounts) => {
+        const newCounts = {
+          ...prevCounts,
+          [muscleGroup]: prevCounts[muscleGroup] > 0 
+            ? prevCounts[muscleGroup] - 1 
+            : prevCounts.Cardio - 1,
+        };
+        localStorage.setItem('pieCount', JSON.stringify(newCounts));
+        return newCounts;       
+      });
+    }
+  };
+  
+  // const clearPieCountFromLocalStorage = () => {
+  //   localStorage.removeItem('pieCount');
+  //   console.log('LocalStorage für pieCount wurde gereinigt');
+  // };
+  
+
+
   return (
-    <PieCountContext.Provider value={{ pieCount, increasePieCount,selectWorkouts }}>
+    <PieCountContext.Provider value={{ pieCount, increasePieCount, selectWorkouts, decreasePieCount }}>
       {children}
     </PieCountContext.Provider>
   );

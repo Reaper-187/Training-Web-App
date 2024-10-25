@@ -5,7 +5,7 @@ import { PieCountContext } from '../../../WorkoutContext';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const PieChart = () => {
-  const { pieCount } = useContext(PieCountContext);
+  const { pieCount, clearPieCountFromLocalStorage } = useContext(PieCountContext);
 
   const data = {
     labels: ['Chest', 'Legs', 'Shoulders', 'Back', 'Biceps', 'Triceps', 'Booty', 'Abs', 'Cardio'],
@@ -30,7 +30,7 @@ export const PieChart = () => {
   const options = {};
   return (
     <div>
-    <Pie key={JSON.stringify(data)} data={data} options={options} />
+      <Pie key={JSON.stringify(data)} data={data} options={options} />
     </div>
   );
 };

@@ -118,16 +118,17 @@ export const SelectScreen = () => {
       );
     } else if (typeOfTraining === 'Krafttraining') {
 
-      const checkIfFieldEmpty = () => {
-        if (
-          selectedWorkoutValue !== "" &&
-          (typeOfTraining === "Krafttraining" ? (weightValue !== "" && repsValue !== "" && setsValue !== "" && selectedMuscleValue !== "") : true)
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      };
+    const checkIfFieldEmpty = () => {
+      if (
+        selectedWorkoutValue !== "" &&
+        (typeOfTraining === "Krafttraining" ? (weightValue !== "" && repsValue !== "" && setsValue !== "" && selectedMuscleValue !== "") : true)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
       return (
         <div className='displayOptions'>
           <div>
