@@ -14,9 +14,9 @@ export const SelectScreen = () => {
 
   const { addWorkout } = useContext(WorkoutContext);
   
-  const { setCurrentId } = useContext(WorkoutContext);
+  const { currentId } = useContext(WorkoutContext);
   
-  const { updateCalories } = useContext(CaloriesContext);
+  const { increaseCalories } = useContext(CaloriesContext);
 
   const { increasePieCount } = useContext(PieCountContext);
   
@@ -40,10 +40,12 @@ export const SelectScreen = () => {
   
   const handleAddWorkout = async () => {
 
-    setCurrentId((prevId) => prevId + 1);
+    // setCurrentId((prevId) => prevId + 1);
+
+    const newId = currentId +1
 
     const workoutData = {
-      id: setCurrentId + 1,
+      id: newId,
       type: typeOfTraining,
       name: selectedMuscleValue,
       exsize: selectedWorkoutValue,
@@ -61,14 +63,17 @@ export const SelectScreen = () => {
     if (typeOfTraining === 'Cardio') {
       caloriesData = await fetchCalories(`${selectedWorkoutValue} for ${timeValue} minutes.`);
       const apiCalories = caloriesData.exercises[0].nf_calories;
-      updateCalories(apiCalories);
+      workoutData.calories = apiCalories;
+      increaseCalories(apiCalories);
     } else {
       caloriesBurned = calculateStrengthCalories(weightValue, setsValue, repsValue)
-      updateCalories(caloriesBurned)      
+      workoutData.calories = caloriesBurned;
+      increaseCalories(caloriesBurned)
     }
   
     if (caloriesData || caloriesBurned) {
-      addWorkout({ ...workoutData, calories: caloriesData, caloriesBurned});
+      // addWorkout({ ...workoutData, calories: caloriesData, caloriesBurned});
+      addWorkout(workoutData);
       console.log('Workout hinzugefügt');
       increasePieCount(muscleGroup)
     } else {

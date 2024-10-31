@@ -31,13 +31,13 @@ export const WorkoutProvider = ({ children }) => {
   }, [currentId]);
 
   const addWorkout = (workout) => {
-    const newId = currentId + 1;
+    // const newId = currentId + 1;
 
-    const workoutWithId = { ...workout, id: newId };
+    const workoutWithId = { ...workout, id: currentId + 1 };
   
     // Füge das Workout zur Liste hinzu
     setSelectWorkouts([...selectWorkouts, workoutWithId]);
-    setCurrentId(newId);
+    setCurrentId((prevId) => prevId + 1);
   };
 
   return (
@@ -64,12 +64,20 @@ export const CaloriesProvider = ({ children }) => {
     localStorage.setItem('calories', JSON.stringify(calories))
   },[calories]);
 
-  const updateCalories = (newCalories) => {
+
+  const [lastAddedCalories, setLastAddedCalories] = useState(0)
+
+  const increaseCalories = (newCalories) => {
     setCalories((prevCalories) => prevCalories + newCalories);
+    setLastAddedCalories(newCalories)
   };
 
+  const decreaseCalories = (lastAddedCalories) => {
+    setCalories((prevTotal) => prevTotal - lastAddedCalories);
+  }
+
   return(
-    <CaloriesContext.Provider value={{calories, setCalories, updateCalories }}>
+    <CaloriesContext.Provider value={{calories, setCalories, increaseCalories, decreaseCalories, lastAddedCalories }}>
       {children}
     </CaloriesContext.Provider>
   );
@@ -78,7 +86,7 @@ export const CaloriesProvider = ({ children }) => {
 export const PieCountContext = createContext();
 
 export const PieCountProvider = ({ children }) => {
-  const { selectWorkouts } = useContext(WorkoutContext); // Zugriff auf die Workouts
+  const { selectWorkouts } = useContext(WorkoutContext);
 
   const initialPieCount = JSON.parse(localStorage.getItem('pieCount')) || {
     Chest: 0,
@@ -184,7 +192,7 @@ export const PieCountProvider = ({ children }) => {
 
 
   return (
-    <PieCountContext.Provider value={{ pieCount, increasePieCount, selectWorkouts, decreasePieCount }}>
+    <PieCountContext.Provider value={{ pieCount, increasePieCount, selectWorkouts, decreasePieCount}}>
       {children}
     </PieCountContext.Provider>
   );

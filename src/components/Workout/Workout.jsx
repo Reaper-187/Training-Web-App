@@ -1,24 +1,31 @@
 import React, { useContext, useState } from 'react'
 import './Workout.css'
 import { Calender } from './Calender'
-import { WorkoutContext, PieCountContext } from '../../WorkoutContext'
+import { WorkoutContext, PieCountContext,CaloriesContext  } from '../../WorkoutContext'
 
 
 
 export const Workout = () => {
   
   const WorkoutList = () => {
-    
-    const { selectWorkouts, setSelectWorkouts  } = useContext(WorkoutContext);
-    
-    function setDeletBtn(id){
-      const newList = selectWorkouts.filter(workout => workout.id !== id)
-        setSelectWorkouts(newList)
-    }
-    
-    const { decreasePieCount } = useContext(PieCountContext)
 
-    
+    const { decreasePieCount } = useContext(PieCountContext)
+    const { decreaseCalories } = useContext(CaloriesContext)
+    const { selectWorkouts, setSelectWorkouts  } = useContext(WorkoutContext);
+
+    function setDeletBtn(id) {
+      const workoutToDelete = selectWorkouts.find((workout) => workout.id === id);
+      
+      if (workoutToDelete) {
+        const caloriesToSubtract = workoutToDelete.calories;
+
+        const newList = selectWorkouts.filter((workout) => workout.id !== id);
+        setSelectWorkouts(newList);
+
+        decreaseCalories(caloriesToSubtract);
+      }
+    }
+
   return (
     <>
       <div className='workoutContainer'>
@@ -41,6 +48,7 @@ export const Workout = () => {
                   <p>Count: {workout.sets} sets x {workout.reps} reps</p> 
                   <p>Weight: {workout.weight} kg</p>
                   <p>Time: {workout.time} min</p> 
+                  <p>Burned-Calories: {workout.calories}</p> 
                 </div>
               ))}
             </div>

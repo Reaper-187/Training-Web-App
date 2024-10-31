@@ -5,7 +5,7 @@ import { PieCountContext } from '../../../WorkoutContext';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const PieChart = () => {
-  const { pieCount, clearPieCountFromLocalStorage } = useContext(PieCountContext);
+  const { pieCount } = useContext(PieCountContext);
 
   const data = {
     labels: ['Chest', 'Legs', 'Shoulders', 'Back', 'Biceps', 'Triceps', 'Booty', 'Abs', 'Cardio'],
@@ -30,6 +30,7 @@ export const PieChart = () => {
   const options = {};
   return (
     <div>
+      {/* <button onClick={clearPieCountFromLocalStorage()}>Storage leeren</button> */}
       <Pie key={JSON.stringify(data)} data={data} options={options} />
     </div>
   );
