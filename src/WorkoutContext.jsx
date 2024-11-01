@@ -9,10 +9,9 @@ export const WorkoutProvider = ({ children }) => {
     const savedWorkouts = localStorage.getItem('workouts');
     try {
       return savedWorkouts ? JSON.parse(savedWorkouts) : [];
-      // return [];
     } catch (error) {
       console.error('Error parsing Workouts from localStorage', error);
-      return 0;
+      return [];
     }
   });
 
@@ -31,12 +30,16 @@ export const WorkoutProvider = ({ children }) => {
   }, [currentId]);
 
   const addWorkout = (workout) => {
-    // const newId = currentId + 1;
-
     const workoutWithId = { ...workout, id: currentId + 1 };
   
-    // Füge das Workout zur Liste hinzu
-    setSelectWorkouts([...selectWorkouts, workoutWithId]);
+    setSelectWorkouts((prevWorkouts) => {
+      if (!Array.isArray(prevWorkouts)) {
+        return [workoutWithId];
+      }
+      return [...prevWorkouts, workoutWithId];
+
+    });
+  
     setCurrentId((prevId) => prevId + 1);
   };
 
