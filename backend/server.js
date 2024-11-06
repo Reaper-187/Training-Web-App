@@ -1,26 +1,19 @@
 const express = require("express");
 const app = express();
 const connectDB = require('./db'); // Importiere die connectDB-Funktion
-const workoutRoutes = require('./routes/workoutRoutes');
-const Workouts = require("./models/WorkoutSchema")
+// const Workout = require("./models/WorkoutSchema")
+const workoutRoutes = require('./routes/workoutRoutes'); // Importiere die Routen
+const cors = require('cors');
 
+
+app.use(cors());
 
 // Datenbankverbindung herstellen
 connectDB();
 app.use(express.json());
 
 // route-Workouts
-app.use('/api/workouts', workoutRoutes);
-
-
-run()
-async function run() {
-  const workout = new Workouts({type: 'Cardio', exsize: 'running', time: 4,})
-  await workout.save()
-  console.log(workout);
-  
-}
-
+app.use('/api', workoutRoutes);
 
 
 app.get('/', (req, res) => {

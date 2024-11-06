@@ -38,4 +38,5 @@ const workoutSchema = new mongoose.Schema({
 });
 
 
+//das Schema wird zu einem Modell umgewandelt und gleichzeitig auch Exportiert
 module.exports = mongoose.model('Workout', workoutSchema)

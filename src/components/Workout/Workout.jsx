@@ -1,30 +1,53 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './Workout.css'
 import { Calender } from './Calender'
 import { WorkoutContext, PieCountContext,CaloriesContext  } from '../../WorkoutContext'
+import axios from 'axios'
+
+
+const APP_URL = import.meta.env.VITE_API_URL
 
 
 
 export const Workout = () => {
+  // const APP_URL = `http://localhost:5000/api/workouts`
   
   const WorkoutList = () => {
 
     const { decreasePieCount } = useContext(PieCountContext)
     const { decreaseCalories } = useContext(CaloriesContext)
     const { selectWorkouts, setSelectWorkouts  } = useContext(WorkoutContext);
+    // const { selectWorkouts, setSelectWorkouts  } = useState([]);
 
-    function setDeletBtn(id) {
+    function setDeletBtn(id) {      
       const workoutToDelete = selectWorkouts.find((workout) => workout.id === id);
-      
       if (workoutToDelete) {
         const caloriesToSubtract = workoutToDelete.calories;
-
-        const newList = selectWorkouts.filter((workout) => workout.id !== id);
-        setSelectWorkouts(newList);
-
-        decreaseCalories(caloriesToSubtract);
+        axios.delete(APP_URL + '/' + id)
+        .then(() => {
+          console.log('Erfolgreich gelöscht')
+          const newList = selectWorkouts.filter((workout) => workout.id !== id);
+          setSelectWorkouts(newList);
+          decreaseCalories(caloriesToSubtract);
+        })
+        .catch((err) => {
+          console.error('Lösung konnte nicht durchgeführt werden',err);
+        })
       }
     }
+
+    useEffect(() => {
+      const fetchGetData = async () => {
+        try {
+          const response = await axios.get(APP_URL)
+          setSelectWorkouts(response.data)
+          console.log(response.data);        
+        } catch (err) {
+          console.error('GET-Data not found',err);   
+        }
+      }
+      fetchGetData()
+  }, []);
 
   return (
     <>

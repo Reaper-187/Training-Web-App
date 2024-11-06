@@ -1,7 +1,10 @@
 import axios from 'axios'
 
+// const API_KEY = import.meta.env.VITE_API_KEY
+// const APP_ID = import.meta.env.VITE_APP_ID
 const API_KEY = '8ce7ed8079fa7a6c0b24295d8cabf249';
 const APP_ID = 'b23d828d';
+
 
 export const fetchCalories = async (query) => {
   const url = `https://trackapi.nutritionix.com/v2/natural/exercise`;
