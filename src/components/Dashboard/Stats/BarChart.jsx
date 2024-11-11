@@ -1,25 +1,39 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-
+import { BarChartContext } from '../../../WorkoutContext';
 // Registrierung der Chart-Komponenten
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 
 
 export const BarChart = () => {
+  
+  const { dailyCalories } = useContext( BarChartContext );
+
+  
+  
   const data = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
       {
-      label: 'calories per 100 kcal',
-      data: [300,600,650,740,230,550,350],
+      label: 'Burned Calories Weekly',
+      data: [
+        dailyCalories.Sun, 
+        dailyCalories.Mon, 
+        dailyCalories.Tue, 
+        dailyCalories.Wed, 
+        dailyCalories.Thu, 
+        dailyCalories.Fri, 
+        dailyCalories.Sat
+      ],
+      
       backgroundColor: 'lightblue',
       borderColor: 'black',
       borderWidth: 1,
-      }
-    ]
-  };
+    }
+  ]
+};
   
   const options = {
     responsive: true,

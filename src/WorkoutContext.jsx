@@ -1,50 +1,28 @@
 import { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios'
+
+
+const APP_URL = import.meta.env.VITE_API_URL
 
 
 export const WorkoutContext = createContext();
 
 
 export const WorkoutProvider = ({ children }) => {
-  const [selectWorkouts, setSelectWorkouts] = useState(() => {
-    const savedWorkouts = localStorage.getItem('workouts');
-    try {
-      return savedWorkouts ? JSON.parse(savedWorkouts) : [];
-    } catch (error) {
-      console.error('Error parsing Workouts from localStorage', error);
-      return [];
-    }
-  });
+  const [selectWorkouts, setSelectWorkouts] = useState([]);
 
-  useEffect(() => {
-    localStorage.setItem('workouts', JSON.stringify(selectWorkouts));
-  }, [selectWorkouts]);
-
-  const [currentId, setCurrentId] = useState(() => {
-    const savedId = localStorage.getItem('currentId');
-    return savedId ? JSON.parse(savedId) : 0;
-    // return null
-  });
-  
-  useEffect(() => {
-    localStorage.setItem('currentId', JSON.stringify(currentId));
-  }, [currentId]);
 
   const addWorkout = (workout) => {
-    const workoutWithId = { ...workout, id: currentId + 1 };
-  
-    setSelectWorkouts((prevWorkouts) => {
-      if (!Array.isArray(prevWorkouts)) {
-        return [workoutWithId];
-      }
-      return [...prevWorkouts, workoutWithId];
-
-    });
-  
-    setCurrentId((prevId) => prevId + 1);
+    axios.post(APP_URL, workout)
+    .then((response) => {
+      console.log('Erfolgreich in der DB gespeichert', response)
+      setSelectWorkouts(prevWorkouts => [...prevWorkouts, workout])
+      })
+    .catch((err)=>{console.error('Daten können nicht in der DB gespeichert werden',err)})    
   };
 
   return (
-    <WorkoutContext.Provider value={{ selectWorkouts, setSelectWorkouts, addWorkout, currentId, setCurrentId}}>
+    <WorkoutContext.Provider value={{ selectWorkouts, setSelectWorkouts, addWorkout}}>
       {children}
     </WorkoutContext.Provider>
   );
@@ -192,11 +170,60 @@ export const PieCountProvider = ({ children }) => {
   //   console.log('LocalStorage für pieCount wurde gereinigt');
   // };
   
-
-
   return (
     <PieCountContext.Provider value={{ pieCount, increasePieCount, selectWorkouts, decreasePieCount}}>
       {children}
     </PieCountContext.Provider>
   );
 };
+export const BarChartContext = createContext();
+
+export const BarChartProvider = ({ children }) => {
+  
+  const [dailyCalories, setDailyCalories] = useState({
+    Sun: 0,
+    Mon: 0,
+    Tue: 0, 
+    Wed: 0, 
+    Thu: 0, 
+    Fri: 0, 
+    Sat: 0 
+  });
+
+  const getCurrentDay = () => {
+    const week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    const creatWorkoutDay = new Date().getDay(); //Wochentag wird hier ermittelt von 0 bis 6
+    return week[creatWorkoutDay]; //mit Week wird es in Tagesnamen übersetzt
+  }
+  
+  const increaseCaloriesForDay = (cal) => {
+    setDailyCalories((dailyCalories)=>{
+      const day = getCurrentDay();
+      const newCal = { ...dailyCalories }
+      newCal[day] += cal;
+      return newCal
+    })
+  }
+
+  console.log('increase hat stattgefunden',dailyCalories)
+
+  const decreaseCaloriesForDay = (cal) => {
+    setDailyCalories((dailyCalories) => {
+      const day = getCurrentDay();
+      if (dailyCalories[day] >= cal) {
+        const newCal = { ...dailyCalories };
+        newCal[day] -= cal;
+        return newCal;
+      } else {
+        return dailyCalories; 
+      }
+    });
+  };
+
+
+  return(
+    <BarChartContext.Provider value = {{ dailyCalories, increaseCaloriesForDay, decreaseCaloriesForDay }}>
+      {children}
+    </BarChartContext.Provider>
+  )
+}

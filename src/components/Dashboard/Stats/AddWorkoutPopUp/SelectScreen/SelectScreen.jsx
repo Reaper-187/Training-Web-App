@@ -1,10 +1,12 @@
 import React, {useState, useContext}  from 'react'
 import {ToastContainer, toast} from 'react-toastify'
-import { WorkoutContext, CaloriesContext, PieCountContext } from '../../../../../WorkoutContext';
+import { WorkoutContext, CaloriesContext, PieCountContext, BarChartContext } from '../../../../../WorkoutContext';
 import { fetchCalories } from '../../../../../apiService';
 import { calculateStrengthCalories } from '../../../../../strengthService';
 import 'react-toastify/dist/ReactToastify.css';
 import './SelectScreen.css'
+
+const APP_URL = import.meta.env.VITE_API_URL
 
 
 export const SelectScreen = () => {
@@ -14,19 +16,17 @@ export const SelectScreen = () => {
 
   const { addWorkout } = useContext(WorkoutContext);
   
-  const { currentId } = useContext(WorkoutContext);
-  
   const { increaseCalories } = useContext(CaloriesContext);
 
   const { increasePieCount } = useContext(PieCountContext);
+
+  const { increaseCaloriesForDay } = useContext(BarChartContext);
   
   const [selectedWorkoutValue, setSelectedWorkoutValue] = useState("");
   const [setsValue, setSetsValue] = useState("");
   const [repsValue, setRepsValue] = useState("");
   const [weightValue, setWeightValue] = useState("");
   const [timeValue, setTimeValue] = useState("")
-
-  
   
   const notify = (isValid) => {
     if (isValid) {
@@ -39,13 +39,7 @@ export const SelectScreen = () => {
   }
   
   const handleAddWorkout = async () => {
-
-    // setCurrentId((prevId) => prevId + 1);
-
-    const newId = currentId +1
-
     const workoutData = {
-      id: newId,
       type: typeOfTraining,
       name: selectedMuscleValue,
       exsize: selectedWorkoutValue,
@@ -58,21 +52,22 @@ export const SelectScreen = () => {
     let caloriesData;
     let caloriesBurned;
     let muscleGroup = workoutData.name
-    
-    
+
+
     if (typeOfTraining === 'Cardio') {
       caloriesData = await fetchCalories(`${selectedWorkoutValue} for ${timeValue} minutes.`);
       const apiCalories = caloriesData.exercises[0].nf_calories;
       workoutData.calories = apiCalories;
       increaseCalories(apiCalories);
+      increaseCaloriesForDay(apiCalories)
     } else {
       caloriesBurned = calculateStrengthCalories(weightValue, setsValue, repsValue)
       workoutData.calories = caloriesBurned;
       increaseCalories(caloriesBurned)
+      increaseCaloriesForDay(caloriesBurned)
     }
   
     if (caloriesData || caloriesBurned) {
-      // addWorkout({ ...workoutData, calories: caloriesData, caloriesBurned});
       addWorkout(workoutData);
       console.log('Workout hinzugefügt');
       increasePieCount(muscleGroup)
@@ -205,8 +200,6 @@ export const SelectScreen = () => {
     return null; //wenn nichts dann nichts
   }
   
-  
-
   return (
     <>
       <h2>Add Workout</h2>

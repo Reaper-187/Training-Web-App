@@ -3,7 +3,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-export const Calender = () => {
+export const Calender = (props) => {
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
@@ -11,9 +12,12 @@ export const Calender = () => {
         disableFuture
         slotProps={{
           textField: {
-            helperText: 'MM/DD/YYYY',
+            helperText: 'MM-DD-YYYY',
           },
         }}
+        value={props.selectedDate}
+        onChange={(date) => props.handleDateChange(date)}
+      
       />
     </LocalizationProvider>
   )

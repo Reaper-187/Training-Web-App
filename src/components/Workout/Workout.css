@@ -28,6 +28,18 @@
   align-items: center;
 }
 
+/* .editCardBtn{
+  scale: 0.8;
+  cursor: pointer;
+  fill: black;
+  transition: ease .2s;
+}
+.editCardBtn:hover{
+  scale: 1;
+  fill: yellow;
+  transform: rotate(19deg);
+} */
+
 .removeCardBtn{
   scale: 0.8;
   cursor: pointer;
@@ -47,6 +59,7 @@
   border-radius: 8px;
   font-weight: bold;
   font-size: medium;
+  display: flex;
 }
 
 .workoutCard p{
