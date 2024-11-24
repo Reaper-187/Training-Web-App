@@ -6,9 +6,6 @@ import { calculateStrengthCalories } from '../../../../../strengthService';
 import 'react-toastify/dist/ReactToastify.css';
 import './SelectScreen.css'
 
-const APP_URL = import.meta.env.VITE_API_URL
-
-
 export const SelectScreen = () => {
 
   const [typeOfTraining, setTypeOfTraining] = useState(null);

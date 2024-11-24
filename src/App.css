@@ -1,6 +1,14 @@
+:root{
+  --light-mode: #F1F2F4;
+  --dark-mode: #121212;
+}
+
+
+
+
 body{
-  /* background-color: rgb(241, 238, 238); */
-  background-color: rgb(143, 139, 139);
+  background-color: var(--dark-mode);
+  /* background-color: var(--light-mode); */
   margin: 0;
   padding: 0;
   box-sizing: border-box;

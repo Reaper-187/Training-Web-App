@@ -54,7 +54,7 @@ export const CaloriesProvider = ({ children }) => {
   };
 
   const decreaseCalories = (lastAddedCalories) => {
-    setCalories((prevTotal) => prevTotal - lastAddedCalories);
+    setCalories((prevTotal) => prevTotal - lastAddedCalories)
   }
 
   return(
@@ -84,6 +84,7 @@ export const PieCountProvider = ({ children }) => {
   const [pieCount, setPieCount] = useState(initialPieCount);
 
   const increasePieCount = (muscleGroup) => {
+
     const lengthCategory = {
       Chest: 0,
       Legs: 0,
@@ -143,11 +144,14 @@ export const PieCountProvider = ({ children }) => {
 
       localStorage.setItem('pieCount', JSON.stringify(newCounts));
       
-      console.log('Neuer pieCount:', newCounts);
+      // console.log('Neuer pieCount:', newCounts);
   
       return newCounts;
     });
   };
+
+
+
 
   const decreasePieCount = (workout) => {
     const muscleGroup = workout.name || 'Cardio'
@@ -176,6 +180,7 @@ export const PieCountProvider = ({ children }) => {
     </PieCountContext.Provider>
   );
 };
+
 export const BarChartContext = createContext();
 
 export const BarChartProvider = ({ children }) => {
@@ -193,36 +198,37 @@ export const BarChartProvider = ({ children }) => {
   const getCurrentDay = () => {
     const week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const creatWorkoutDay = new Date().getDay(); //Wochentag wird hier ermittelt von 0 bis 6
-    return week[creatWorkoutDay]; //mit Week wird es in Tagesnamen übersetzt
+    return week[creatWorkoutDay]; //mit Week wird der Wochentag in Tagesnamen übersetzt
   }
   
+  
   const increaseCaloriesForDay = (cal) => {
-    setDailyCalories((dailyCalories)=>{
+    setDailyCalories((prevCalories) => {
       const day = getCurrentDay();
-      const newCal = { ...dailyCalories }
-      newCal[day] += cal;
-      return newCal
-    })
-  }
+      const updatedCalories = { ...prevCalories };
+      updatedCalories[day] = (updatedCalories[day] || 0) + cal;
+      return updatedCalories;
+    });
+  };
+  
 
   console.log('increase hat stattgefunden',dailyCalories)
 
   const decreaseCaloriesForDay = (cal) => {
-    setDailyCalories((dailyCalories) => {
+    setDailyCalories((prevCalories) => {
       const day = getCurrentDay();
-      if (dailyCalories[day] >= cal) {
-        const newCal = { ...dailyCalories };
-        newCal[day] -= cal;
-        return newCal;
+      if (prevCalories[day] >= cal) {
+        const updatedCalories = { ...prevCalories };
+        updatedCalories[day] -= cal;
+        return updatedCalories;
       } else {
-        return dailyCalories; 
+        return prevCalories; 
       }
     });
   };
 
-
   return(
-    <BarChartContext.Provider value = {{ dailyCalories, increaseCaloriesForDay, decreaseCaloriesForDay }}>
+    <BarChartContext.Provider value = {{ dailyCalories, setDailyCalories, increaseCaloriesForDay, decreaseCaloriesForDay }}>
       {children}
     </BarChartContext.Provider>
   )

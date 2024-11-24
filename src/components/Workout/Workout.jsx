@@ -38,7 +38,7 @@ export const Workout = () => {
     }
 
     useEffect(() => {
-      const fetchGetData = async () => {
+      const GetWorkoutsData = async () => {
         try {
           const response = await axios.get(APP_URL)
           setSelectWorkouts(response.data)
@@ -47,7 +47,7 @@ export const Workout = () => {
           console.error('GET-Data not found',err);   
         }
       }
-      fetchGetData()
+      GetWorkoutsData()
   }, []);
 
   const [selectedDate, setSelectedDate] = useState();
@@ -106,10 +106,12 @@ export const Workout = () => {
                   </div>
                   <h3>{workout.name}</h3> 
                   <h3>{workout.exsize}</h3> 
-                  <p>Count: {workout.sets} sets x {workout.reps} reps</p> 
-                  <p>Weight: {workout.weight} kg</p>
-                  <p>Time: {workout.time} min</p> 
-                  <p>Burned-Calories: {workout.calories}</p> 
+                  <span className='card-stats'>
+                    <p>Count: {workout.sets} sets x {workout.reps} reps</p> 
+                    <p>Weight: {workout.weight} kg</p>
+                    <p>Time: {workout.time} min</p> 
+                    <p>Burned-Calories: {workout.calories}</p> 
+                  </span>
                 </div>
               ))
               )}
