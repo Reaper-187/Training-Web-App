@@ -1,7 +1,7 @@
 const express = require('express');
-const router = express.Router();
 const Workout = require('../models/WorkoutSchema'); 
 
+const router = express.Router();
 
 router.post('/workouts', async (req, res) => {
   try {
@@ -33,7 +33,7 @@ router.get('/workouts', async (req, res) => {
     const workouts = await Workout.find(); // Alle Workouts abrufen
     res.json(workouts);
   } catch (err) {
-    res.status(500).json({ message: err.message }); // Fehlerbehandlung
+    res.status(500).json({ message: err.message });
   }
 });
 

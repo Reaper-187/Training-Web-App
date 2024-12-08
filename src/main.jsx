@@ -7,11 +7,11 @@ import { WorkoutProvider } from './WorkoutContext'; // Füge diesen Import hinzu
 
 
 
-import {Dashboard} from './components/Dashboard/Dashboard';
+import { Dashboard } from './components/Dashboard/Dashboard';
 
-import {Workout} from './components/Workout/Workout';
+import { Workout } from './components/Workout/Workout';
 
-import {ErrorPage} from './components/ErrorPage';
+import { ErrorPage } from './components/ErrorPage';
 
 
 // Router-Konfiguration
@@ -19,9 +19,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element:
-    <WorkoutProvider>
-      <App/>
-    </WorkoutProvider>,    
+    <Login>
+      <WorkoutProvider>
+        <App/>
+      </WorkoutProvider>
+    </Login>,
     errorElement: <ErrorPage />, // Seite für Fehlerfälle
     children: [
       {

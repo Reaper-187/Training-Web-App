@@ -64,122 +64,131 @@ export const CaloriesProvider = ({ children }) => {
   );
 };
 
-export const PieCountContext = createContext();
+// export const PieCountContext = createContext();
 
-export const PieCountProvider = ({ children }) => {
-  const { selectWorkouts } = useContext(WorkoutContext);
+// export const PieCountProvider = ({ children }) => {
 
-  const initialPieCount = JSON.parse(localStorage.getItem('pieCount')) || {
-    Chest: 0,
-    Legs: 0,
-    Shoulders: 0,
-    Back: 0,
-    Biceps: 0,
-    Triceps: 0,
-    Booty: 0,
-    Abs: 0,
-    Cardio: 0,
-  };
+//   const { selectWorkouts } = useContext(WorkoutContext);
 
-  const [pieCount, setPieCount] = useState(initialPieCount);
+//   const initialPieCount = {
+//     Chest: 0,
+//     Legs: 0,
+//     Shoulders: 0,
+//     Back: 0,
+//     Biceps: 0,
+//     Triceps: 0,
+//     Booty: 0,
+//     Abs: 0,
+//     Cardio: 0,
+//   };
+//   // const initialPieCount = JSON.parse(localStorage.getItem('pieCount')) || {
+//   //   Chest: 0,
+//   //   Legs: 0,
+//   //   Shoulders: 0,
+//   //   Back: 0,
+//   //   Biceps: 0,
+//   //   Triceps: 0,
+//   //   Booty: 0,
+//   //   Abs: 0,
+//   //   Cardio: 0,
+//   // };
 
-  const increasePieCount = (muscleGroup) => {
+//   const [pieCount, setPieCount] = useState(initialPieCount);
 
-    const lengthCategory = {
-      Chest: 0,
-      Legs: 0,
-      Shoulders: 0,
-      Back: 0,
-      Biceps: 0,
-      Triceps: 0,
-      Booty: 0,
-      Abs: 0,
-      Cardio: 0,
-    };
+//   const increasePieCount = (muscleGroup) => {
+
+//     const lengthCategory = {
+//       Chest: 0,
+//       Legs: 0,
+//       Shoulders: 0,
+//       Back: 0,
+//       Biceps: 0,
+//       Triceps: 0,
+//       Booty: 0,
+//       Abs: 0,
+//       Cardio: 0,
+//     };
   
-    for (let i = 0; i < selectWorkouts.length; i++) {
-      const muscleGroup = selectWorkouts[i];
+//     for (let i = 0; i < selectWorkouts.length; i++) {
+//       const muscleGroup = selectWorkouts[i];
     
-      switch (muscleGroup) {
-        case 'Chest':
-          lengthCategory.Chest += 1;
-          break;
-        case 'Legs':
-          lengthCategory.Legs += 1;
-          break;
-        case 'Shoulders':
-          lengthCategory.Shoulders += 1;
-          break;
-        case 'Back':
-          lengthCategory.Back += 1;
-          break;
-        case 'Biceps':
-          lengthCategory.Biceps += 1;
-          break;
-        case 'Triceps':
-          lengthCategory.Triceps += 1;
-          break;
-        case 'Booty':
-          lengthCategory.Booty += 1;
-          break;
-        case 'Abs':
-          lengthCategory.Abs += 1;
-          break;
-        case 'Cardio':
-          lengthCategory.Cardio += 1;
-          break;
-        default:
-          // Optional: Handle any unknown workout types
-          console.log('Unknown workout type:', lengthCategory);
-      }
-    }
+//       switch (muscleGroup) {
+//         case 'Chest':
+//           lengthCategory.Chest += 1;
+//           break;
+//         case 'Legs':
+//           lengthCategory.Legs += 1;
+//           break;
+//         case 'Shoulders':
+//           lengthCategory.Shoulders += 1;
+//           break;
+//         case 'Back':
+//           lengthCategory.Back += 1;
+//           break;
+//         case 'Biceps':
+//           lengthCategory.Biceps += 1;
+//           break;
+//         case 'Triceps':
+//           lengthCategory.Triceps += 1;
+//           break;
+//         case 'Booty':
+//           lengthCategory.Booty += 1;
+//           break;
+//         case 'Abs':
+//           lengthCategory.Abs += 1;
+//           break;
+//         case 'Cardio':
+//           lengthCategory.Cardio += 1;
+//           break;
+//         default:
+//           // Optional: Handle any unknown workout types
+//           console.log('Unknown workout type:', lengthCategory);
+//       }
+//     }
 
-    setPieCount((prevCounts) => {
-      const targetGroup = muscleGroup === '' ? 'Cardio' : muscleGroup;
+//     setPieCount((prevCounts) => {
+//       const targetGroup = muscleGroup === '' ? 'Cardio' : muscleGroup;
       
-      const newCounts = {
-        ...prevCounts,
-        [targetGroup]: prevCounts[targetGroup] + 1,
-      };
+//       const newCounts = {
+//         ...prevCounts,
+//         [targetGroup]: prevCounts[targetGroup] + 1,
+//       };
 
-      localStorage.setItem('pieCount', JSON.stringify(newCounts));
+//       // localStorage.setItem('pieCount', JSON.stringify(newCounts));
       
-      // console.log('Neuer pieCount:', newCounts);
+//       // console.log('Neuer pieCount:', newCounts);
   
-      return newCounts;
-    });
-  };
+//       return newCounts;
+//     });
+//   };
 
-
-
-
-  const decreasePieCount = (workout) => {
-    const muscleGroup = workout.name || 'Cardio'
-    if (pieCount[muscleGroup] > 0) {
-      setPieCount((prevCounts) => {
-        const newCounts = {
-          ...prevCounts,
-          [muscleGroup]: prevCounts[muscleGroup] > 0 
-            ? prevCounts[muscleGroup] - 1 
-            : prevCounts.Cardio - 1,
-        };
-        localStorage.setItem('pieCount', JSON.stringify(newCounts));
-        return newCounts;       
-      });
-    }
-  };
+//   const decreasePieCount = (workout) => {
+//     const muscleGroup = workout.name || 'Cardio'
+//     if (pieCount[muscleGroup] > 0) {
+//       setPieCount((prevCounts) => {
+//         const newCounts = {
+//           ...prevCounts,
+//           [muscleGroup]: prevCounts[muscleGroup] > 0 
+//             ? prevCounts[muscleGroup] - 1 
+//             : prevCounts.Cardio - 1,
+//         };
+//         // localStorage.setItem('pieCount', JSON.stringify(newCounts));
+//         return newCounts;       
+//       });
+//     }
+//   };
   
-  // const clearPieCountFromLocalStorage = () => {
-  //   localStorage.removeItem('pieCount');
-  //   console.log('LocalStorage für pieCount wurde gereinigt');
-  // };
+//   // const clearPieCountFromLocalStorage = () => {
+//   //   localStorage.removeItem('pieCount');
+//   //   console.log('LocalStorage für pieCount wurde gereinigt');
+//   // };
   
-  return (
-    <PieCountContext.Provider value={{ pieCount, increasePieCount, selectWorkouts, decreasePieCount}}>
-      {children}
-    </PieCountContext.Provider>
-  );
-};
+//   return (
+//     <PieCountContext.Provider value={{ pieCount, setPieCount, increasePieCount, selectWorkouts, decreasePieCount}}>
+//       {children}
+//     </PieCountContext.Provider>
+//   );
+// };
 
 export const BarChartContext = createContext();
 

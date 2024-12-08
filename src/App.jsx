@@ -2,7 +2,8 @@ import React from 'react';
 import './App.css';
 
 import { Header } from './components/Header/Header';
-import { WorkoutProvider, CaloriesProvider, PieCountProvider, BarChartProvider } from './WorkoutContext';
+import { Login } from './components/Login/Login';
+import { WorkoutProvider, CaloriesProvider, BarChartProvider } from './WorkoutContext';
 import { Outlet } from 'react-router-dom';
 
 function App() {
@@ -11,14 +12,16 @@ function App() {
     <>
       <CaloriesProvider>   {/* Hier beide Provider nebeneinander */}
         <BarChartProvider>
-          <PieCountProvider>
+          {/* <PieCountProvider> */}
             <WorkoutProvider>
-              <Header />
-              <main>
-                <Outlet />
-              </main>
+              <Login>
+                <Header />
+                <main>
+                  <Outlet />
+                </main>
+              </Login>
             </WorkoutProvider>
-          </PieCountProvider>
+          {/* </PieCountProvider> */}
         </BarChartProvider>
       </CaloriesProvider>
     </>

@@ -1,26 +1,99 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { PieCountContext } from '../../../WorkoutContext';
+// import { PieCountContext } from '../../../WorkoutContext';
+import axios from 'axios'
 ChartJS.register(ArcElement, Tooltip, Legend);
+import socket from "../../../socket";
+
+
+const APP_URL = import.meta.env.VITE_API_URL
+
 
 export const PieChart = () => {
-  const { pieCount } = useContext(PieCountContext);
+
+
+  useEffect(() => {
+    // Verbindungsnachricht empfangen
+    socket.on("connect", () => {
+      console.log("Mit dem Server verbunden:", socket.id);
+    });
+
+    // Verbindung schließen
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  // Wenn Workout erstellt wird geht Meldung an Server
+  // useEffect(() => {
+  //   socket.on("newWorkout", (data) => {
+  //     console.log("Neues Workout erhalten:", data);
+  //     // Hier kannst du den Zustand aktualisieren
+  //   });
+  
+  //   return () => socket.off("newWorkout"); // Socket-Event bereinigen
+  // }, []);
+  
+
+
+
+
+  const initialPieCount = {
+    Chest: 0,
+    Legs: 0,
+    Shoulders: 0,
+    Back: 0,
+    Biceps: 0,
+    Triceps: 0,
+    Booty: 0,
+    Abs: 0,
+    Cardio: 0,
+  }
+  
+  const [newPieCount, setNewPieCount] = useState(initialPieCount)
+  const currentDate = new Date().toISOString().slice(0, 10)
+
+  useEffect(() => {
+    const getDataForPieChart = async () => {
+      try {
+        const response = await axios.get(APP_URL);
+        const workoutsForCurrentDay = response.data.filter((filteredPieData) => filteredPieData.date.slice(0, 10) == currentDate)
+        // const muscleGroup = workoutsForCurrentDay.filter(({name}) => name == name)
+        console.log("Gefilterte Piechart Daten nach Datum:", workoutsForCurrentDay);       
+        const updatedPieCount = { ...newPieCount };
+          workoutsForCurrentDay.forEach((findTypeOfTrain) => {
+              const key = findTypeOfTrain.name || "Cardio";
+              updatedPieCount[key] += 1;
+          });
+        setNewPieCount(updatedPieCount);
+      } catch (err) {
+        console.error("GET-Piechart-Data not found", err);
+      }
+    };
+  
+    getDataForPieChart();
+  }, []);
+
+
+
+
+
 
   const data = {
     labels: ['Chest', 'Legs', 'Shoulders', 'Back', 'Biceps', 'Triceps', 'Booty', 'Abs', 'Cardio'],
     datasets: [
       {
         data: [
-          pieCount.Chest,
-          pieCount.Legs,
-          pieCount.Shoulders,
-          pieCount.Back,
-          pieCount.Biceps,
-          pieCount.Triceps,
-          pieCount.Booty,
-          pieCount.Abs,
-          pieCount.Cardio,
+          newPieCount.Chest,
+          newPieCount.Legs,
+          newPieCount.Shoulders,
+          newPieCount.Back,
+          newPieCount.Biceps,
+          newPieCount.Triceps,
+          newPieCount.Booty,
+          newPieCount.Abs,
+          newPieCount.Cardio,
         ],
         backgroundColor: ['aqua', 'green', 'orange', 'yellow', 'blue', 'lightgreen', 'purple', 'red', 'pink'],
       },

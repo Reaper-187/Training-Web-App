@@ -1,6 +1,6 @@
 import React, {useState, useContext}  from 'react'
 import {ToastContainer, toast} from 'react-toastify'
-import { WorkoutContext, CaloriesContext, PieCountContext, BarChartContext } from '../../../../../WorkoutContext';
+import { WorkoutContext, CaloriesContext, BarChartContext } from '../../../../../WorkoutContext';
 import { fetchCalories } from '../../../../../apiService';
 import { calculateStrengthCalories } from '../../../../../strengthService';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,7 +15,7 @@ export const SelectScreen = () => {
   
   const { increaseCalories } = useContext(CaloriesContext);
 
-  const { increasePieCount } = useContext(PieCountContext);
+  // const { increasePieCount } = useContext(PieCountContext);
 
   const { increaseCaloriesForDay } = useContext(BarChartContext);
   
@@ -67,7 +67,7 @@ export const SelectScreen = () => {
     if (caloriesData || caloriesBurned) {
       addWorkout(workoutData);
       console.log('Workout hinzugefügt');
-      increasePieCount(muscleGroup)
+      // increasePieCount(muscleGroup)
     } else {
       console.log('Fehler bei Kalorienberechnung');
     }

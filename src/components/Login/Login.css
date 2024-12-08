@@ -1,0 +1,174 @@
+/* form{
+  position: absolute;
+  inset: 0;
+  margin: auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid red 2px;
+  height: 50vh;
+  color: white;
+}
+.container{
+  display: flex;
+  border: solid blue 2px;
+  flex-direction: column;
+  
+} */
+
+:root {
+  --button-padding: 1em;
+  --space-for-arrow: 2em;
+  --dark-mode: #121212;
+  --light-mode: #F1F2F4;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+  background-color: var(--dark-mode);
+}
+
+h1{
+  font-size: 1.7rem;
+  color: #f2f2f2;
+}
+
+.background-img img{
+  width: 100%;
+  height: 100dvh;
+  position: fixed;
+  z-index: -10;
+}
+
+
+.login-form{
+  background-image: linear-gradient(216deg, rgba(77, 77, 77,0.05) 0%, 
+                  rgba(28, 146, 101, 0.05) 25%,rgba(42, 42, 42,0.05) 25%, 
+                  rgba(42, 42, 42,0.05) 38%,rgba(223, 223, 223,0.05) 38%, rgba(223, 223, 223,0.05) 75%,rgba(36, 36, 36,0.05) 75%, 
+                  rgba(33, 94, 79, 0.877) 100%),linear-gradient(44deg, rgba(128, 128, 128,0.05) 0%, rgba(128, 128, 128,0.05) 34%,rgba(212, 212, 212,0.05) 34%, 
+                  rgba(212, 212, 212,0.05) 57%,rgba(25, 25, 25,0.05) 57%, rgba(25, 25, 25,0.05) 89%,rgba(135, 135, 135,0.05) 89%, 
+                  rgba(40, 209, 201, 0.05) 100%),linear-gradient(241deg, rgba(55, 55, 55,0.05) 0%, rgba(55, 55, 55,0.05) 14%,rgba(209, 209, 209,0.05) 14%,
+                  rgba(120, 198, 221, 0.185) 60%,rgba(37, 218, 218, 0.123) 60%, rgba(245, 245, 245,0.05) 69%,rgba(164, 164, 164,0.05) 69%, rgba(164, 164, 164,0.05) 100%),linear-gradient(249deg, 
+                  rgba(37, 197, 162, 0.616) 0%, rgba(248, 248, 248,0.05) 32%,rgba(148, 148, 148,0.05) 32%, 
+                  rgba(148, 148, 148,0.05) 35%,rgba(202, 202, 202,0.05) 35%, rgba(202, 202, 202,0.05) 51%,rgba(181, 181, 181,0.05) 51%, 
+                  rgba(181, 181, 181,0.05) 100%),linear-gradient(92deg, hsl(214,0%,11%),hsl(214,0%,11%));
+  height: 100%;
+  width: 50%;
+  border-radius: 22px 0 0 22px;
+}
+
+.structure-form{
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 45dvw;
+  height: 60dvh;
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  border: solid 2px rgb(121, 226, 177);
+}
+
+.regist-form{
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.client-data{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  gap: 20px;
+  padding: 1rem;
+}
+
+
+.e-mail-input,
+.name-input,
+.password-input,
+.phone-input,
+.username-input{
+  border: unset;
+  border-bottom: solid black;
+  background-color: unset;
+  outline: none;
+  transition: ease .3s;
+  width: 100%;
+  cursor: pointer;
+}
+
+
+
+
+.e-mail-input:focus,
+.password-input:focus,
+.phone-input:focus,
+.username-input:focus{
+  border-bottom: solid 1px rgb(83, 175, 147);
+  background: none;
+} 
+
+input::placeholder{
+  color: rgb(83, 175, 147);
+  padding: .25rem;
+}
+
+button{
+  display: grid;
+  place-items: center;
+}
+
+.submit-btn, a {
+  position: relative;
+  padding-block: 1em; /* top and bottom padding */
+  padding-inline-start: var(--space-for-arrow); /* left padding */
+  padding-inline-end: var(--button-padding); /*right padding */
+  border: none;
+  border-radius: .25em;
+  background-color: transparent;
+  font-size: 1em;
+  cursor: pointer;
+  transition: padding 250ms ease, background-color 250ms ease;
+  color: #f2f2f2;
+}
+
+.submit-btn::before,a::before {
+  position: absolute;
+  content: '➡';
+  font-size: 2rem;
+  background-size: 1em;
+  inset-block-start: 50%;
+  inset-inline-start: 0em; /* wo der Content startet */
+  transform: translateY(-50%);
+  line-height: 1;
+  transition: inset-inline-start 250ms ease;
+}
+
+.submit-btn:hover, a:hover {
+  padding-inline-start: var(--button-padding);  /* left padding */
+  padding-inline-end: var(--space-for-arrow);  /* right padding */
+  background-color: rgb(83, 175, 147);
+  /* color: rgb(190, 101, 0); */
+  color: #f2f2f2;
+}
+
+.submit-btn:hover::before, a:hover::before {
+  inset-inline-start: calc(100% - 1.75em);
+}
+
+.links-btn{
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+}
+
+.error-message{
+  color: red;
+  padding: .5em 0;
+}

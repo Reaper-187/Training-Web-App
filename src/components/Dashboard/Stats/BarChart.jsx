@@ -28,7 +28,7 @@ export const BarChart = () => {
   const [apiDataLoaded, setApiDataLoaded] = useState(false);
   
   useEffect(() => {
-    const GetCaloiresData = async () => {
+    const getCaloiresData = async () => {
       try {
         const response = await axios.get(APP_URL);
         const caloriesForCurrentDay = response.data.map((dayToName) => ({
@@ -43,7 +43,7 @@ export const BarChart = () => {
       }
     };
   
-    GetCaloiresData();
+    getCaloiresData();
   }, []);
   
 
