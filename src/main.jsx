@@ -1,44 +1,56 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App'; // Haupt-App-Komponente
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
-import { WorkoutProvider } from './WorkoutContext'; // Füge diesen Import hinzu
-
-
-
+import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom';
+import { CheckAuthContext, CheckAuthProvider } from './CheckAuthContext';
+import App from './App';
 import { Dashboard } from './components/Dashboard/Dashboard';
-
 import { Workout } from './components/Workout/Workout';
-
 import { ErrorPage } from './components/ErrorPage';
+import { Login } from './components/Login/Login'
+
+// const { setIsAuthenticated, isAuthenticated, checkAuth } = useContext (CheckAuthProvider)
+// Zustand für Authentifizierung verwalten
+const ProtectedLayout = () => {
+  const { isAuthenticated } = useContext(CheckAuthContext);
+  if (isAuthenticated === null) return <div>Loading...</div>;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+};
 
 
-// Router-Konfiguration
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element:
-    <Login>
-      <WorkoutProvider>
-        <App/>
-      </WorkoutProvider>
-    </Login>,
-    errorElement: <ErrorPage />, // Seite für Fehlerfälle
-    children: [
-      {
-        path: "Dashboard",
-        element:  <Dashboard/>,
-        errorElement: <ErrorPage/>,
-      },
-      {
-        path: "Workout",
-        element: <Workout />,
-      },
-    ],
-  },
-]);
+  const LoginRoute = () => {
+    const { isAuthenticated } = useContext(CheckAuthContext);
+    if (isAuthenticated === null) return <div>Loading...</div>;
+    return isAuthenticated ? <Navigate to="/dashboard" /> : <Login />;
+  };
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router} />
-);
+  // Router-Konfiguration
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <App />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          element: <ProtectedLayout />,
+          children: [
+            { path: "dashboard", element: <Dashboard /> },
+            { path: "workout", element: <Workout /> },
+          ],
+        },
+      ],
+    },
+    {
+      path: "/login",
+      element: <LoginRoute />,
+      errorElement: <ErrorPage />,
+    }
+  ]);
+
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    <CheckAuthProvider>
+      <RouterProvider router={router} />
+    </CheckAuthProvider>
+  );
+  
+
+

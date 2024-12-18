@@ -15,8 +15,6 @@ export const SelectScreen = () => {
   
   const { increaseCalories } = useContext(CaloriesContext);
 
-  // const { increasePieCount } = useContext(PieCountContext);
-
   const { increaseCaloriesForDay } = useContext(BarChartContext);
   
   const [selectedWorkoutValue, setSelectedWorkoutValue] = useState("");

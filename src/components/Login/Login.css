@@ -103,9 +103,6 @@ h1{
   cursor: pointer;
 }
 
-
-
-
 .e-mail-input:focus,
 .password-input:focus,
 .phone-input:focus,
@@ -119,12 +116,8 @@ input::placeholder{
   padding: .25rem;
 }
 
-button{
-  display: grid;
-  place-items: center;
-}
 
-.submit-btn, a {
+.submit-btn, .links-btn {
   position: relative;
   padding-block: 1em; /* top and bottom padding */
   padding-inline-start: var(--space-for-arrow); /* left padding */
@@ -138,7 +131,7 @@ button{
   color: #f2f2f2;
 }
 
-.submit-btn::before,a::before {
+.submit-btn::before, .links-btn::before {
   position: absolute;
   content: '➡';
   font-size: 2rem;
@@ -150,7 +143,7 @@ button{
   transition: inset-inline-start 250ms ease;
 }
 
-.submit-btn:hover, a:hover {
+.submit-btn:hover, .links-btn:hover {
   padding-inline-start: var(--button-padding);  /* left padding */
   padding-inline-end: var(--space-for-arrow);  /* right padding */
   background-color: rgb(83, 175, 147);
@@ -158,8 +151,8 @@ button{
   color: #f2f2f2;
 }
 
-.submit-btn:hover::before, a:hover::before {
-  inset-inline-start: calc(100% - 1.75em);
+.submit-btn:hover::before, .links-btn:hover::before {
+  inset-inline-start: calc(100% - 1em);
 }
 
 .links-btn{

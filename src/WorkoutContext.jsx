@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios'
 
 
+
 const APP_URL = import.meta.env.VITE_API_URL
 
 
@@ -242,3 +243,5 @@ export const BarChartProvider = ({ children }) => {
     </BarChartContext.Provider>
   )
 }
+
+

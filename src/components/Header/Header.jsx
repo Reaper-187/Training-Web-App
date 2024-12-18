@@ -10,8 +10,6 @@ export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
-
-    // Zustand umschalten
     setIsMenuOpen(!isMenuOpen);
   };
 
@@ -27,12 +25,49 @@ export const Header = () => {
 
      
       <ul className={isMenuOpen ? "openNav" : ""} >
-        <li><Link to="/Dashboard">Dashboard</Link></li>
-        <li><Link to="/Workout">Workout</Link></li>
-        <li><Link to="/Blog">Blogs</Link></li>
-        <li><Link to="/Contact">Contact</Link></li>
-      </ul>
+        <div className='navRout'>
 
+          <Link to="/dashboard">
+            <div className="box-3">
+              <div className="btn nav-btn">
+                Dashboard
+              </div>
+            </div>
+          </Link>
+
+          <Link to="/workout">
+            <div className="box-3">
+              <div className="btn nav-btn">
+                Workout
+              </div>
+            </div>
+          </Link>
+
+          <Link to="/blog">
+            <div className="box-3">
+              <div className="btn nav-btn">
+                Blog
+              </div>
+            </div>
+          </Link>
+
+          <Link to="/contact">
+            <div className="box-3">
+              <div className="btn nav-btn">
+                Contact
+              </div>
+            </div>
+          </Link>
+
+        </div>
+        <form type='submit' method='POST' action="/logut?_method=DELETE">
+          <div className="box-3">
+            <div className="btn nav-btn">
+              <span>Log-out</span>
+            </div>
+          </div>
+        </form>
+      </ul>
     </nav>
   )
 }

@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './Login.css'
 import 'material-symbols';
 // import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 // import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { CheckAuthContext } from "../../CheckAuthContext";
 import * as Yup from 'yup';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
-
-const APP_USER = import.meta.env.VITE_API_USERS
-
-
+axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
+const register = import.meta.env.VITE_API_REGISTER
+const login = import.meta.env.VITE_API_LOGIN
 
 export const Login = () => {
+  
+
+  const { checkAuth } = useContext(CheckAuthContext);
+
   const [formSwitch, setFormSwitch] = useState("Login");
 
   // Validierungsschema
@@ -43,26 +47,27 @@ const initialValues = formSwitch === "Registration" ? registrationInitialValues 
 const navigate = useNavigate();
 
 const handleSubmit = async (values, { setSubmitting }, isLogin) => {
-  const url = isLogin ? import.meta.env.VITE_API_LOGIN : import.meta.env.VITE_API_REGISTER;
-  console.log('URL:', url, 'Values:', values, 'isLogin:', isLogin);
+  const url = isLogin ? login : register;
 
   try {
-    const response = await axios.post(url, values);
+    const response = await axios.post(url, values); 
     console.log('Erfolgreich:', response.data);
-    
+
     if (response.data.success) {
-      navigate('/Dashboard');
+      await checkAuth()
+      console.log('CheckAuth wird nach Erfolgreichem Login Aufgerufen', checkAuth());
+      navigate('/dashboard')
     } else {
-      console.log('Fehler beim Login/Registrierung');
+      console.log("Fehler: Login nicht erfolgreich.");
     }
     } catch (error) {
-      console.error('Fehler bei der Anfrage:', error);
+      console.error('Fehler bei der Anfrage:', error.response.data);
+      // console.error('Fehler bei der Anfrage:', error);
     } finally {
       setSubmitting(false);
     }
   };
-
-
+  
   return (
     <div className="structure-form">
       <div className="login-form"></div>
