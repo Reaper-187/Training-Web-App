@@ -46,8 +46,6 @@ export const SelectScreen = () => {
   
     let caloriesData;
     let caloriesBurned;
-    let muscleGroup = workoutData.name
-
 
     if (typeOfTraining === 'Cardio') {
       caloriesData = await fetchCalories(`${selectedWorkoutValue} for ${timeValue} minutes.`);
@@ -61,7 +59,7 @@ export const SelectScreen = () => {
       increaseCalories(caloriesBurned)
       increaseCaloriesForDay(caloriesBurned)
     }
-  
+    
     if (caloriesData || caloriesBurned) {
       addWorkout(workoutData);
       console.log('Workout hinzugefügt');
@@ -70,6 +68,8 @@ export const SelectScreen = () => {
       console.log('Fehler bei Kalorienberechnung');
     }
   };
+
+
   
 
   function displayOptions() {

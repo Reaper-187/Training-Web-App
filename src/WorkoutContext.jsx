@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import axios from 'axios'
 
 
@@ -15,8 +15,8 @@ export const WorkoutProvider = ({ children }) => {
 
   const addWorkout = (workout) => {
     axios.post(APP_URL, workout)
-    .then((response) => {
-      console.log('Erfolgreich in der DB gespeichert', response)
+    .then(() => {
+      // console.log('Erfolgreich in der DB gespeichert', response)
       setSelectWorkouts(prevWorkouts => [...prevWorkouts, workout])
       })
     .catch((err)=>{console.error('Daten können nicht in der DB gespeichert werden',err)})    
@@ -220,9 +220,6 @@ export const BarChartProvider = ({ children }) => {
       return updatedCalories;
     });
   };
-  
-
-  console.log('increase hat stattgefunden',dailyCalories)
 
   const decreaseCaloriesForDay = (cal) => {
     setDailyCalories((prevCalories) => {

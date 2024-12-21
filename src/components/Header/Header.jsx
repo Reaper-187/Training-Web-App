@@ -1,17 +1,38 @@
-import React, {useState}  from 'react'
+import React, { useContext, useState}  from 'react'
 import './Header.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { CheckAuthContext } from "../../CheckAuthContext";
+import axios from 'axios'
 
 
-
+axios.defaults.withCredentials = true
+const logOut = import.meta.env.VITE_API_LOGOUT
 
 export const Header = () => {
+  const { toggleAuthentication } = useContext(CheckAuthContext);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  
+  const navigate = useNavigate()
+  
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get(logOut)
+      console.log('Das ist der ganze response',response);
+      
+      if (response.data.success) {
+        console.log('You successfully logged out');
+        toggleAuthentication(false)
+        navigate('/login')
+      }
+    }catch (error) {
+      console.error('Error on request for logout:', error);
+    }
+  } 
 
   return(
     <nav>
@@ -60,13 +81,13 @@ export const Header = () => {
           </Link>
 
         </div>
-        <form type='submit' method='POST' action="/logut?_method=DELETE">
+        <button className='logout-btn' method='GET' action="/logout" onClick={handleLogout}>
           <div className="box-3">
             <div className="btn nav-btn">
               <span>Log-out</span>
             </div>
           </div>
-        </form>
+        </button>
       </ul>
     </nav>
   )

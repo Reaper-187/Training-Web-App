@@ -60,7 +60,7 @@ export const PieChart = () => {
         const response = await axios.get(APP_URL);
         const workoutsForCurrentDay = response.data.filter((filteredPieData) => filteredPieData.date.slice(0, 10) == currentDate)
         // const muscleGroup = workoutsForCurrentDay.filter(({name}) => name == name)
-        console.log("Gefilterte Piechart Daten nach Datum:", workoutsForCurrentDay);       
+        // console.log("Gefilterte Piechart Daten nach Datum:", workoutsForCurrentDay);       
         const updatedPieCount = { ...newPieCount };
           workoutsForCurrentDay.forEach((findTypeOfTrain) => {
               const key = findTypeOfTrain.name || "Cardio";

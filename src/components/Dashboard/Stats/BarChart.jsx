@@ -58,7 +58,7 @@ export const BarChart = () => {
           updatedData[entry.date] = (updatedData[entry.date] || 0) + entry.calories;
         });
   
-        console.log('Aktualisierte formattedData:', updatedData);
+        // console.log('Aktualisierte formattedData:', updatedData);
         return updatedData;
       });
     }
@@ -77,7 +77,7 @@ export const BarChart = () => {
 
   useEffect(() => {
     if (apiDataLoaded && !hasBarchartReset && isNewWeek === 1) {
-      console.log("Reset Barchart");
+      // console.log("Reset Barchart");
       // wenn neue Woche true => Bachart wird zurückgesetzt
       setFormattedData((prevData) =>
         Object.keys(prevData).reduce((newData, key) => {
@@ -100,7 +100,6 @@ export const BarChart = () => {
   }, [isNewWeek]);
 
 
-  console.log('Das ist die Summe der FormattedData',formattedData)
 
   const data = {
     

@@ -7,17 +7,22 @@ const passport = require('passport');
 
 
 // methode Override überschreibt die Funktion dann kommt action"/logut?_method=DELETE"
-router.delete('/logout', (req, res) => {
-    req.logOut() //cleart die Session und loggt den User aus
-    res.redirect('/login')
-  })
-  
+  router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ success: false, message: 'Error with logout' });
+      }
+      res.clearCookie('connect.sid'); // Cookie entfernen
+      res.status(200).json({ success: true, message: 'Logout successfully' });
+    });
+  });
+
   
   // Prüft ob User eingeloggt ist   
   router.post('/auth/check', (req, res) => {
-    console.log('Session-Daten in /auth/check:', req.session);
+    // console.log('Session-Daten in /auth/check:', req.session);
     if (req.session.passport && req.session.passport.user) {
-      console.log('Session-Daten in /auth/check:', req.session);
+      // console.log('Session-Daten in /auth/check:', req.session);
       res.status(200).json({ loggedIn: true });
       console.log('lggedIn ist True', ({loggedIn: true}));
       
@@ -25,9 +30,7 @@ router.delete('/logout', (req, res) => {
       res.status(200).json({ loggedIn: false });
       console.log('loggedIn bleibt Fasle',({loggedIn: false}));
     }
-  });  
-
-
+  });
 
   router.post('/register',  async (req, res) => {
     try {
@@ -64,7 +67,7 @@ router.delete('/logout', (req, res) => {
           console.log('Fehler beim Login:', err);
           return res.status(500).json({ success: false, message: 'Anmeldung fehlgeschlagen' });
         }
-        console.log('Session nach Login:', req.session);
+        // console.log('Session nach Login:', req.session);
         req.session.loggedIn = true;
         res.status(200).json({
           success: true,

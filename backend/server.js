@@ -12,14 +12,13 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const httpServer = createServer(app);
 const session = require('express-session');
-const MemoryStore = require('memorystore')(session)
 const passport = require('passport');
 const initializePassport = require('./routes/passportConfig');
 const User = require('./models/LoginAndValidation/UserLoginSchema');
 const flash = require('express-flash');
 const MongoStore = require('connect-mongo');
 const crypto = require('crypto');
-const methodOverride = require('method-override')
+const axios = require('axios')
 
 const SECRET_KEY = crypto.randomBytes(32).toString('hex');
 
@@ -55,8 +54,9 @@ app.use(flash());
 
 const io = new Server(httpServer, {
   cors: {
-    origin: '*', // alle Domains werden damit erlaubt
-  },
+    origin: '*',
+    credentials: true,
+  }
 });
 
 io.on('connection', (socket) => {
@@ -67,13 +67,12 @@ io.on('connection', (socket) => {
   });
 });
 
-app.use(methodOverride('_method'))
 
 // cros-origin-Anfragen erlauben weil Frontend auf != Backend {Port} läuft
 app.use(
   cors({
-    origin: 'http://localhost:5173', // Erlaubt Anfragen vom Frontend
-    credentials: true, // Cookies und Auth-Header erlaubt zu senden/empfangen
+    origin: 'http://localhost:5173',
+    credentials: true
   })
 );
 
@@ -83,9 +82,35 @@ connectDB();
 
 app.use(express.json());
 
+
+// Proxy-Route für die Nutritionix-API
+app.post('/api/calories', async (req, res) => {
+
+  const API_CALORIES_KEY = process.env.VITE_API_KEY
+  const API_CALORIES_ID = process.env.VITE_APP_ID
+  try {
+    const response = await axios.post(
+      'https://trackapi.nutritionix.com/v2/natural/exercise',
+      req.body,
+      {
+        headers: {
+          'x-app-key': API_CALORIES_KEY,
+          'x-app-id': API_CALORIES_ID,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error('Fehler bei der API-Anfrage:', error.response?.data || error.message);
+    res.status(500).json({ message: 'Interner Serverfehler', error: error.response?.data });
+  }
+});
+
+
 // Routen
 app.use('/api', workoutRoutes); // Route für Workouts
-app.use('/api', userRoute); // Route für Benutzer
+app.use('/api', userRoute); // Route für User
 
 app.get('/', (req, res) => {
   res.send('API läuft');

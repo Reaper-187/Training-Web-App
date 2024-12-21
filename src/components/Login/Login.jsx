@@ -51,11 +51,8 @@ const handleSubmit = async (values, { setSubmitting }, isLogin) => {
 
   try {
     const response = await axios.post(url, values); 
-    console.log('Erfolgreich:', response.data);
-
-    if (response.data.success) {
+      if (response.data.success) {
       await checkAuth()
-      console.log('CheckAuth wird nach Erfolgreichem Login Aufgerufen', checkAuth());
       navigate('/dashboard')
     } else {
       console.log("Fehler: Login nicht erfolgreich.");
