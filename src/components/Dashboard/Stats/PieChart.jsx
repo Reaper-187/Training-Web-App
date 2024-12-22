@@ -15,8 +15,12 @@ export const PieChart = () => {
 
   useEffect(() => {
     // Verbindungsnachricht empfangen
-    socket.on("connect", () => {
+    socket.on("connect",() => {
       console.log("Mit dem Server verbunden:", socket.id);
+    });
+    
+    socket.on("updatedWithSocket",updatedPieCount => {
+      setNewPieCount(updatedPieCount);
     });
 
     // Verbindung schließen
@@ -24,20 +28,6 @@ export const PieChart = () => {
       socket.disconnect();
     };
   }, []);
-
-  // Wenn Workout erstellt wird geht Meldung an Server
-  // useEffect(() => {
-  //   socket.on("newWorkout", (data) => {
-  //     console.log("Neues Workout erhalten:", data);
-  //     // Hier kannst du den Zustand aktualisieren
-  //   });
-  
-  //   return () => socket.off("newWorkout"); // Socket-Event bereinigen
-  // }, []);
-  
-
-
-
 
   const initialPieCount = {
     Chest: 0,
@@ -52,6 +42,7 @@ export const PieChart = () => {
   }
   
   const [newPieCount, setNewPieCount] = useState(initialPieCount)
+
   const currentDate = new Date().toISOString().slice(0, 10)
 
   useEffect(() => {
@@ -59,14 +50,13 @@ export const PieChart = () => {
       try {
         const response = await axios.get(APP_URL);
         const workoutsForCurrentDay = response.data.filter((filteredPieData) => filteredPieData.date.slice(0, 10) == currentDate)
-        // const muscleGroup = workoutsForCurrentDay.filter(({name}) => name == name)
-        // console.log("Gefilterte Piechart Daten nach Datum:", workoutsForCurrentDay);       
         const updatedPieCount = { ...newPieCount };
           workoutsForCurrentDay.forEach((findTypeOfTrain) => {
               const key = findTypeOfTrain.name || "Cardio";
               updatedPieCount[key] += 1;
           });
-        setNewPieCount(updatedPieCount);
+          setNewPieCount(updatedPieCount);
+          socket.emit('updatePieSocket', updatedPieCount)
       } catch (err) {
         console.error("GET-Piechart-Data not found", err);
       }
@@ -74,10 +64,6 @@ export const PieChart = () => {
   
     getDataForPieChart();
   }, []);
-
-
-
-
 
 
   const data = {

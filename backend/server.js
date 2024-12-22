@@ -61,12 +61,16 @@ const io = new Server(httpServer, {
 
 io.on('connection', (socket) => {
   console.log('Ein Client ist verbunden:', socket.id);
+  socket.on("updatePieSocket", updatedPieCount => {
+    io.emit("updatedWithSocket", updatedPieCount)
+    console.log(updatedPieCount);
+    
+  })
 
   socket.on('disconnect', () => {
     console.log('Ein Client hat die Verbindung getrennt:', socket.id);
   });
 });
-
 
 // cros-origin-Anfragen erlauben weil Frontend auf != Backend {Port} läuft
 app.use(
@@ -84,6 +88,7 @@ app.use(express.json());
 
 
 // Proxy-Route für die Nutritionix-API
+// Damit ungehe ich die Cros-Origin NW Rechtlinie
 app.post('/api/calories', async (req, res) => {
 
   const API_CALORIES_KEY = process.env.VITE_API_KEY
