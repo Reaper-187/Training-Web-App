@@ -59,18 +59,21 @@ const io = new Server(httpServer, {
   }
 });
 
+
+
 io.on('connection', (socket) => {
   console.log('Ein Client ist verbunden:', socket.id);
-  socket.on("updatePieSocket", updatedPieCount => {
-    io.emit("updatedWithSocket", updatedPieCount)
-    console.log(updatedPieCount);
-    
+  socket.on("updatePieSocket", updatedPieCount => {    
+    io.emit("updatOkWithSocket", updatedPieCount)
+
   })
 
   socket.on('disconnect', () => {
     console.log('Ein Client hat die Verbindung getrennt:', socket.id);
   });
 });
+
+
 
 // cros-origin-Anfragen erlauben weil Frontend auf != Backend {Port} läuft
 app.use(
@@ -92,6 +95,7 @@ app.use(express.json());
 app.post('/api/calories', async (req, res) => {
 
   const API_CALORIES_KEY = process.env.VITE_API_KEY
+  const API_CALORIES_SECONDEKEY = process.env.VITE_API_SECONDE_KEY
   const API_CALORIES_ID = process.env.VITE_APP_ID
   try {
     const response = await axios.post(
@@ -99,7 +103,7 @@ app.post('/api/calories', async (req, res) => {
       req.body,
       {
         headers: {
-          'x-app-key': API_CALORIES_KEY,
+          'x-app-key': API_CALORIES_KEY || API_CALORIES_SECONDEKEY ,
           'x-app-id': API_CALORIES_ID,
           'Content-Type': 'application/json',
         },

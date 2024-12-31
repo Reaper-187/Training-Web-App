@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import  './CaloriesCalc.css'
 
 import { CaloriesContext } from '../../../../WorkoutContext'
 

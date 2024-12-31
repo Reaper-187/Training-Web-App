@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom';
 import { CheckAuthContext, CheckAuthProvider } from './CheckAuthContext';
@@ -8,7 +8,6 @@ import { Workout } from './components/Workout/Workout';
 import { ErrorPage } from './components/ErrorPage';
 import { Login } from './components/Login/Login'
 
-// const { setIsAuthenticated, isAuthenticated, checkAuth } = useContext (CheckAuthProvider)
 // Zustand für Authentifizierung verwalten
 const ProtectedLayout = () => {
   const { isAuthenticated } = useContext(CheckAuthContext);

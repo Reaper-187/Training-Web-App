@@ -1,5 +1,5 @@
-import React, {useState, useContext} from 'react'
-import  './Dashboard.css'
+import React from 'react'
+// import  './Dashboard.css'
 import {Stats} from './Stats/Stats'
 import { CaloriesBurnedCard } from './Stats/CaloriesCalc/CaloriesBurnedCard'
 import { WorkoutsCard } from './Stats/CaloriesCalc/WorkoutsCard'

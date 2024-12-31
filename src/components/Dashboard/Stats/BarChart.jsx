@@ -141,6 +141,7 @@ export const BarChart = () => {
   return (
     <div>
       <Bar
+      className='chart bar-chart'
       data = {data}
       options={options}
       />

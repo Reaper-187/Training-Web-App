@@ -1,6 +1,6 @@
 import React, {useState, useContext}  from 'react'
 import {ToastContainer, toast} from 'react-toastify'
-import { WorkoutContext, CaloriesContext, BarChartContext } from '../../../../../WorkoutContext';
+import { WorkoutContext, CaloriesContext, BarChartContext, PieCountContext } from '../../../../../WorkoutContext';
 import { fetchCalories } from '../../../../../apiService';
 import { calculateStrengthCalories } from '../../../../../strengthService';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +12,8 @@ export const SelectScreen = () => {
   const [selectedMuscleValue, setSelectedMuscleValue] = useState("");
 
   const { addWorkout } = useContext(WorkoutContext);
+
+  const { notifyWorkoutAdded } = useContext(PieCountContext);
   
   const { increaseCalories } = useContext(CaloriesContext);
 
@@ -32,7 +34,7 @@ export const SelectScreen = () => {
       
     }
   }
-  
+
   const handleAddWorkout = async () => {
     const workoutData = {
       type: typeOfTraining,
@@ -69,9 +71,6 @@ export const SelectScreen = () => {
     }
   };
 
-
-  
-
   function displayOptions() {
     if (typeOfTraining === 'Cardio') {
 
@@ -107,8 +106,17 @@ export const SelectScreen = () => {
             <input type="number" value={timeValue} onInput={e => setTimeValue(e.target.value)} />   
           </div>
         </div>
-        <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid);if(isValid){handleAddWorkout()}}}><span>Add to!</span></a>
+
+        <a className='addWorkoutBtn' 
+            onClick={() => {const isValid = checkIfFieldEmpty();notify(isValid);
+              if (isValid)
+                handleAddWorkout();
+                notifyWorkoutAdded();
+            ;}}>
+              <span>Add to!</span>
+        </a>
         <ToastContainer/>
+
         </div>
       );
     } else if (typeOfTraining === 'Krafttraining') {
@@ -186,7 +194,16 @@ export const SelectScreen = () => {
             </select>
           </div>
         
-          <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid);if(isValid){handleAddWorkout()}}}><span>Add to!</span></a>
+          <a className='addWorkoutBtn' 
+            onClick={() => {const isValid = checkIfFieldEmpty();notify(isValid);
+              if (isValid)
+              {
+                handleAddWorkout();
+                notifyWorkoutAdded()
+              }
+              }}>
+              <span>Add to!</span>
+          </a>
           <ToastContainer/>
         </div>
       );
@@ -208,7 +225,6 @@ export const SelectScreen = () => {
           {displayOptions()}
           
         </div>
-        
     </>
   )
 };
