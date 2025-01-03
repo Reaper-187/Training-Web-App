@@ -47,7 +47,7 @@ export const BarChart = () => {
   }, []);
   
 
-  // rendert Calorienverbrauch für jeweiligen Wochen Tag in der Barchart
+  // rendert Calorienverbrauch für jeweiligen Wochentag in der Barchart
   useEffect(() => {
     if (dailyCalories.length > 0) {
       setFormattedData((prevData) => {
@@ -64,16 +64,16 @@ export const BarChart = () => {
     }
   }, [dailyCalories]);
   
-  // const [hasBarchartReset, setHasBarchartReset] = useState()
+  
+  
+  // BarchartReset
+  const isNewWeek = new Date().getDay()
+  
   const [hasBarchartReset, setHasBarchartReset] = useState(() => {
     //muss in Localstorage gespeichert werden weil => wenn Seite neu geladen wird, wird der State Auto. resetet
     const storedValue = localStorage.getItem("hasBarchartReset");
     return storedValue ? JSON.parse(storedValue) : false;
   });
-  
-  
-  // BarchartReset
-  const isNewWeek = new Date().getDay()
 
   useEffect(() => {
     if (apiDataLoaded && !hasBarchartReset && isNewWeek === 1) {

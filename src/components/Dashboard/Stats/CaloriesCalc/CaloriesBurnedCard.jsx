@@ -16,7 +16,7 @@ export const CaloriesBurnedCard = () => {
       </div>
       
       <div className='card-info'>
-        <p>{calories} kcal </p>
+        <p>{Math.floor(calories)} kcal </p>
         <p>Total calories burned today</p>
       </div>
     </div>
