@@ -49,6 +49,7 @@ export const SelectScreen = () => {
     }
   }
 
+
   const handleMuscleChange = (e) => {
     setSelectedMuscleValue(e.target.value);
     setSelectedWorkoutValue(""); // Reset the workout selection
