@@ -1,6 +1,6 @@
-import React, {useState, useContext}  from 'react'
-import {ToastContainer, toast} from 'react-toastify'
-import { WorkoutContext, CaloriesContext, BarChartContext } from '../../../../../WorkoutContext';
+import React, { useState, useContext } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import { WorkoutContext, CaloriesContext, BarChartContext, PieCountContext } from '../../../../../WorkoutContext';
 import { fetchCalories } from '../../../../../apiService';
 import { calculateStrengthCalories } from '../../../../../strengthService';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,72 +12,97 @@ export const SelectScreen = () => {
   const [selectedMuscleValue, setSelectedMuscleValue] = useState("");
 
   const { addWorkout } = useContext(WorkoutContext);
-  
+
+  const { notifyWorkoutAdded } = useContext(PieCountContext);
+
   const { increaseCalories } = useContext(CaloriesContext);
 
   const { increaseCaloriesForDay } = useContext(BarChartContext);
-  
+
+
+  const muscleGroupOptions = {
+    Chest: ["Bench Press", "Incline Bench Press", "Chest Press", "Butterfly"],
+    Back: ["Pull-Ups", "Lat Pulldown", "Rowing"],
+    Biceps: ["Bicep Curls", "Hammer Curls", "Scott Curls"],
+    Triceps: ["Tricep Dips", "Tricep Pushdowns", "Overhead Extensions"],
+    Legs: ["Squats", "Leg Press", "Lunges"],
+    Shoulders: ["Shoulder Press", "Lateral Raises", "Front Raises"],
+    Booty: ["Hip Thrust", "Glute Bridge"],
+    Abs: ["Crunches", "Plank", "Russian Twists"],
+  };
+
+
   const [selectedWorkoutValue, setSelectedWorkoutValue] = useState("");
   const [setsValue, setSetsValue] = useState("");
   const [repsValue, setRepsValue] = useState("");
   const [weightValue, setWeightValue] = useState("");
   const [timeValue, setTimeValue] = useState("")
-  
+
+
   const notify = (isValid) => {
     if (isValid) {
-      toast("💪Your Workout has been added💪",{ type: "success"});
-      
+      toast("💪Your Workout has been added💪", { type: "success" });
+
     } else {
-      toast("pleas fill up all fields",{type: 'error'});
-      
+      toast("pleas fill up all fields", { type: 'error' });
+
     }
   }
-  
+
+  const handleMuscleChange = (e) => {
+    setSelectedMuscleValue(e.target.value);
+    setSelectedWorkoutValue(""); // Reset the workout selection
+  };
+
   const handleAddWorkout = async () => {
     const workoutData = {
       type: typeOfTraining,
       name: selectedMuscleValue,
       exsize: selectedWorkoutValue,
+      weight: weightValue || '-',
       sets: setsValue,
       reps: repsValue,
-      weight: weightValue || '-',
       time: timeValue || '-',
     };
-  
-    let caloriesData;
-    let caloriesBurned;
+
+    let cardioCaloriesData;
+    let strengthCaloriesData;
+
 
     if (typeOfTraining === 'Cardio') {
-      caloriesData = await fetchCalories(`${selectedWorkoutValue} for ${timeValue} minutes.`);
-      const apiCalories = caloriesData.exercises[0].nf_calories;
-      workoutData.calories = apiCalories;
-      increaseCalories(apiCalories);
-      increaseCaloriesForDay(apiCalories)
+      // debugger
+      cardioCaloriesData = await fetchCalories(`${selectedWorkoutValue} for ${timeValue} minutes.`);
+      const cardioApiCalBurned = cardioCaloriesData.exercises[0].nf_calories;
+      workoutData.calories = cardioApiCalBurned;
+      increaseCalories(cardioApiCalBurned);
+      increaseCaloriesForDay(cardioApiCalBurned)
     } else {
-      caloriesBurned = calculateStrengthCalories(weightValue, setsValue, repsValue)
-      workoutData.calories = caloriesBurned;
-      increaseCalories(caloriesBurned)
-      increaseCaloriesForDay(caloriesBurned)
+      strengthCaloriesData = calculateStrengthCalories(
+        selectedWorkoutValue,
+        weightValue,
+        setsValue,
+        repsValue,
+      );
+      const strengthCaloBurned = strengthCaloriesData.burnedCalories;
+      workoutData.calories = strengthCaloBurned
+      increaseCalories(strengthCaloBurned);
+      increaseCaloriesForDay(strengthCaloBurned);
     }
-    
-    if (caloriesData || caloriesBurned) {
+
+    if (cardioCaloriesData || strengthCaloriesData) {
       addWorkout(workoutData);
+      console.log(workoutData)
       console.log('Workout hinzugefügt');
-      // increasePieCount(muscleGroup)
     } else {
       console.log('Fehler bei Kalorienberechnung');
     }
   };
 
-
-  
-
   function displayOptions() {
-    if (typeOfTraining === 'Cardio') {
-
+    if (typeOfTraining === "Cardio") {
       const checkIfFieldEmpty = () => {
         if (
-          selectedWorkoutValue !== "" && 
+          selectedWorkoutValue !== "" &&
           (typeOfTraining === "Cardio" ? timeValue !== "" : true)
         ) {
           return true;
@@ -85,130 +110,143 @@ export const SelectScreen = () => {
           return false;
         }
       };
-
       return (
-      <div className='displayOptions'>
-
-        <div>
+        <div className="displayOptions">
           <h4>Type of Training</h4>
-          <select className='cardioTrainings' onChange={(e) => setSelectedWorkoutValue(e.target.value)}>
+          <select
+            className="cardioTrainings"
+            onChange={(e) => setSelectedWorkoutValue(e.target.value)}
+            value={selectedWorkoutValue}
+          >
             <option value=""></option>
-            <option value="running">running</option>
-            <option value="stepper">Stepper</option>
-            <option value="Seilspringen">Seilspringen</option>
-            <option value="cycling">Fahrrad</option>
-            <option value="Rudern">Rudern</option>
+            {["running", "stepper", "Seilspringen", "cycling", "Rudern"].map((workout) => (
+              <option key={workout} value={workout}>
+                {workout}
+              </option>
+            ))}
           </select>
-        </div>
+          <h4>Time (minutes)</h4>
+          <input
+            type="number"
+            value={timeValue}
+            onChange={(e) => setTimeValue(e.target.value)}
+            className="cardioTrainings"
+          />
 
-        <div >
-          <h5>Time</h5>
-          <div className='cardioTrainings' onChange={(e) => setTimeValue(e.target.value)}>
-            <input type="number" value={timeValue} onInput={e => setTimeValue(e.target.value)} />   
-          </div>
-        </div>
-        <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid);if(isValid){handleAddWorkout()}}}><span>Add to!</span></a>
-        <ToastContainer/>
+          <a className='addWorkoutBtn'
+            onClick={() => {
+              const isValid = checkIfFieldEmpty(); notify(isValid);
+              if (isValid)
+                handleAddWorkout();
+              notifyWorkoutAdded();
+              ;
+            }}>
+            <span>Add to!</span>
+          </a>
+          <ToastContainer />
+
         </div>
       );
     } else if (typeOfTraining === 'Krafttraining') {
 
-    const checkIfFieldEmpty = () => {
-      if (
-        selectedWorkoutValue !== "" &&
-        (typeOfTraining === "Krafttraining" ? (weightValue !== "" && repsValue !== "" && setsValue !== "" && selectedMuscleValue !== "") : true)
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    };
+      const checkIfFieldEmpty = () => {
+        if (
+          selectedWorkoutValue !== "" &&
+          (typeOfTraining === "Krafttraining" ? (weightValue !== "" && repsValue !== "" && setsValue !== "" && selectedMuscleValue !== "") : true)
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+
+      const availableWorkouts = selectedMuscleValue && muscleGroupOptions[selectedMuscleValue]
+        ? muscleGroupOptions[selectedMuscleValue] : [];
+
 
       return (
         <div className='displayOptions'>
           <div>
             <h4>Type of Muscle</h4>
-            <select className='cardioTrainings' onChange={(e) => setSelectedMuscleValue(e.target.value)}>
+            <select className="cardioTrainings" onChange={handleMuscleChange} value={selectedMuscleValue}>
               <option value=""></option>
-              <option value="Chest">Chest</option>
-              <option value="Back">Back</option>
-              <option value="Biceps">Biceps</option>
-              <option value="Triceps">Triceps</option>
-              <option value="Legs">Legs</option>
-              <option value="Shoulders">Shoulders</option>
-              <option value="Booty">Booty</option>
-              <option value="Abs">Abs</option>
+              {Object.keys(muscleGroupOptions).map((muscle) => (
+                <option key={muscle} value={muscle}>
+                  {muscle}
+                </option>
+              ))}
             </select>
           </div>
           <div>
             <h4>Type of Training</h4>
-            <select className='cardioTrainings' onChange={(e) => setSelectedWorkoutValue(e.target.value)}>
+            <select className="cardioTrainings" onChange={(e) => setSelectedWorkoutValue(e.target.value)} value={selectedWorkoutValue} disabled={!selectedMuscleValue}>
               <option value=""></option>
-              <option value="Bankdrücken">Bankdrücken</option>
-              <option value="Schrägbankdrücken">Schrägbankdrücken</option>
-              <option value="Brustprässe">Brustprässe</option>
-              <option value="Hammer">Hammer</option>
-              <option value="Butterfly">Butterfly</option>
-              <option value="Squads">Squads</option>
-              <option value="Beinpresse">Beinpresse</option>
+              {availableWorkouts.map((workout) => (
+                <option key={workout} value={workout}>
+                  {workout}
+                </option>
+              ))}
             </select>
           </div>
-
           <div>
             <h4>Gewicht</h4>
-            <div className='cardioTrainings' onChange={(e) => setWeightValue(e.target.value)}>
-              <input type="number" value={weightValue} onInput={e => setWeightValue(e.target.value)} />
+            <div className="cardioTrainings">
+              <input type="number" value={weightValue} onChange={(e) => setWeightValue(e.target.value)} />
             </div>
           </div>
-
           <div>
             <h4>Reps</h4>
-            <select className='cardioTrainings' onChange={(e) => setRepsValue(e.target.value)}>
+            <select
+              className="cardioTrainings" onChange={(e) => setRepsValue(e.target.value)} value={repsValue}>
               <option value=""></option>
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
+              {[5, 10, 15, 20].map((rep) => (
+                <option key={rep} value={rep}>{rep}</option>
+              ))}
             </select>
           </div>
-        
           <div>
             <h4>Sets</h4>
-            <select className='cardioTrainings' onChange={(e) => setSetsValue(e.target.value)}>
+            <select className="cardioTrainings" onChange={(e) => setSetsValue(e.target.value)} value={setsValue}>
               <option value=""></option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
+              {[1, 2, 3, 4, 5, 6, 7].map((set) => (
+                <option key={set} value={set}>
+                  {set}
+                </option>
+              ))}
             </select>
           </div>
-        
-          <a className='addWorkoutBtn' onClick={() =>{const isValid = checkIfFieldEmpty();notify(isValid);if(isValid){handleAddWorkout()}}}><span>Add to!</span></a>
-          <ToastContainer/>
+
+          <a className='addWorkoutBtn'
+            onClick={() => {
+              const isValid = checkIfFieldEmpty(); notify(isValid);
+              if (isValid) {
+                handleAddWorkout();
+                notifyWorkoutAdded()
+              }
+            }}>
+            <span>Add to!</span>
+          </a>
+          <ToastContainer />
         </div>
       );
     }
 
     return null; //wenn nichts dann nichts
   }
-  
+
   return (
     <>
       <h2>Add Workout</h2>
-        <div>
-          <h4>What did you do</h4>
-          <select onChange={(e) => setTypeOfTraining(e.target.value)}>
-            <option value="">-</option>
-            <option value="Cardio">Cardio</option>
-            <option value="Krafttraining">Krafttraining</option>
-          </select>      
-          {displayOptions()}
-          
-        </div>
-        
+      <div>
+        <h4>What did you do</h4>
+        <select onChange={(e) => setTypeOfTraining(e.target.value)}>
+          <option value="">-</option>
+          <option value="Cardio">Cardio</option>
+          <option value="Krafttraining">Krafttraining</option>
+        </select>
+        {displayOptions()}
+
+      </div>
     </>
   )
 };

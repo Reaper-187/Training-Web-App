@@ -5,10 +5,7 @@ import { WorkoutContext,  CaloriesContext, BarChartContext  } from '../../Workou
 import axios from 'axios'
 
 
-
 const APP_URL = import.meta.env.VITE_API_URL
-
-
 
 export const Workout = () => {
    

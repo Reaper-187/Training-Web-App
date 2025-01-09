@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 import { Header } from './components/Header/Header';
-import { WorkoutProvider, CaloriesProvider, BarChartProvider } from './WorkoutContext';
+import { WorkoutProvider, CaloriesProvider, BarChartProvider, PieCountProvider } from './WorkoutContext';
 
 import { Outlet } from 'react-router-dom';
 
@@ -12,12 +12,14 @@ function App() {
   <>
     <CaloriesProvider>   {/* Hier beide Provider nebeneinander */}
       <BarChartProvider>
-          <WorkoutProvider>
-            <Header />
-              <main>
-                <Outlet />
-              </main>
-          </WorkoutProvider>
+        <PieCountProvider>
+            <WorkoutProvider>
+              <Header />
+                <main>
+                  <Outlet />
+                </main>
+            </WorkoutProvider>
+        </PieCountProvider>
       </BarChartProvider>
     </CaloriesProvider>
   </>

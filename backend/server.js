@@ -59,18 +59,21 @@ const io = new Server(httpServer, {
   }
 });
 
+
+
 io.on('connection', (socket) => {
   console.log('Ein Client ist verbunden:', socket.id);
-  socket.on("updatePieSocket", updatedPieCount => {
-    io.emit("updatedWithSocket", updatedPieCount)
-    console.log(updatedPieCount);
-    
+  socket.on("updatePieSocket", updatedPieCount => {    
+    io.emit("updatOkWithSocket", updatedPieCount)
+
   })
 
   socket.on('disconnect', () => {
     console.log('Ein Client hat die Verbindung getrennt:', socket.id);
   });
 });
+
+
 
 // cros-origin-Anfragen erlauben weil Frontend auf != Backend {Port} läuft
 app.use(
@@ -88,10 +91,12 @@ app.use(express.json());
 
 
 // Proxy-Route für die Nutritionix-API
-// Damit ungehe ich die Cros-Origin NW Rechtlinie
+// Damit ungehe ich die Cors-Origin NW Rechtlinie
 app.post('/api/calories', async (req, res) => {
 
   const API_CALORIES_KEY = process.env.VITE_API_KEY
+  console.log(API_CALORIES_KEY)
+
   const API_CALORIES_ID = process.env.VITE_APP_ID
   try {
     const response = await axios.post(
@@ -111,6 +116,39 @@ app.post('/api/calories', async (req, res) => {
     res.status(500).json({ message: 'Interner Serverfehler', error: error.response?.data });
   }
 });
+
+
+
+app.get('/api/caloriesNinjas', async (req, res) => {
+  const API_NINJAS_KEY = process.env.API_CALORIES_NINJAS_KEY;
+  const { activity } = req.query; // `activity`-Parameter aus der URL
+  console.log('Empfangener activity-Parameter:', activity);
+
+  if (!activity) {
+    return res.status(400).json({ message: 'activity-Parameter fehlt.' });
+  }
+
+  try {
+    const url = `https://api.api-ninjas.com/v1/caloriesburned?activity=${encodeURIComponent(activity)}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        'x-api-key': API_NINJAS_KEY,
+      },
+    });
+
+    console.log('API-Antwort:', response.data);
+    res.json(response.data); // Antwort weiterleiten
+  } catch (error) {
+    console.error('Fehler bei der API-Anfrage:', error.response?.data || error.message);
+    res.status(500).json({
+      message: 'Interner Serverfehler',
+      error: error.response?.data || error.message,
+    });
+  }
+});
+
+
 
 
 // Routen

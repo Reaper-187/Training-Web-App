@@ -1,8 +1,10 @@
+
 .hiddenScreen{
   display: none;
-
 }
+
 .hiddenScreen.active{
+  position: relative;
   display: block;
 }
 

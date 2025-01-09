@@ -1,8 +1,8 @@
 import React, {useState}  from 'react'
-import './Button.css'
+import './open-close.css'
 
 import { AddWorkoutScreen } from '../AddWorkoutScreen';
-import { OpenAdd} from './OpenAdd';
+import { OpenAdd } from './OpenCloseAddBtn';
 
 
 
@@ -21,18 +21,18 @@ export const AddWorkoutBtn = () => {
   }
 
   return (
-    <>
-    <div className={openAddWorkout ? 'hiddenScreen.active' : 'hiddenScreen'}>
-      <AddWorkoutScreen onClose={closeAddBtn}/>
-    </div>
+      <>      
+        <div className={openAddWorkout ? 'hiddenScreen.active' : 'hiddenScreen'}>
+          <AddWorkoutScreen onClose={closeAddBtn}/>
+        </div>
 
-      <h1>Add New Workout</h1>
-      <br />
-        
-    <span onClick={openAddBtn}>
-      <OpenAdd/>
-    </span>
+          <h1>Add New Workout</h1>
+          <br />
+            
 
-    </>
+        <span onClick={openAddBtn}>
+          <OpenAdd/>
+        </span>
+      </>
   )
 }

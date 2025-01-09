@@ -27,12 +27,13 @@ h2{
   border-radius: 10px;
   transition: ease-in .1s;
   background-color: #22272B;
+  animation: workoutCard .7s ease forwards;
 }
 
 .workoutCard:hover{
   border: none;
-  /* transform: translate(5px, -10px); */
-  scale: 1.01;
+  transform: translateY(-10px);
+  
   background-color: #1E1E1E;
   /* box-shadow: 10px -10px rgba(0, 255, 255, 0.219); */
   box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
@@ -95,4 +96,58 @@ h2{
 
 .calenderContainer{
   margin: 5rem 0;
+}
+
+
+
+
+
+/* @media (max-width: 768px)  {
+
+  .addContainer{
+    width: 70vw;
+    right: -60%;
+    animation: addWorkoutAnimation2 ease-in-out .7s forwards;
+  }
+
+
+  .displayOptions{
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    opacity: 0;
+    animation: displayOptions2 .7s ease-in-out .7s forwards;
+  }
+
+  @keyframes addWorkoutAnimation2 {
+    from{
+      height: 0dvh;
+    }
+    to{
+      height: 50dvh;
+    }  
+  }
+
+  @keyframes displayOptions2 {
+    from{
+      opacity: 0;
+    }
+    to{
+      opacity: 1;
+    }  
+  }
+
+} */
+
+
+@keyframes workoutCard {
+  from{
+    opacity: .4;
+    scale: .8;
+  }
+  to{
+    opacity: 1;
+    scale: 1;
+  }  
 }
