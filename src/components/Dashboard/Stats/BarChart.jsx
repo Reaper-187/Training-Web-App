@@ -35,7 +35,6 @@ export const BarChart = () => {
           ...dayToName,
           date: new Date(dayToName.date).toLocaleString("en-US", { weekday: "short" }),
         }));
-        // console.log("Gefilterte Daten:", caloriesForCurrentDay);
         setDailyCalories(caloriesForCurrentDay);
         setApiDataLoaded(true);
       } catch (err) {
@@ -46,25 +45,25 @@ export const BarChart = () => {
     getCaloiresData();
   }, []);
   
-
   // rendert Calorienverbrauch für jeweiligen Wochentag in der Barchart
   useEffect(() => {
-    if (dailyCalories.length > 0) {
-      setFormattedData((prevData) => {
-        const updatedData = { ...prevData };
+    console.log('Triggered because dailyCalories changed');
+    const entries = Object.entries(dailyCalories); // Wandelt Objekt in Array um
   
-        dailyCalories.forEach((entry) => {
-          // Akkumulieren statt ersetzen
-          updatedData[entry.date] = (updatedData[entry.date] || 0) + entry.calories;
-        });
-  
-        // console.log('Aktualisierte formattedData:', updatedData);
-        return updatedData;
+    setFormattedData((prevData) => {
+      const updatedData = { ...prevData };
+      
+      entries.forEach(([day, calories]) => {
+        updatedData[day] = calories; // Direktes Mapping von Tag zu Kalorien
       });
-    }
+  
+      console.log('Updated formattedData:', updatedData); // Debugging
+      return updatedData;
+    });
   }, [dailyCalories]);
   
   
+
   
   // BarchartReset
   const isNewWeek = new Date().getDay()
@@ -100,6 +99,7 @@ export const BarChart = () => {
   }, [isNewWeek]);
 
 
+  console.log('Formatted data sent to BarChart:', formattedData);
 
   const data = {
     
@@ -123,6 +123,10 @@ export const BarChart = () => {
     }
   ]
 };  
+
+useEffect(() => {
+  console.log('Data passed to BarChart:', data);
+}, [data]);
 
   const options = {
     responsive: true,

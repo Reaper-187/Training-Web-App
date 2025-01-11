@@ -31,35 +31,3 @@ export const fetchCalories = async (query) => {
   }
 }
 
-
-
-// Ninjas-Api kann nur GET-Req verarbeiten
-
-const API_NINJAS = import.meta.env.VITE_API_NINJAS;
-
-export const fetchCaloriesFromNinjas = async (activity) => {
-  const url = `${API_NINJAS}?activity=${encodeURIComponent(activity)}`;
-
-  try {
-    const response = await axios.get(url, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    console.log('API-Antwort:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('API-Fehler:', error.response?.data || error.message);
-    return null;
-  }
-};
-
-
-const activity = "body building"; // Ersetze mit der gewünschten Aktivität
-fetchCaloriesFromNinjas(activity).then(data => {
-  console.log('Erhaltene Daten:', data);
-});
-
-
-// calories_per_hour

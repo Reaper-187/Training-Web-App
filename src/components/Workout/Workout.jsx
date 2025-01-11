@@ -13,12 +13,11 @@ export const Workout = () => {
 
     // const { decreasePieCount } = useContext(PieCountContext)
     const { decreaseCalories } = useContext(CaloriesContext)
-    const { decreaseCaloriesForDay } = useContext(BarChartContext)
+    const { decreaseBarCaloriesForDay } = useContext(BarChartContext)
     const { selectWorkouts, setSelectWorkouts  } = useContext(WorkoutContext);
 
-    function setDeletBtn(_id) {      
+    function deleteWorkoutCard(_id) {
       const workoutToDelete = selectWorkouts.find((workout) => workout._id === _id);
-
       if (workoutToDelete) {
         const caloriesToSubtract = workoutToDelete.calories;
         axios.delete(APP_URL + '/' + workoutToDelete._id)
@@ -26,7 +25,7 @@ export const Workout = () => {
           const newList = selectWorkouts.filter((workout) => workout._id !== _id);
           setSelectWorkouts(newList);
           decreaseCalories(caloriesToSubtract);
-          decreaseCaloriesForDay(caloriesToSubtract)
+          decreaseBarCaloriesForDay(caloriesToSubtract)
         })
         .catch((err) => {
           console.error('Lösung konnte nicht durchgeführt werden',err);
@@ -99,7 +98,7 @@ export const Workout = () => {
                 <div className='workoutCard' key={index} _id={workout._id} date={workout.date}>
                   <div className='topElements'>
                     <span>{workout.type}</span>
-                    <svg onClick={() => {setDeletBtn(workout._id);;}} className='removeCardBtn' xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+                    <svg onClick={() => {deleteWorkoutCard(workout._id);;}} className='removeCardBtn' xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                   </div>
                   <h3>{workout.name}</h3> 
                   <h3>{workout.exsize}</h3> 

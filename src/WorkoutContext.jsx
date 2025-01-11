@@ -84,6 +84,7 @@ export const PieCountProvider = ({ children }) => {
   };
 
   const [newPieCount, setNewPieCount] = useState(initialPieCount);
+  
   const [workoutAddedTrigger, setWorkoutAddedTrigger] = useState(false); // Neuer Trigger
 
   function triggerSocketChart() {
@@ -141,21 +142,23 @@ export const BarChartProvider = ({ children }) => {
   }
   
   
-  const increaseCaloriesForDay = (cal) => {
+  const increaseBarCaloriesForDay = (cal) => {
     setDailyCalories((prevCalories) => {
       const day = getCurrentDay();
       const updatedCalories = { ...prevCalories };
       updatedCalories[day] = (updatedCalories[day] || 0) + cal;
+      console.log('Increase der BARCHART Funktioniert wie es soll',updatedCalories); // Debug-Ausgabe
       return updatedCalories;
     });
   };
 
-  const decreaseCaloriesForDay = (cal) => {
+  const decreaseBarCaloriesForDay = (cal) => {
     setDailyCalories((prevCalories) => {
       const day = getCurrentDay();
       if (prevCalories[day] >= cal) {
         const updatedCalories = { ...prevCalories };
         updatedCalories[day] -= cal;
+        console.log('deIncrease der BARCHART Funktioniert wie es soll',updatedCalories); // Debug-Ausgabe
         return updatedCalories;
       } else {
         return prevCalories; 
@@ -164,7 +167,7 @@ export const BarChartProvider = ({ children }) => {
   };
 
   return(
-    <BarChartContext.Provider value = {{ dailyCalories, setDailyCalories, increaseCaloriesForDay, decreaseCaloriesForDay }}>
+    <BarChartContext.Provider value = {{ dailyCalories, setDailyCalories, increaseBarCaloriesForDay, decreaseBarCaloriesForDay }}>
       {children}
     </BarChartContext.Provider>
   )

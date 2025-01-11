@@ -17,7 +17,7 @@ export const SelectScreen = () => {
 
   const { increaseCalories } = useContext(CaloriesContext);
 
-  const { increaseCaloriesForDay } = useContext(BarChartContext);
+  const { increaseBarCaloriesForDay } = useContext(BarChartContext);
 
 
   const muscleGroupOptions = {
@@ -76,7 +76,7 @@ export const SelectScreen = () => {
       const cardioApiCalBurned = cardioCaloriesData.exercises[0].nf_calories;
       workoutData.calories = cardioApiCalBurned;
       increaseCalories(cardioApiCalBurned);
-      increaseCaloriesForDay(cardioApiCalBurned)
+      increaseBarCaloriesForDay(cardioApiCalBurned)
     } else {
       strengthCaloriesData = calculateStrengthCalories(
         selectedWorkoutValue,
@@ -87,7 +87,7 @@ export const SelectScreen = () => {
       const strengthCaloBurned = strengthCaloriesData.burnedCalories;
       workoutData.calories = strengthCaloBurned
       increaseCalories(strengthCaloBurned);
-      increaseCaloriesForDay(strengthCaloBurned);
+      increaseBarCaloriesForDay(strengthCaloBurned);
     }
 
     if (cardioCaloriesData || strengthCaloriesData) {
@@ -220,10 +220,9 @@ export const SelectScreen = () => {
           <a className='addWorkoutBtn'
             onClick={() => {
               const isValid = checkIfFieldEmpty(); notify(isValid);
-              if (isValid) {
+              if (isValid) 
                 handleAddWorkout();
-                notifyWorkoutAdded()
-              }
+                notifyWorkoutAdded();              
             }}>
             <span>Add to!</span>
           </a>

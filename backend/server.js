@@ -117,40 +117,6 @@ app.post('/api/calories', async (req, res) => {
   }
 });
 
-
-
-app.get('/api/caloriesNinjas', async (req, res) => {
-  const API_NINJAS_KEY = process.env.API_CALORIES_NINJAS_KEY;
-  const { activity } = req.query; // `activity`-Parameter aus der URL
-  console.log('Empfangener activity-Parameter:', activity);
-
-  if (!activity) {
-    return res.status(400).json({ message: 'activity-Parameter fehlt.' });
-  }
-
-  try {
-    const url = `https://api.api-ninjas.com/v1/caloriesburned?activity=${encodeURIComponent(activity)}`;
-
-    const response = await axios.get(url, {
-      headers: {
-        'x-api-key': API_NINJAS_KEY,
-      },
-    });
-
-    console.log('API-Antwort:', response.data);
-    res.json(response.data); // Antwort weiterleiten
-  } catch (error) {
-    console.error('Fehler bei der API-Anfrage:', error.response?.data || error.message);
-    res.status(500).json({
-      message: 'Interner Serverfehler',
-      error: error.response?.data || error.message,
-    });
-  }
-});
-
-
-
-
 // Routen
 app.use('/api', workoutRoutes); // Route für Workouts
 app.use('/api', userRoute); // Route für User
