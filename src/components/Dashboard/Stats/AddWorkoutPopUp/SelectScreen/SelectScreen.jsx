@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
-import { WorkoutContext, CaloriesContext, BarChartContext, PieCountContext } from '../../../../../WorkoutContext';
+import { WorkoutContext, CaloriesContext, BarChartContext } from '../../../../../WorkoutContext';
 import { fetchCalories } from '../../../../../apiService';
 import { calculateStrengthCalories } from '../../../../../strengthService';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,7 +13,7 @@ export const SelectScreen = () => {
 
   const { addWorkout } = useContext(WorkoutContext);
 
-  const { notifyWorkoutAdded } = useContext(PieCountContext);
+  // const { notifyWorkoutAdded } = useContext(PieCountContext);
 
   const { increaseCalories } = useContext(CaloriesContext);
 
@@ -66,6 +66,7 @@ export const SelectScreen = () => {
       time: timeValue || '-',
     };
 
+
     let cardioCaloriesData;
     let strengthCaloriesData;
 
@@ -102,10 +103,7 @@ export const SelectScreen = () => {
   function displayOptions() {
     if (typeOfTraining === "Cardio") {
       const checkIfFieldEmpty = () => {
-        if (
-          selectedWorkoutValue !== "" &&
-          (typeOfTraining === "Cardio" ? timeValue !== "" : true)
-        ) {
+        if (timeValue !== "") {
           return true;
         } else {
           return false;
@@ -120,7 +118,7 @@ export const SelectScreen = () => {
             value={selectedWorkoutValue}
           >
             <option value=""></option>
-            {["running", "stepper", "Seilspringen", "cycling", "Rudern"].map((workout) => (
+            {["running", "stepper", "jump-rope", "cycling", "rowing"].map((workout) => (
               <option key={workout} value={workout}>
                 {workout}
               </option>
@@ -139,8 +137,7 @@ export const SelectScreen = () => {
               const isValid = checkIfFieldEmpty(); notify(isValid);
               if (isValid)
                 handleAddWorkout();
-              notifyWorkoutAdded();
-              ;
+              // notifyWorkoutAdded();
             }}>
             <span>Add to!</span>
           </a>
@@ -220,9 +217,9 @@ export const SelectScreen = () => {
           <a className='addWorkoutBtn'
             onClick={() => {
               const isValid = checkIfFieldEmpty(); notify(isValid);
-              if (isValid) 
+              if (isValid)
                 handleAddWorkout();
-                notifyWorkoutAdded();              
+              // notifyWorkoutAdded();              
             }}>
             <span>Add to!</span>
           </a>
@@ -234,16 +231,32 @@ export const SelectScreen = () => {
     return null; //wenn nichts dann nichts
   }
 
+  const handleTypeChange = (newType) => {
+    setTypeOfTraining(newType);
+
+    if (newType === "Cardio") {
+      // Zurücksetzen der Krafttraining-spezifischen Felder
+      setSelectedMuscleValue("");
+      setWeightValue("");
+      setSetsValue("");
+      setRepsValue("");
+    } else if (newType === "Krafttraining") {
+      // Zurücksetzen der Cardio-spezifischen Felder
+      setTimeValue("");
+    }
+  };
+
   return (
     <>
       <h2>Add Workout</h2>
       <div>
         <h4>What did you do</h4>
-        <select onChange={(e) => setTypeOfTraining(e.target.value)}>
+        <select onChange={(e) => handleTypeChange(e.target.value)} value={typeOfTraining}>
           <option value="">-</option>
           <option value="Cardio">Cardio</option>
           <option value="Krafttraining">Krafttraining</option>
         </select>
+
         {displayOptions()}
 
       </div>

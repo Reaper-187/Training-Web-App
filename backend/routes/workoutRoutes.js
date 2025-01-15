@@ -5,6 +5,11 @@ const router = express.Router();
 
 router.post('/workouts', async (req, res) => {
   try {
+    const { name, type } = req.body;
+    // Fallback für fehlende Namen bei Cardio-Workouts
+    if (!name && type === 'Cardio') {
+      req.body.name = 'Cardio';
+    }
     const workout = new Workout(req.body); // Neues Workout mit den gesendeten Daten
     const savedWorkout = await workout.save(); // Speichern in der DB
     res.status(201).json(savedWorkout);
@@ -27,10 +32,9 @@ async function getWorkouts(req, res, next) {
   }
 }
 
-
 router.get('/workouts', async (req, res) => {
   try {
-    const workouts = await Workout.find(); // Alle Workouts abrufen
+    const workouts = await Workout.find(); // Alle Workouts abrufen    
     res.json(workouts);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -38,15 +42,15 @@ router.get('/workouts', async (req, res) => {
 });
 
 
-router.put('/workouts/:id', getWorkouts, async (req, res) => {
-  try {
-    Object.assign(res.workout, req.body);
-    const updatedWorkout = await res.workout.save();
-    res.json(updatedWorkout);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+// router.put('/workouts/:id', getWorkouts, async (req, res) => {
+//   try {
+//     Object.assign(res.workout, req.body);
+//     const updatedWorkout = await res.workout.save();
+//     res.json(updatedWorkout);
+//   } catch (err) {
+//     res.status(400).json({ message: err.message });
+//   }
+// });
 
 
 router.delete('/workouts/:id', getWorkouts, async (req, res) => {

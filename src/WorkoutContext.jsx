@@ -1,10 +1,33 @@
 import { createContext, useState, useEffect } from 'react';
-import socket from "./socket";
+// import socket from "./socket";
 import axios from 'axios'
 
 
 
 const APP_URL = import.meta.env.VITE_API_URL
+
+export const WorkoutContext = createContext();
+
+
+export const WorkoutProvider = ({ children }) => {
+  const [selectWorkouts, setSelectWorkouts] = useState([]);
+
+
+  const addWorkout = (workout) => {
+    axios.post(APP_URL, workout)
+    .then(() => {
+      setSelectWorkouts(prevWorkouts => [...prevWorkouts, workout])
+      })
+    .catch((err)=>{console.error('Daten können nicht in der DB gespeichert werden',err)})    
+  };
+
+  return (
+    <WorkoutContext.Provider value={{ selectWorkouts, setSelectWorkouts, addWorkout}}>
+      {children}
+    </WorkoutContext.Provider>
+  );
+};
+
 
 export const CaloriesContext  = createContext()
 
@@ -42,84 +65,74 @@ export const CaloriesProvider = ({ children }) => {
   );
 };
 
-export const WorkoutContext = createContext();
-
-
-export const WorkoutProvider = ({ children }) => {
-  const [selectWorkouts, setSelectWorkouts] = useState([]);
-
-
-  const addWorkout = (workout) => {
-    axios.post(APP_URL, workout)
-    .then(() => {
-      // console.log('Erfolgreich in der DB gespeichert', response)
-      setSelectWorkouts(prevWorkouts => [...prevWorkouts, workout])
-      })
-    .catch((err)=>{console.error('Daten können nicht in der DB gespeichert werden',err)})    
-  };
-
-  return (
-    <WorkoutContext.Provider value={{ selectWorkouts, setSelectWorkouts, addWorkout}}>
-      {children}
-    </WorkoutContext.Provider>
-  );
-};
 
 
 
-export const PieCountContext = createContext();
 
-export const PieCountProvider = ({ children }) => {
+// export const PieCountContext = createContext();
 
-  const initialPieCount = {
-    Chest: 0,
-    Legs: 0,
-    Shoulders: 0,
-    Back: 0,
-    Biceps: 0,
-    Triceps: 0,
-    Booty: 0,
-    Abs: 0,
-    Cardio: 0,
-  };
+// export const PieCountProvider = ({ children }) => {
 
-  const [newPieCount, setNewPieCount] = useState(initialPieCount);
+//   // const initialPieCount = {
+//   //   Chest: 0,
+//   //   Legs: 0,
+//   //   Shoulders: 0,
+//   //   Back: 0,
+//   //   Biceps: 0,
+//   //   Triceps: 0,
+//   //   Booty: 0,
+//   //   Abs: 0,
+//   //   Cardio: 0,
+//   // };
+
+//   const [newPieCount, setNewPieCount] = useState({
+//     Chest: 0,
+//     Legs: 0,
+//     Shoulders: 0,
+//     Back: 0,
+//     Biceps: 0,
+//     Triceps: 0,
+//     Booty: 0,
+//     Abs: 0,
+//     Cardio: 0,
+//   });
   
-  const [workoutAddedTrigger, setWorkoutAddedTrigger] = useState(false); // Neuer Trigger
+  
+//   // const [workoutAddedTrigger, setWorkoutAddedTrigger] = useState(false); // Neuer Trigger
 
-  function triggerSocketChart() {
-    socket.emit("updatePieSocket", newPieCount);
-  }
+//   // function triggerSocketChart() {
+//   //   socket.emit("updatePieSocket", newPieCount);
+//   // }
 
-  function notifyWorkoutAdded() {
-    setWorkoutAddedTrigger((prev) => !prev); // Zustand umschalten
-  }
+//   // function notifyWorkoutAdded() {
+//   //   setWorkoutAddedTrigger((prev) => !prev); // Zustand umschalten
+//   // }
 
-  // Durch die verwendung von socket.io wird die änderung
-  // zwischen server und Clientside in echtzeit Synchronisiert
-  // Entlasung des NW da nicht permanente Anfragen an den server gesendet werden
-  useEffect(() => {
-    // Verbindungsnachricht empfangen
-    socket.on("connect", () => {
-      console.log("Mit dem Server verbunden:", socket.id);
-    });
+//   // // Durch die verwendung von socket.io wird die änderung
+//   // // zwischen server und Clientside in echtzeit Synchronisiert
+//   // // Entlasung des NW da nicht permanente Anfragen an den server gesendet werden
+//   // useEffect(() => {
+//   //   // Verbindungsnachricht empfangen
+//   //   socket.on("connect", () => {
+//   //     console.log("Mit dem Server verbunden:", socket.id);
+//   //   });
 
-    socket.on("updatOkWithSocket", (updatedPieCount) => {
-      setNewPieCount(updatedPieCount);
-    });
+//   //   socket.on("updatOkWithSocket", (updatedPieCount) => {
+//   //     setNewPieCount(updatedPieCount);
+//   //   });
 
-    // Verbindung schließen
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+//   //   // Verbindung schließen
+//   //   return () => {
+//   //     socket.disconnect();
+//   //   };
+//   // }, []);
 
-  return (
-    <PieCountContext.Provider value={{workoutAddedTrigger, triggerSocketChart, notifyWorkoutAdded , newPieCount, setNewPieCount }}>
-      {children}
-    </PieCountContext.Provider>
-  );
-};
+//   return (
+//     <PieCountContext.Provider value={{ newPieCount, setNewPieCount }}>
+//       {children}
+//     </PieCountContext.Provider>
+//   );
+// };
 
 export const BarChartContext = createContext();
 

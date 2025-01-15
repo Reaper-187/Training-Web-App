@@ -12,9 +12,9 @@ const APP_URL = import.meta.env.VITE_API_URL
 
 
 export const BarChart = () => {
-  
-  const { dailyCalories, setDailyCalories } = useContext( BarChartContext );  
-  
+
+  const { dailyCalories, setDailyCalories } = useContext(BarChartContext);
+
   const [formattedData, setFormattedData] = useState({
     Sun: 0,
     Mon: 0,
@@ -26,7 +26,7 @@ export const BarChart = () => {
   });
 
   const [apiDataLoaded, setApiDataLoaded] = useState(false);
-  
+
   useEffect(() => {
     const getCaloiresData = async () => {
       try {
@@ -41,33 +41,33 @@ export const BarChart = () => {
         console.error("GET-Calories-Data not found", err);
       }
     };
-  
+
     getCaloiresData();
   }, []);
-  
+
   // rendert Calorienverbrauch für jeweiligen Wochentag in der Barchart
   useEffect(() => {
-    console.log('Triggered because dailyCalories changed');
+
     const entries = Object.entries(dailyCalories); // Wandelt Objekt in Array um
-  
+
     setFormattedData((prevData) => {
       const updatedData = { ...prevData };
-      
+
       entries.forEach(([day, calories]) => {
         updatedData[day] = calories; // Direktes Mapping von Tag zu Kalorien
       });
-  
-      console.log('Updated formattedData:', updatedData); // Debugging
+
+
       return updatedData;
     });
   }, [dailyCalories]);
-  
-  
 
-  
+
+
+
   // BarchartReset
   const isNewWeek = new Date().getDay()
-  
+
   const [hasBarchartReset, setHasBarchartReset] = useState(() => {
     //muss in Localstorage gespeichert werden weil => wenn Seite neu geladen wird, wird der State Auto. resetet
     const storedValue = localStorage.getItem("hasBarchartReset");
@@ -99,34 +99,30 @@ export const BarChart = () => {
   }, [isNewWeek]);
 
 
-  console.log('Formatted data sent to BarChart:', formattedData);
+
 
   const data = {
-    
-  // labels: ['0',   '1',   '2',   '3',   '4',   '5',   '6'],
+
+    // labels: ['0',   '1',   '2',   '3',   '4',   '5',   '6'],
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
       {
-      label: 'Burned Calories',
-      data: [
-        formattedData.Sun, 
-        formattedData.Mon, 
-        formattedData.Tue, 
-        formattedData.Wed, 
-        formattedData.Thu, 
-        formattedData.Fri, 
-        formattedData.Sat
-      ],      
-      backgroundColor: 'lightblue',
-      borderColor: 'black',
-      borderWidth: 1,
-    }
-  ]
-};  
-
-useEffect(() => {
-  console.log('Data passed to BarChart:', data);
-}, [data]);
+        label: 'Burned Calories',
+        data: [
+          formattedData.Sun,
+          formattedData.Mon,
+          formattedData.Tue,
+          formattedData.Wed,
+          formattedData.Thu,
+          formattedData.Fri,
+          formattedData.Sat
+        ],
+        backgroundColor: 'lightblue',
+        borderColor: 'black',
+        borderWidth: 1,
+      }
+    ]
+  };
 
   const options = {
     responsive: true,
@@ -140,14 +136,14 @@ useEffect(() => {
       },
     },
   };
-  
+
 
   return (
     <div>
       <Bar
-      className='chart bar-chart'
-      data = {data}
-      options={options}
+        className='chart bar-chart'
+        data={data}
+        options={options}
       />
     </div>
   )

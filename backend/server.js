@@ -38,8 +38,6 @@ app.use(
   })
 );
 
-
-
 app.use(express.urlencoded({ extended: true }));
 
 initializePassport(
@@ -59,19 +57,17 @@ const io = new Server(httpServer, {
   }
 });
 
+// io.on('connection', (socket) => {
+//   console.log('Ein Client ist verbunden:', socket.id);
+//   socket.on("updatePieSocket", updatedPieCount => {    
+//     io.emit("updatOkWithSocket", updatedPieCount)
 
+//   })
 
-io.on('connection', (socket) => {
-  console.log('Ein Client ist verbunden:', socket.id);
-  socket.on("updatePieSocket", updatedPieCount => {    
-    io.emit("updatOkWithSocket", updatedPieCount)
-
-  })
-
-  socket.on('disconnect', () => {
-    console.log('Ein Client hat die Verbindung getrennt:', socket.id);
-  });
-});
+//   socket.on('disconnect', () => {
+//     console.log('Ein Client hat die Verbindung getrennt:', socket.id);
+//   });
+// });
 
 
 
@@ -89,14 +85,10 @@ connectDB();
 
 app.use(express.json());
 
-
 // Proxy-Route für die Nutritionix-API
 // Damit ungehe ich die Cors-Origin NW Rechtlinie
 app.post('/api/calories', async (req, res) => {
-
   const API_CALORIES_KEY = process.env.VITE_API_KEY
-  console.log(API_CALORIES_KEY)
-
   const API_CALORIES_ID = process.env.VITE_APP_ID
   try {
     const response = await axios.post(
