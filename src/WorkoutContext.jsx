@@ -14,12 +14,20 @@ export const WorkoutProvider = ({ children }) => {
 
 
   const addWorkout = (workout) => {
+    console.log("Workout wird hinzugefügt:", workout);
     axios.post(APP_URL, workout)
-    .then(() => {
-      setSelectWorkouts(prevWorkouts => [...prevWorkouts, workout])
+      .then(() => {
+        console.log("Workout erfolgreich gespeichert.");
+        setSelectWorkouts((prevWorkouts) => {
+          console.log("Aktuelle Workouts vor Update:", prevWorkouts);
+          return [...prevWorkouts, workout];
+        });
       })
-    .catch((err)=>{console.error('Daten können nicht in der DB gespeichert werden',err)})    
+      .catch((err) => {
+        console.error("Fehler beim Hinzufügen des Workouts:", err);
+      });
   };
+  
 
   return (
     <WorkoutContext.Provider value={{ selectWorkouts, setSelectWorkouts, addWorkout}}>

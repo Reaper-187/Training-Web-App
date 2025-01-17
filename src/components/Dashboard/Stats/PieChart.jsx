@@ -14,6 +14,7 @@ const APP_URL = import.meta.env.VITE_API_URL
 export const PieChart = () => {
   
   const { selectWorkouts } = useContext(WorkoutContext);
+  
   const currentDate = new Date().toISOString().slice(0, 10);
   
   const [newPieCount, setNewPieCount] = useState({
@@ -33,41 +34,21 @@ export const PieChart = () => {
     const getDataForPieChart = async () => {
       try {
           const response = await axios.get(APP_URL);
-    
-          console.log('Alle Workouts aus der API:', response.data);
-    
           const workoutsForCurrentDay = response.data.filter(
             (filteredPieData) => filteredPieData.date.slice(0, 10) === currentDate
           );
-    
-          console.log('Gefilterte Workouts für heute:', workoutsForCurrentDay);
-    
-          const updatedPieCount = { ...newPieCount };
-          workoutsForCurrentDay.forEach((findTypeOfTrain) => {
-            console.log('Workout-Typ:', findTypeOfTrain.name);
-    
+          const updatedPieCount = workoutsForCurrentDay.reduce((acc, findTypeOfTrain) => {
             const key = findTypeOfTrain.name || "Cardio";
-            updatedPieCount[key] += 1;
-    
-            console.log('Zwischenstand von updatedPieCount:', updatedPieCount);
-          });
-    
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+          }, {});
           setNewPieCount(updatedPieCount);
         } catch (err) {
           console.error("Fehler beim Abrufen der Pie-Chart-Daten:", err);
         }
       };
-    
       getDataForPieChart();
-    }, [selectWorkouts]); // Abhängig von `selectWorkouts`
-    
-
-
-  useEffect(() => {
-    console.log('Neuer Pie-Count:', newPieCount);
-  }, [newPieCount]);
-  
-  
+    }, [selectWorkouts]); // Abhängig von `selectWorkouts`    
 
   const data = {
     labels: ['Chest', 'Legs', 'Shoulders', 'Back', 'Biceps', 'Triceps', 'Booty', 'Abs', 'Cardio'],
@@ -84,16 +65,15 @@ export const PieChart = () => {
           newPieCount.Abs,
           newPieCount.Cardio,
           ],
-        backgroundColor: ['aqua', 'green', 'orange', 'yellow', 'blue', 'lightgreen', 'purple', 'red', 'pink'],
-      },
-    ],
-  };
-
+          
+          backgroundColor: ['aqua', 'green', 'orange', 'yellow', 'blue', 'lightgreen', 'purple', 'red', 'pink'],
+        },
+      ],
+    };
 
   const options = {};
   return (
     <div>
-      {/* <button onClick={clearPieCountFromLocalStorage()}>Storage leeren</button> */}
       <Pie className='chart pie-chart' key={JSON.stringify(data)} data={data} options={options}/>
     </div>
   );

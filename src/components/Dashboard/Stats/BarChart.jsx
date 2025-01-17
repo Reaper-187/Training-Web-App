@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { BarChartContext } from '../../../WorkoutContext';
+import { BarChartContext, CaloriesContext } from '../../../WorkoutContext';
 import axios from 'axios'
 
 
@@ -14,6 +14,7 @@ const APP_URL = import.meta.env.VITE_API_URL
 export const BarChart = () => {
 
   const { dailyCalories, setDailyCalories } = useContext(BarChartContext);
+  
 
   const [formattedData, setFormattedData] = useState({
     Sun: 0,
@@ -31,11 +32,12 @@ export const BarChart = () => {
     const getCaloiresData = async () => {
       try {
         const response = await axios.get(APP_URL);
-        const caloriesForCurrentDay = response.data.map((dayToName) => ({
-          ...dayToName,
-          date: new Date(dayToName.date).toLocaleString("en-US", { weekday: "short" }),
-        }));
-        setDailyCalories(caloriesForCurrentDay);
+        const barChartData = response.data.reduce((acc, curr) => {
+          const day = new Date(curr.date).toLocaleString("en-US", { weekday: "short" });
+          acc[day] = (acc[day] || 0) + curr.calories;
+          return acc;
+        }, {});
+        setDailyCalories(barChartData);
         setApiDataLoaded(true);
       } catch (err) {
         console.error("GET-Calories-Data not found", err);

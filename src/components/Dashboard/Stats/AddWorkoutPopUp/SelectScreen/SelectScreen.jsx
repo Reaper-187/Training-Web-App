@@ -251,7 +251,7 @@ export const SelectScreen = () => {
       <h2>Add Workout</h2>
       <div>
         <h4>What did you do</h4>
-        <select onChange={(e) => handleTypeChange(e.target.value)} value={typeOfTraining}>
+        <select onChange={(e) => handleTypeChange(e.target.value)} value={typeOfTraining || ""}>
           <option value="">-</option>
           <option value="Cardio">Cardio</option>
           <option value="Krafttraining">Krafttraining</option>
