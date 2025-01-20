@@ -36,40 +36,62 @@ export const WorkoutProvider = ({ children }) => {
   );
 };
 
+const API_CALORIES_BURNED = import.meta.env.VITE_API_CALORIES_BURNED
 
 export const CaloriesContext  = createContext()
 
 export const CaloriesProvider = ({ children }) => {
-  const [calories, setCalories] = useState(() =>{
-    const savedCalories = localStorage.getItem('calories');
-    try {
-      return savedCalories ? JSON.parse(savedCalories) : 0;
-    } catch (error) {
-      console.error('Error parsing calories from localStorage', error);
-      return 0;
-    }
-  });  
+  const [calories, setCalories] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem('calories', JSON.stringify(calories))
-  },[calories]);
+      const fetchCalories = async () => {
+          try {
+              const response = await axios.get(API_CALORIES_BURNED);
+              setCalories(response.data.calories);
+          } catch (error) {
+              console.error('Error fetching calories:', error);
+          } finally {
+              setIsLoading(false);
+          }
+      };
+      fetchCalories();
+  }, []);
 
-
-  const [lastAddedCalories, setLastAddedCalories] = useState(0)
+  const syncCaloriesWithBackend = async (newCalories) => {
+      try {
+          await axios.post(API_CALORIES_BURNED, { calories: newCalories });
+          console.log('Calories updated');
+      } catch (error) {
+          setError('Failed to sync calories');
+          console.error(error);
+      }
+  };
 
   const increaseCalories = (newCalories) => {
-    setCalories((prevCalories) => prevCalories + newCalories);
-    setLastAddedCalories(newCalories)
+      setCalories((prev) => {
+          const updatedCalories = prev + newCalories;
+          syncCaloriesWithBackend(updatedCalories);
+          return updatedCalories;
+      });
   };
 
   const decreaseCalories = (lastAddedCalories) => {
-    setCalories((prevTotal) => prevTotal - lastAddedCalories)
-  }
+      setCalories((prev) => {
+          const updatedCalories = prev - lastAddedCalories;
+          syncCaloriesWithBackend(updatedCalories);
+          return updatedCalories;
+      });
+  };
 
-  return(
-    <CaloriesContext.Provider value={{calories, increaseCalories, decreaseCalories, lastAddedCalories }}>
-      {children}
-    </CaloriesContext.Provider>
+  if (isLoading) return <div>Loading...</div>;
+
+  return (
+      <CaloriesContext.Provider value={{ calories, increaseCalories, decreaseCalories }}>
+          {error && <p>{error}</p>}
+          {children}
+      </CaloriesContext.Provider>
   );
 };
 

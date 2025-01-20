@@ -82,20 +82,25 @@ export const Workout = () => {
 
     return (
       <>
-        <div className='workoutContainer'>
-          <div className='calenderContainer'>
+        <div className='workouts-container'>
+          <div className='calender-container'>
             <Calender handleDateChange={handleDateChange} selectedDate={selectedDate} />
           </div>
 
           <div>
             <h2>Todays Workouts</h2>
             <div className="workoutView">
-              <div className='workoutCardContainer'>
+              <div className='workout-card-container cards'>
                 {filteredWorkouts.length === 0 ? (
-                  <p>Keine Workouts für dieses Datum gefunden</p>
+                  <p className='not-add'>No Workouts for this Day</p>
                 ) : (
                   filteredWorkouts.map((workout, index) => (
-                    <div className='workoutCard' key={index} _id={workout._id} date={workout.date}>
+                    <div className='workout-card' 
+                      key={index} 
+                      _id={workout._id} 
+                      date={workout.date} 
+                      style={{ '--delay': `${index * 0.2}s` }}>
+                        
                       <div className='topElements'>
                         <span>{workout.type}</span>
                         <svg onClick={() => { deleteWorkoutCard(workout._id);; }} className='removeCardBtn' xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>

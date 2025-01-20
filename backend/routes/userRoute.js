@@ -8,6 +8,7 @@ const passport = require('passport');
 
 // methode Override überschreibt die Funktion dann kommt action"/logut?_method=DELETE"
   router.get('/logout', (req, res) => {
+    // Damit werden alle Daten die in der Sitzung gespeichert sind gelöscht
     req.session.destroy((err) => {
       if (err) {
         return res.status(500).json({ success: false, message: 'Error with logout' });
@@ -20,15 +21,12 @@ const passport = require('passport');
   
   // Prüft ob User eingeloggt ist   
   router.post('/auth/check', (req, res) => {
-    // console.log('Session-Daten in /auth/check:', req.session);
     if (req.session.passport && req.session.passport.user) {
-      // console.log('Session-Daten in /auth/check:', req.session);
       res.status(200).json({ loggedIn: true });
-      console.log('lggedIn ist True', ({loggedIn: true}));
-      
+      // console.log('lggedIn ist True', ({loggedIn: true}));
     } else {
       res.status(200).json({ loggedIn: false });
-      console.log('loggedIn bleibt Fasle',({loggedIn: false}));
+      // console.log('loggedIn bleibt Fasle',({loggedIn: false}));
     }
   });
 

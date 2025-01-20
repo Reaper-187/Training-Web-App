@@ -6,24 +6,18 @@ import { WorkoutProvider, CaloriesProvider, BarChartProvider } from './WorkoutCo
 
 import { Outlet } from 'react-router-dom';
 
-function App() {
+export const App = () => {
   
   return (
   <>
-    <CaloriesProvider>   {/* Hier beide Provider nebeneinander */}
+    <CaloriesProvider>
       <BarChartProvider>
-        {/* <PieCountProvider> */}
-            <WorkoutProvider>
-              <Header />
-                <main>
-                  <Outlet />
-                </main>
-            </WorkoutProvider>
-        {/* </PieCountProvider> */}
+        <WorkoutProvider>
+          <Header />
+            <Outlet />
+        </WorkoutProvider>
       </BarChartProvider>
     </CaloriesProvider>
   </>
   )
 }
-
-export default App;

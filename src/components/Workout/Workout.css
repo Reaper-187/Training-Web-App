@@ -1,4 +1,4 @@
-.workoutContainer{
+.workouts-container{
   display: flex;
   justify-content: space-evenly;
   padding: 2rem 0;
@@ -15,12 +15,21 @@ h2{
   gap: 1rem;
 }
 
-.workoutCardContainer{
+.workout-card-container{
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
 }
-.workoutCard{
+
+
+.not-add{
+  padding: 2rem;
+  border: solid 2px white;
+  border-radius: 10px;
+  background-color: lightblue;
+}
+
+.workout-card{
   border: solid 1px black;
   padding: 1rem;
   width: 15vw;
@@ -28,16 +37,21 @@ h2{
   transition: ease-in .1s;
   background-color: #22272B;
   animation: workoutCard .7s ease forwards;
+  opacity: 0;
+  animation-delay: var(--delay, 0s); /* Verzögerung */
+
 }
 
-.workoutCard:hover{
-  border: none;
-  transform: translateY(-10px);
-  
-  background-color: #1E1E1E;
-  /* box-shadow: 10px -10px rgba(0, 255, 255, 0.219); */
-  box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
+.cards .workout-card:hover{
+  transform: scale(1.02, 1.02);
 }
+
+.cards:hover > .workout-card:not(:hover){
+  filter: blur(7px);
+  transform: scale(.95, .95);
+}
+
+
 
 .topElements{
   display: flex;
@@ -84,7 +98,7 @@ h2{
   flex-wrap: wrap;
   gap: .5rem;
 }
-.workoutCard p{
+.workout-card p{
   font-size: medium;
   border-bottom: solid 1px turquoise;
   color: #DCDFE4;
@@ -94,7 +108,7 @@ h2{
 }
 
 
-.calenderContainer{
+.calender-container{
   margin: 5rem 0;
 }
 

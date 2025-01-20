@@ -1,34 +1,8 @@
-/* form{
-  position: absolute;
-  inset: 0;
-  margin: auto 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: solid red 2px;
-  height: 50vh;
-  color: white;
-}
-.container{
-  display: flex;
-  border: solid blue 2px;
-  flex-direction: column;
-  
-} */
-
 :root {
   --button-padding: 1em;
   --space-for-arrow: 2em;
   --dark-mode: #121212;
   --light-mode: #F1F2F4;
-}
-
-body{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
-  background-color: var(--dark-mode);
 }
 
 h1{

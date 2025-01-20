@@ -105,8 +105,8 @@ export const BarChart = () => {
 
   const data = {
 
-    // labels: ['0',   '1',   '2',   '3',   '4',   '5',   '6'],
-    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  // labels: ['0',   '1',   '2',   '3',   '4',   '5',   '6'],
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',],
     datasets: [
       {
         label: 'Burned Calories',
@@ -117,7 +117,7 @@ export const BarChart = () => {
           formattedData.Wed,
           formattedData.Thu,
           formattedData.Fri,
-          formattedData.Sat
+          formattedData.Sat,
         ],
         backgroundColor: 'lightblue',
         borderColor: 'black',

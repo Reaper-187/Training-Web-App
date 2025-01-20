@@ -7,6 +7,7 @@ const app = express();
 const connectDB = require('./db');
 const workoutRoutes = require('./routes/workoutRoutes');
 const userRoute = require('./routes/userRoute');
+const caloriesRoute = require('./routes/caloriesRoute');
 const cors = require('cors');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
@@ -18,7 +19,6 @@ const User = require('./models/LoginAndValidation/UserLoginSchema');
 const flash = require('express-flash');
 const MongoStore = require('connect-mongo');
 const crypto = require('crypto');
-const axios = require('axios')
 
 const SECRET_KEY = crypto.randomBytes(32).toString('hex');
 
@@ -85,33 +85,10 @@ connectDB();
 
 app.use(express.json());
 
-// Proxy-Route für die Nutritionix-API
-// Damit ungehe ich die Cors-Origin NW Rechtlinie
-app.post('/api/calories', async (req, res) => {
-  const API_CALORIES_KEY = process.env.VITE_API_KEY
-  const API_CALORIES_ID = process.env.VITE_APP_ID
-  try {
-    const response = await axios.post(
-      'https://trackapi.nutritionix.com/v2/natural/exercise',
-      req.body,
-      {
-        headers: {
-          'x-app-key': API_CALORIES_KEY,
-          'x-app-id': API_CALORIES_ID,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    res.json(response.data);
-  } catch (error) {
-    console.error('Fehler bei der API-Anfrage:', error.response?.data || error.message);
-    res.status(500).json({ message: 'Interner Serverfehler', error: error.response?.data });
-  }
-});
-
 // Routen
 app.use('/api', workoutRoutes); // Route für Workouts
 app.use('/api', userRoute); // Route für User
+app.use('/api', caloriesRoute); // Route für Calories
 
 app.get('/', (req, res) => {
   res.send('API läuft');

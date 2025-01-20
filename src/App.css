@@ -7,8 +7,8 @@
 
 
 body{
-  /* background-color: var(--dark-mode);
-  background-color: var(--light-mode); */
+  background-color: var(--dark-mode);
+  /* background-color: var(--light-mode); */
   margin: 0;
   padding: 0;
   box-sizing: border-box;

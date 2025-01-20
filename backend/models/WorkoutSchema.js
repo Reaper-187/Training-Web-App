@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 
 const workoutSchema = new mongoose.Schema({
-
+  userId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true 
+  }, // Verknüpfung mit dem User wenn Workout erstellt wird
   type:{
     type: String,
     required: true,
@@ -15,15 +19,15 @@ const workoutSchema = new mongoose.Schema({
   },
   sets: {
     type: Number,
-    minSets: 1,
+    min: 1,
   },
   reps: {
     type: Number,
-    minReps: 1
+    min: 1
   },
   weight: {
     type: String,
-    minWeight: 1
+    min: 1
   },
   time: {
     type: String,

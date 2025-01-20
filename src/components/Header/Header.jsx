@@ -1,38 +1,14 @@
-import React, { useContext, useState}  from 'react'
+import React, { useState }  from 'react'
 import './Header.css'
-import { Link, useNavigate } from 'react-router-dom'
-import { CheckAuthContext } from "../../CheckAuthContext";
-import axios from 'axios'
-
-
-axios.defaults.withCredentials = true
-const logOut = import.meta.env.VITE_API_LOGOUT
+import { Link } from 'react-router-dom'
+import { Logout } from '../Logout/Logout';
 
 export const Header = () => {
-  const { toggleAuthentication } = useContext(CheckAuthContext);
-
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  
-  const navigate = useNavigate()
-  
-  const handleLogout = async () => {
-    try {
-      const response = await axios.get(logOut)
-      console.log('Das ist der ganze response',response);
-      
-      if (response.data.success) {
-        console.log('You successfully logged out');
-        toggleAuthentication(false)
-        navigate('/login')
-      }
-    }catch (error) {
-      console.error('Error on request for logout:', error);
-    }
-  } 
 
   return(
     <nav>
@@ -49,45 +25,39 @@ export const Header = () => {
         <div className='navRout'>
 
           <Link to="/dashboard">
-            <div className="box-3">
+            
               <div className="btn nav-btn">
-                Dashboard
+                <span className='word' data-text="Dashboard">Dashboard</span>
               </div>
-            </div>
+            
           </Link>
 
           <Link to="/workout">
-            <div className="box-3">
+            
               <div className="btn nav-btn">
-                Workout
+              <span className='word'data-text="Workout">Workout</span>
               </div>
-            </div>
+            
           </Link>
 
           <Link to="/blog">
-            <div className="box-3">
+            
               <div className="btn nav-btn">
-                Blog
+              <span className='word'data-text="Blog">Blog</span>
               </div>
-            </div>
+            
           </Link>
 
           <Link to="/contact">
-            <div className="box-3">
+            
               <div className="btn nav-btn">
-                Contact
+                <span className='word'data-text="Contact">Contact</span>
               </div>
-            </div>
+            
           </Link>
 
         </div>
-        <button className='logout-btn' method='GET' action="/logout" onClick={handleLogout}>
-          <div className="box-3">
-            <div className="btn nav-btn">
-              <span>Log-out</span>
-            </div>
-          </div>
-        </button>
+        <Logout/>
       </ul>
     </nav>
   )

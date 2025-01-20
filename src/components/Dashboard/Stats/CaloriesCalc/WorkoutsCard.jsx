@@ -3,20 +3,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { CaloriesContext } from '../../../../WorkoutContext'
 
 export const WorkoutsCard = () => {
-  const { calories } = useContext(CaloriesContext);
-
-  
-
-  // const continueTrain = null
-
-  // useEffect(() => {
-  //   if (addTrainForToday) {
-  //     continueTrain  += 1
-  //   } else {
-  //     continueTrain == 0
-  //   }
-  // }, [addTrainForToday])
-  
+  const { calories } = useContext(CaloriesContext);  
 
   return (
     <>
