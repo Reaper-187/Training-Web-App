@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './Workout.css'
 import { Calender } from './Calender'
-import { WorkoutContext, CaloriesContext, BarChartContext } from '../../WorkoutContext'
+import { WorkoutContext, BarChartContext } from '../../WorkoutContext'
 import axios from 'axios'
 
 
@@ -11,8 +11,6 @@ export const Workout = () => {
 
   const WorkoutList = () => {
 
-    // const { decreasePieCount } = useContext(PieCountContext)
-    const { decreaseCalories } = useContext(CaloriesContext)
     const { decreaseBarCaloriesForDay } = useContext(BarChartContext)
     const { selectWorkouts, setSelectWorkouts } = useContext(WorkoutContext);
 
@@ -24,7 +22,6 @@ export const Workout = () => {
           .then(() => {
             const newList = selectWorkouts.filter((workout) => workout._id !== _id);
             setSelectWorkouts(newList);
-            decreaseCalories(caloriesToSubtract);
             decreaseBarCaloriesForDay(caloriesToSubtract)
           })
           .catch((err) => {
@@ -38,7 +35,6 @@ export const Workout = () => {
         try {
           const response = await axios.get(APP_URL)
           setSelectWorkouts(response.data)
-          // console.log(response.data);        
         } catch (err) {
           console.error('GET-Data not found', err);
         }
@@ -95,12 +91,12 @@ export const Workout = () => {
                   <p className='not-add'>No Workouts for this Day</p>
                 ) : (
                   filteredWorkouts.map((workout, index) => (
-                    <div className='workout-card' 
-                      key={index} 
-                      _id={workout._id} 
-                      date={workout.date} 
+                    <div className='workout-card'
+                      key={index}
+                      _id={workout._id}
+                      date={workout.date}
                       style={{ '--delay': `${index * 0.2}s` }}>
-                        
+
                       <div className='topElements'>
                         <span>{workout.type}</span>
                         <svg onClick={() => { deleteWorkoutCard(workout._id);; }} className='removeCardBtn' xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>

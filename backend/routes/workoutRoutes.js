@@ -1,5 +1,5 @@
 const express = require('express');
-const Workout = require('../models/WorkoutSchema'); 
+const Workout = require('../models/WorkoutSchema');
 
 const router = express.Router();
 
@@ -14,11 +14,14 @@ router.post('/workouts', async (req, res) => {
     const workout = new Workout({
       ...req.body,
       userId: req.session.passport.user,
-    }); // Workout wird mir userID gesendet
-    // console.log('DAS IST DAS wORKOUT',workout)
+    }); // Workout wird mit userID gesendet
+
+    console.log('DAS IST DAS wORKOUT',workout)
+
     const savedWorkout = await workout.save(); // Speichern in der DB
 
     res.status(201).json(savedWorkout);
+    
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -41,8 +44,15 @@ router.get('/workouts', async (req, res) => {
   try {
     const userId = req.session.passport.user;
     // console.log('Das ist die UserID aus der GET',userId)
-    const workouts = await Workout.find({userId}); // Alle Workouts abrufen    
-    res.json(workouts);
+    const workouts = await Workout.find({ userId }); // Alle Workouts abrufen   
+
+    // Extrahiere Kalorien und füge sie hinzu
+    const workoutData = workouts.map(workout => ({
+      ...workout.toObject(),
+      caloriesBurned: workout.calories, // Kalorien extrahieren und hinzuzufügen
+    }));
+
+    res.json(workoutData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -63,7 +73,7 @@ router.get('/workouts', async (req, res) => {
 router.delete('/workouts/:id', getWorkouts, async (req, res) => {
   try {
     await Workout.findByIdAndDelete(req.params.id);
-    res.status(204).send(); 
+    res.status(204).send();
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

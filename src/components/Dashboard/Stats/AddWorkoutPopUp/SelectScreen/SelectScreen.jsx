@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
-import { WorkoutContext, CaloriesContext, BarChartContext } from '../../../../../WorkoutContext';
+import { WorkoutContext, BarChartContext } from '../../../../../WorkoutContext';
 import { fetchCalories } from '../../../../../apiService';
 import { calculateStrengthCalories } from '../../../../../strengthService';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,15 +8,19 @@ import './SelectScreen.css'
 
 export const SelectScreen = () => {
 
+  const notify = (isValid) => {
+    if (isValid) {
+      toast("💪Your Workout has been added💪", { type: "success" });
+
+    } else {
+      toast("pleas fill up all fields", { type: 'error' });
+
+    }
+  }
+
   const [typeOfTraining, setTypeOfTraining] = useState(null);
   const [selectedMuscleValue, setSelectedMuscleValue] = useState("");
-
   const { addWorkout } = useContext(WorkoutContext);
-
-  // const { notifyWorkoutAdded } = useContext(PieCountContext);
-
-  const { increaseCalories } = useContext(CaloriesContext);
-
   const { increaseBarCaloriesForDay } = useContext(BarChartContext);
 
 
@@ -39,15 +43,6 @@ export const SelectScreen = () => {
   const [timeValue, setTimeValue] = useState("")
 
 
-  const notify = (isValid) => {
-    if (isValid) {
-      toast("💪Your Workout has been added💪", { type: "success" });
-
-    } else {
-      toast("pleas fill up all fields", { type: 'error' });
-
-    }
-  }
 
 
   const handleMuscleChange = (e) => {
@@ -76,7 +71,6 @@ export const SelectScreen = () => {
       cardioCaloriesData = await fetchCalories(`${selectedWorkoutValue} for ${timeValue} minutes.`);
       const cardioApiCalBurned = cardioCaloriesData.exercises[0].nf_calories;
       workoutData.calories = cardioApiCalBurned;
-      increaseCalories(cardioApiCalBurned);
       increaseBarCaloriesForDay(cardioApiCalBurned)
     } else {
       strengthCaloriesData = calculateStrengthCalories(
@@ -87,7 +81,6 @@ export const SelectScreen = () => {
       );
       const strengthCaloBurned = strengthCaloriesData.burnedCalories;
       workoutData.calories = strengthCaloBurned
-      increaseCalories(strengthCaloBurned);
       increaseBarCaloriesForDay(strengthCaloBurned);
     }
 
