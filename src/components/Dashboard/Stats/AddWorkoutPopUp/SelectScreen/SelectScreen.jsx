@@ -159,7 +159,7 @@ export const SelectScreen = () => {
         <div className='displayOptions'>
           <div>
             <h4>Type of Muscle</h4>
-            <select className="cardioTrainings" onChange={handleMuscleChange} value={selectedMuscleValue}>
+            <select className="input-field" onChange={handleMuscleChange} value={selectedMuscleValue}>
               <option value=""></option>
               {Object.keys(muscleGroupOptions).map((muscle) => (
                 <option key={muscle} value={muscle}>
@@ -170,7 +170,7 @@ export const SelectScreen = () => {
           </div>
           <div>
             <h4>Type of Training</h4>
-            <select className="cardioTrainings" onChange={(e) => setSelectedWorkoutValue(e.target.value)} value={selectedWorkoutValue} disabled={!selectedMuscleValue}>
+            <select className="input-field" onChange={(e) => setSelectedWorkoutValue(e.target.value)} value={selectedWorkoutValue} disabled={!selectedMuscleValue}>
               <option value=""></option>
               {availableWorkouts.map((workout) => (
                 <option key={workout} value={workout}>
@@ -180,31 +180,22 @@ export const SelectScreen = () => {
             </select>
           </div>
           <div>
-            <h4>Gewicht</h4>
-            <div className="cardioTrainings">
+            <h4>Gewicht in kg</h4>
+            <div className="input-field">
               <input type="number" value={weightValue} onChange={(e) => setWeightValue(e.target.value)} />
             </div>
           </div>
           <div>
             <h4>Reps</h4>
-            <select
-              className="cardioTrainings" onChange={(e) => setRepsValue(e.target.value)} value={repsValue}>
-              <option value=""></option>
-              {[5, 10, 15, 20].map((rep) => (
-                <option key={rep} value={rep}>{rep}</option>
-              ))}
-            </select>
+            <div className="input-field">
+              <input type="number" value={repsValue} onChange={(e) => setRepsValue(e.target.value)} />
+            </div>
           </div>
           <div>
             <h4>Sets</h4>
-            <select className="cardioTrainings" onChange={(e) => setSetsValue(e.target.value)} value={setsValue}>
-              <option value=""></option>
-              {[1, 2, 3, 4, 5, 6, 7].map((set) => (
-                <option key={set} value={set}>
-                  {set}
-                </option>
-              ))}
-            </select>
+            <div className="input-field">
+              <input type="number" value={setsValue} onChange={(e) => setSetsValue(e.target.value)}/>
+            </div>
           </div>
 
           <a className='addWorkoutBtn'

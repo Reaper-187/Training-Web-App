@@ -20,7 +20,10 @@
   margin: 5rem 0;
   opacity: 0;
   animation: displayOptions .7s ease-in-out .7s forwards;
+}
 
+.input-field input{
+  width: 2vw;
 }
 
 select{

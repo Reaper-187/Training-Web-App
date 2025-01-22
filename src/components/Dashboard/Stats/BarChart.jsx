@@ -1,20 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { BarChartContext } from '../../../WorkoutContext';
-import axios from 'axios'
+import { CaloriesContext } from '../../../WorkoutContext';
+
 
 
 // Registrierung der Chart-Komponenten
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const APP_URL = import.meta.env.VITE_API_URL
+// const APP_URL = import.meta.env.VITE_API_URL
 
 
 export const BarChart = () => {
 
-  const { dailyCalories, setDailyCalories } = useContext(BarChartContext);
+  const [apiDataLoaded, setApiDataLoaded] = useState(false);
   
+  const { workouts } = useContext(CaloriesContext);
 
   const [formattedData, setFormattedData] = useState({
     Sun: 0,
@@ -25,46 +26,21 @@ export const BarChart = () => {
     Fri: 0,
     Sat: 0,
   });
-
-  const [apiDataLoaded, setApiDataLoaded] = useState(false);
-
+  
+  // Workouts zu Kalorien-Daten aggregieren
   useEffect(() => {
-    const getCaloiresData = async () => {
-      try {
-        const response = await axios.get(APP_URL);
-        const barChartData = response.data.reduce((acc, curr) => {
-          const day = new Date(curr.date).toLocaleString("en-US", { weekday: "short" });
-          acc[day] = (acc[day] || 0) + curr.calories;
-          return acc;
-        }, {});
-        setDailyCalories(barChartData);
-        setApiDataLoaded(true);
-      } catch (err) {
-        console.error("GET-Calories-Data not found", err);
-      }
-    };
+    const caloriesByDay = workouts.reduce((acc, workout) => {
+      const day = new Date(workout.date).toLocaleString("en-US", { weekday: "short" });
+      acc[day] = (acc[day] || 0) + workout.calories;
+      setApiDataLoaded(true);
+      return acc;
+    }, {});
 
-    getCaloiresData();
-  }, []);
-
-  // rendert Calorienverbrauch für jeweiligen Wochentag in der Barchart
-  useEffect(() => {
-
-    const entries = Object.entries(dailyCalories); // Wandelt Objekt in Array um
-
-    setFormattedData((prevData) => {
-      const updatedData = { ...prevData };
-
-      entries.forEach(([day, calories]) => {
-        updatedData[day] = calories; // Direktes Mapping von Tag zu Kalorien
-      });
-
-
-      return updatedData;
-    });
-  }, [dailyCalories]);
-
-
+    setFormattedData((prevData) => ({
+      ...prevData,
+      ...caloriesByDay,
+    }));
+  }, [workouts]);
 
 
   // BarchartReset
@@ -78,8 +54,6 @@ export const BarChart = () => {
 
   useEffect(() => {
     if (apiDataLoaded && !hasBarchartReset && isNewWeek === 1) {
-      // console.log("Reset Barchart");
-      // wenn neue Woche true => Bachart wird zurückgesetzt
       setFormattedData((prevData) =>
         Object.keys(prevData).reduce((newData, key) => {
           newData[key] = 0;
@@ -89,16 +63,13 @@ export const BarChart = () => {
       setHasBarchartReset(true);
       localStorage.setItem("hasBarchartReset", JSON.stringify(true));
     }
-  }, [apiDataLoaded, isNewWeek, hasBarchartReset]);
-
-
-  useEffect(() => {
-    // setHasBarchartReset wird wieder bei neuer Woche Aktiv für BarchartReset
+    
     if (isNewWeek === 0) {
       setHasBarchartReset(false);
       localStorage.setItem("hasBarchartReset", JSON.stringify(false));
     }
-  }, [isNewWeek]);
+  }, [apiDataLoaded, isNewWeek, hasBarchartReset]);
+
 
 
 

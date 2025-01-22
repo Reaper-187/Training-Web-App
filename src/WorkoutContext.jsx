@@ -44,6 +44,14 @@ export const CaloriesProvider = ({ children }) => {
 
   const [totalCalories, setTotalCalories] = useState(0);
 
+  // const resetCalories = new Date().getDay()
+
+  // useEffect(() => {
+  //     if (resetCalories === 1) {
+  //       totalCalories = 0
+  //     }
+  //   }, [resetCalories]);
+
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
