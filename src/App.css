@@ -1,17 +1,55 @@
 :root{
-  --light-mode: #F1F2F4;
-  --dark-mode: #121212;
+  --main-brand-color: #297AE3;
+  --primary-color: #15171C;
+  --secondary-color: #232933;
+  --light-secondary-color: #2E3744;
+  --text-color: white;
+  --secondary-text-color: #B3B4B6;
 }
 
+
+.dark {
+  --main-brand-color: #297AE3;
+  --primary-color: #15171C;
+  --secondary-color: #232933;
+  --light-secondary-color: #2E3744;
+  --text-color: white;
+  --secondary-text-color: #B3B4B6;
+}
+
+.light {
+  --main-brand-color: #297AE3;
+  --primary-color: #FAFAFA;
+  --secondary-color: #f1efef;
+  --light-secondary-color: #F5F5F5;
+  --text-color: #333333;
+  --secondary-text-color: #666666;
+}
 
 
 
 body{
-  background-color: var(--dark-mode);
-  /* background-color: var(--light-mode); */
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  font-size: large;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
 }
 
+
+.theme-toggle-btn {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border: solid 1px var(--primary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--light-secondary-color);
+}

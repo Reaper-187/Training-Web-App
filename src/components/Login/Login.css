@@ -1,10 +1,3 @@
-:root {
-  --button-padding: 1em;
-  --space-for-arrow: 2em;
-  --dark-mode: #121212;
-  --light-mode: #F1F2F4;
-}
-
 h1{
   font-size: 1.7rem;
   color: #f2f2f2;
@@ -94,8 +87,8 @@ input::placeholder{
 .submit-btn, .links-btn {
   position: relative;
   padding-block: 1em; /* top and bottom padding */
-  padding-inline-start: var(--space-for-arrow); /* left padding */
-  padding-inline-end: var(--button-padding); /*right padding */
+  padding-inline-start: 2em; /* left padding */
+  padding-inline-end: 1em; /*right padding */
   border: none;
   border-radius: .25em;
   background-color: transparent;
@@ -118,8 +111,8 @@ input::placeholder{
 }
 
 .submit-btn:hover, .links-btn:hover {
-  padding-inline-start: var(--button-padding);  /* left padding */
-  padding-inline-end: var(--space-for-arrow);  /* right padding */
+  padding-inline-start: 1em;  /* left padding */
+  padding-inline-end: 2em;  /* right padding */
   background-color: rgb(83, 175, 147);
   /* color: rgb(190, 101, 0); */
   color: #f2f2f2;

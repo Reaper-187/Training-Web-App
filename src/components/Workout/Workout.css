@@ -22,11 +22,11 @@ h2{
 }
 
 
-.not-add{
+.not-found-card{
   padding: 2rem;
   border: solid 2px white;
   border-radius: 10px;
-  background-color: lightblue;
+  background-color: var(--secondary-color);
 }
 
 .workout-card{
@@ -35,7 +35,7 @@ h2{
   width: 15vw;
   border-radius: 10px;
   transition: ease-in .1s;
-  background-color: #22272B;
+  background-color: var(--secondary-color);
   animation: workoutCard .7s ease forwards;
   opacity: 0;
   animation-delay: var(--delay, 0s); /* Verzögerung */
@@ -85,11 +85,11 @@ h2{
 }
 
 .topElements span{
-  background-color: turquoise;
+  background-color: var(--main-brand-color);
   padding: .25rem;
   border-radius: 8px;
-  font-weight: bold;
-  font-size: medium;
+  font-weight: 600;
+  font-size: large;
   display: flex;
 }
 
@@ -100,10 +100,9 @@ h2{
 }
 .workout-card p{
   font-size: medium;
-  border-bottom: solid 1px turquoise;
+  border-bottom: solid 1px var(--main-brand-color);
   color: #DCDFE4;
-  border-radius: 10px;
-  width: fit-content;
+  border-radius: 5px;
   padding: .5rem;
 }
 

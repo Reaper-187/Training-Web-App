@@ -88,7 +88,7 @@ export const Workout = () => {
             <div className="workoutView">
               <div className='workout-card-container cards'>
                 {filteredWorkouts.length === 0 ? (
-                  <p className='not-add'>No Workouts for this Day</p>
+                  <p className='not-found-card'>No Workouts for this Day</p>
                 ) : (
                   filteredWorkouts.map((workout, index) => (
                     <div className='workout-card'

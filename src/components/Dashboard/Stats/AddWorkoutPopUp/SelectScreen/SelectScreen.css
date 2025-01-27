@@ -1,6 +1,7 @@
 
 .addContainer{
   position: absolute;
+  height: 50dvh;
   padding: 1rem 2rem;
   width: 80vw;
   z-index: 10;
@@ -38,10 +39,11 @@ input[type=number]::-webkit-outer-spin-button{
   margin: 0;
 }
 
-@media (max-width: 768px)  {
+/* @media (max-width: 768px)  {
 
   .addContainer{
     width: 70vw;
+    height: 50dvh;
     right: -60%;
     animation: addWorkoutAnimation2 ease-in-out .7s forwards;
   }
@@ -58,10 +60,12 @@ input[type=number]::-webkit-outer-spin-button{
 
   @keyframes addWorkoutAnimation2 {
     from{
-      height: 0dvh;
+      transform: translate(0px , -60px);
+      opacity: 0;
     }
     to{
-      height: 50dvh;
+      transform: translate(0px , 5px);
+      opacity: 1;
     }  
   }
 
@@ -74,16 +78,18 @@ input[type=number]::-webkit-outer-spin-button{
     }  
   }
 
-}
+} */
 
 
 
 @keyframes addWorkoutAnimation {
   from{
-    height: 0dvh;
+    transform: translate(0px , -60px);
+    opacity: 0;
   }
   to{
-    height: 50dvh;
+    transform: translate(0px , 5px);
+    opacity: 1;
   }  
 }
 

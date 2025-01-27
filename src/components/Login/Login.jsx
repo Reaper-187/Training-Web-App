@@ -14,7 +14,7 @@ const register = import.meta.env.VITE_API_REGISTER
 const login = import.meta.env.VITE_API_LOGIN
 
 export const Login = () => {
-  
+
 
   const { checkAuth } = useContext(CheckAuthContext);
 
@@ -24,12 +24,12 @@ export const Login = () => {
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email format').required('Email is required'),
     password: Yup.string().min(7, 'Password must be at least 7 characters').required('Password is required'),
-    name: formSwitch === "Registration" 
-      ? Yup.string().required('Name is required') 
+    name: formSwitch === "Registration"
+      ? Yup.string().required('Name is required')
       : Yup.string().notRequired(),
   });
 
-// Initialwerte für Login und Registrierung
+  // Initialwerte für Login und Registrierung
   const registrationInitialValues = {
     name: '',
     email: '',
@@ -41,42 +41,49 @@ export const Login = () => {
     password: '',
   };
 
-// Dynamisch initialisieren basierend auf `formSwitch`
-const initialValues = formSwitch === "Registration" ? registrationInitialValues : loginInitialValues;
+  // Dynamisch initialisieren basierend auf `formSwitch`
+  const initialValues = formSwitch === "Registration" ? registrationInitialValues : loginInitialValues;
 
-const navigate = useNavigate();
+  console.log("Initial Values:", initialValues);
 
-const handleSubmit = async (values, { setSubmitting }, isLogin) => {
-  const url = isLogin ? login : register;
+  const navigate = useNavigate();
 
-  try {
-    const response = await axios.post(url, values); 
+  const handleSubmit = async (values, { setSubmitting }, isLogin) => {
+    const url = isLogin ? login : register;
+
+    try {
+      const response = await axios.post(url, values);
       if (response.data.success) {
-      await checkAuth()
-      navigate('/dashboard')
-    } else {
-      console.log("Fehler: Login nicht erfolgreich.");
-    }
+        console.log("CheckAuth aufgerufen.");
+        await checkAuth()
+        navigate('/dashboard')
+      } else {
+        console.log("Fehler: Login nicht erfolgreich.");
+      }
     } catch (error) {
-      console.error('Fehler bei der Anfrage:', error.response.data);
-      // console.error('Fehler bei der Anfrage:', error);
+      // Prüfe, ob der Fehler die erwartete Struktur hat
+      if (error.response) {
+        console.error('Fehler bei der Anfrage:', error.response.data);
+      } else {
+        console.error('Fehler ohne response:', error);
+      }
     } finally {
       setSubmitting(false);
     }
   };
-  
+
   return (
     <div className="structure-form">
       <div className="login-form"></div>
       <div className="regist-form">
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            enableReinitialize
-            onSubmit={(values, { setSubmitting }) => {
-              handleSubmit(values, { setSubmitting }, formSwitch === "Login"); // true für Login
-            }}
-          >
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          enableReinitialize
+          onSubmit={(values, { setSubmitting }) => {
+            handleSubmit(values, { setSubmitting }, formSwitch === "Login"); // true für Login
+          }}
+        >
 
           {({ isSubmitting }) => (
             <Form className="client-data">

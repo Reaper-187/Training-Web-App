@@ -6,7 +6,7 @@ export const ErrorPage = () => {
   return (
     <div>404 Not Found
 
-      <Link to="/Dashboard">Dashboard</Link>
+      <Link to="/dashboard">Dashboard</Link>
     </div>
   )
 }

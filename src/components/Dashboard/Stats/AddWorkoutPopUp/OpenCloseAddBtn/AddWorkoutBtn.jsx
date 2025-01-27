@@ -25,11 +25,6 @@ export const AddWorkoutBtn = () => {
         <div className={openAddWorkout ? 'hiddenScreen.active' : 'hiddenScreen'}>
           <AddWorkoutScreen onClose={closeAddBtn}/>
         </div>
-
-          <h1>Add New Workout</h1>
-          <br />
-            
-
         <span onClick={openAddBtn}>
           <OpenAdd/>
         </span>
