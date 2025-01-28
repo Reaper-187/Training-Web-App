@@ -1,20 +1,6 @@
-.card-container{
-  display: flex;
-  justify-content: space-evenly;
-  flex-wrap: wrap;  
-}
-
-
 .card{
-  min-width: 20%;
-  background-color: var(--secondary-color);
-  border: solid 2px black;
-  border-radius: 15px;
-  padding: 1rem;
-  margin: 1rem 0;
   opacity: 0;
   animation: onLoad ease .5s forwards;
-
 }
 
 .calories-burned{

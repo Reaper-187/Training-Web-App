@@ -90,7 +90,7 @@ export const BarChart = () => {
           formattedData.Fri,
           formattedData.Sat,
         ],
-        backgroundColor: 'lightblue',
+        backgroundColor: '#297AE3',
         borderColor: 'black',
         borderWidth: 1,
       }

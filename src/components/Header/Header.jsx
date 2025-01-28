@@ -1,14 +1,30 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Header.css'
 import { Link, useLocation } from 'react-router-dom'
 import { Logout } from '../Logout/Logout';
 import { FaSun, FaMoon } from "react-icons/fa";
-import { ThemeContext } from "../../WorkoutContext";
+
 
 export const Header = () => {
 
 
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const [theme, setTheme] = useState("light");
+
+  // Lade den gespeicherten Modus oder setze das Standard-Theme
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+    document.body.className = savedTheme;
+  }, []);
+
+  // Wechseln des Modus
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.body.className = newTheme;
+  };
+
 
 
   const location = useLocation(); // Erhalte den aktuellen Pfad
@@ -68,10 +84,11 @@ export const Header = () => {
 
         </div>
         
+        <Logout />
+
         <button onClick={toggleTheme} className="theme-toggle-btn">
           {theme === "light" ? <FaMoon /> : <FaSun />}
         </button>
-          <Logout />
       </ul>
 
 

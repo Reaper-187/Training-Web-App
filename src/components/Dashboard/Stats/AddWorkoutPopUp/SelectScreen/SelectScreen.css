@@ -9,7 +9,8 @@
   right: 0;
   margin: auto;
   border-radius: 15px;
-  background-color: #2e92ccef;
+  border: solid 2px black;
+  background-color: var(--light-secondary-color);
   animation: addWorkoutAnimation ease-in-out .7s forwards;
 }
 

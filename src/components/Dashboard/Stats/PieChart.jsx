@@ -2,10 +2,8 @@ import React, { useEffect, useContext, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { WorkoutContext } from '../../../WorkoutContext';
-// import socket from "../../../socket";
 import axios from 'axios'
 ChartJS.register(ArcElement, Tooltip, Legend);
-import  './Stats.css'
 
 const APP_URL = import.meta.env.VITE_API_URL
 

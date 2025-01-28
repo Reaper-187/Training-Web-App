@@ -1,0 +1,78 @@
+.dashboard-container{
+  display: flex;
+  justify-content: space-evenly;
+  padding: 4rem 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.card-container{
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;  
+}
+
+.stat-card{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  min-width: 25vw;
+  border: solid 2px black;
+  background-color: var(--secondary-color);
+  border-radius: 15px;
+  opacity: 0;
+  animation: chartOnScroll ease 1s forwards;
+  padding: 1rem;
+}
+
+.bar-chart{
+  display: flex;
+  align-items: center;
+  animation-delay: .4s;
+}
+
+.pie-chart{
+  display: flex;
+  align-items: center;
+  animation-delay: .6s;
+}
+
+.add-btn-comp{
+  display: flex;
+  align-items: center;
+  animation-delay: .8s;
+}
+
+
+@media (max-width: 768px)  {
+
+  .stat-card{
+    animation: chartOnScrollMedia ease forwards;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+  }
+
+}
+
+@keyframes chartOnScrollMedia {
+  from{
+    scale: .8;
+  }
+  to{
+    opacity: 1;
+    scale: 1;
+  }
+
+}
+
+@keyframes chartOnScroll {
+  from{
+    transform: translateX(-20px);
+  }
+  to{
+    opacity: 1;
+    transform: translateX(0px);
+
+  }
+
+}

@@ -2,37 +2,6 @@ import { createContext, useState, useEffect } from 'react';
 // import socket from "./socket";
 import axios from 'axios'
 
-
-export const ThemeContext = createContext();
-
-export const ThemeProvider = ({ children }) => {
-
-  const [theme, setTheme] = useState("light");
-
-  // Lade den gespeicherten Modus oder setze das Standard-Theme
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme);
-    document.body.className = savedTheme;
-  }, []);
-
-  // Wechseln des Modus
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.body.className = newTheme;
-  };
-
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-};
-
-
-
 const APP_URL = import.meta.env.VITE_API_URL
 
 export const WorkoutContext = createContext();
