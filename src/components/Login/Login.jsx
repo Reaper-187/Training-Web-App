@@ -41,7 +41,7 @@ export const Login = () => {
     password: '',
   };
 
-  // Dynamisch initialisieren basierend auf `formSwitch`
+  // Dynamisch initialisieren basierend auf formSwitch
   const initialValues = formSwitch === "Registration" ? registrationInitialValues : loginInitialValues;
 
   console.log("Initial Values:", initialValues);
@@ -72,6 +72,7 @@ export const Login = () => {
     }
   };
 
+  
   return (
     <div className="structure-form">
       <div className="login-form"></div>

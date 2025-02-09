@@ -1,0 +1,28 @@
+.swiper {
+  max-width: 80vw;
+  width: 100%;
+}
+
+
+.swiper-scrollbar{
+  display: none;
+}
+
+
+@media (max-width: 425px) {
+
+  .swiper {
+    width: 100%;
+    height: fit-content;
+  }
+  
+  /* SwiperSlide */
+  .swiper-slide {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+}

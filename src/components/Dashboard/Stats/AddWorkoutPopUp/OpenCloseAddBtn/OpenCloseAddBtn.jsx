@@ -6,11 +6,10 @@ export const OpenAdd = () => {
   return (
     <>
       <button className="add-btn">Add your Workout</button>
-
-      <span className='responsive-add-btn'>
-        <AddCircleIcon  className='add-btn'/>
+  
+      <span className='responsive-btn'>
+        <AddCircleIcon/> 
       </span>
-
     </>
   )
 }

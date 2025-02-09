@@ -31,8 +31,9 @@ app.use(
     saveUninitialized: false,
     store:  MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
     cookie: {
-      secure: process.env.NODE_ENV === 'production', // Nur auf true setzen, wenn HTTPS verwendet wird
+      secure:  process.env.NODE_ENV === 'production', // Nur auf true setzen, wenn HTTPS verwendet wird
       httpOnly: true, // Schutz vor JavaScript-Angriffen
+      // sameSite: 'None', // Für Cross-Site-Cookies
       maxAge: 1000 * 60 * 60 * 24,
     },
   })
@@ -50,31 +51,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: '*',
-    credentials: true,
-  }
-});
-
-// io.on('connection', (socket) => {
-//   console.log('Ein Client ist verbunden:', socket.id);
-//   socket.on("updatePieSocket", updatedPieCount => {    
-//     io.emit("updatOkWithSocket", updatedPieCount)
-
-//   })
-
-//   socket.on('disconnect', () => {
-//     console.log('Ein Client hat die Verbindung getrennt:', socket.id);
-//   });
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: '*',
+//     credentials: true,
+//   }
 // });
-
-
 
 // cros-origin-Anfragen erlauben weil Frontend auf != Backend {Port} läuft
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173'],
     credentials: true
   })
 );
@@ -119,7 +106,7 @@ app.get('/', (req, res) => {
   res.send('API läuft');
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 httpServer.listen(PORT, () => {
   console.log(`Server läuft auf Port ${PORT}`);
 });

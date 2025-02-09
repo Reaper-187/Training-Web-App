@@ -8,9 +8,6 @@ import { CaloriesContext } from '../../../WorkoutContext';
 // Registrierung der Chart-Komponenten
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-// const APP_URL = import.meta.env.VITE_API_URL
-
-
 export const BarChart = () => {
 
   const [apiDataLoaded, setApiDataLoaded] = useState(false);
@@ -99,6 +96,7 @@ export const BarChart = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'bottom',

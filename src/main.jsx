@@ -50,6 +50,3 @@ const ProtectedLayout = () => {
       <RouterProvider router={router} />
     </CheckAuthProvider>
   );
-  
-
-

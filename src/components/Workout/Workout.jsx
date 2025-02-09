@@ -80,13 +80,13 @@ export const Workout = () => {
       <>
         <div className='workouts-container'>
           <div className='calender-container'>
+          <h2>Workout-History</h2>
             <Calender handleDateChange={handleDateChange} selectedDate={selectedDate} />
           </div>
 
-          <div>
-            <h2>Todays Workouts</h2>
-            <div className="workoutView">
-              <div className='workout-card-container cards'>
+          {/* <div>
+            <div className="workoutView"> */}
+              <div className='cards workout-card-container '>
                 {filteredWorkouts.length === 0 ? (
                   <p className='not-found-card'>No Workouts for this Day</p>
                 ) : (
@@ -113,8 +113,8 @@ export const Workout = () => {
                   ))
                 )}
               </div>
-            </div>
-          </div>
+            {/* </div>
+          </div> */}
         </div>
       </>
     )

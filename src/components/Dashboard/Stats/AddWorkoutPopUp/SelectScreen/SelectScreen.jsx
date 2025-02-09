@@ -10,11 +10,22 @@ export const SelectScreen = () => {
 
   const notify = (isValid) => {
     if (isValid) {
-      toast("💪Your Workout has been added💪", { type: "success" });
+      toast("💪Your Workout has been added💪", {
+        type: "success",
+        position: 'top-center',
+        autoClose: 1500,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false
+      });
 
     } else {
-      toast("pleas fill up all fields", { type: 'error' });
-
+      toast("pleas fill up all fields", {
+        type: 'error',
+        position: 'top-center',
+        autoClose: 1500,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false
+      });
     }
   }
 
@@ -103,34 +114,38 @@ export const SelectScreen = () => {
         }
       };
       return (
-        <div className="displayOptions">
-          <h4>Type of Training</h4>
-          <select
-            className="cardioTrainings"
-            onChange={(e) => setSelectedWorkoutValue(e.target.value)}
-            value={selectedWorkoutValue}
-          >
-            <option value=""></option>
-            {["running", "stepper", "jump-rope", "cycling", "rowing"].map((workout) => (
-              <option key={workout} value={workout}>
-                {workout}
-              </option>
-            ))}
-          </select>
-          <h4>Time (minutes)</h4>
-          <input
-            type="number"
-            value={timeValue}
-            onChange={(e) => setTimeValue(e.target.value)}
-            className="cardioTrainings"
-          />
+        <div className="display-options">
+          <div>
+            <h4>Type of Workout</h4>
+            <select
+              className="cardioTrainings"
+              onChange={(e) => setSelectedWorkoutValue(e.target.value)}
+              value={selectedWorkoutValue}
+            >
+              <option value=""></option>
+              {["running", "stepper", "jump-rope", "cycling", "rowing"].map((workout) => (
+                <option key={workout} value={workout}>
+                  {workout}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <h4>Time (minutes)</h4>
+            <input
+              type="number"
+              value={timeValue}
+              onChange={(e) => setTimeValue(e.target.value)}
+              className="cardioTrainings"
+            />
+          </div>
 
           <a className='addWorkoutBtn'
             onClick={() => {
               const isValid = checkIfFieldEmpty(); notify(isValid);
               if (isValid)
                 handleAddWorkout();
-              // notifyWorkoutAdded();
             }}>
             <span>Add to!</span>
           </a>
@@ -156,7 +171,7 @@ export const SelectScreen = () => {
 
 
       return (
-        <div className='displayOptions'>
+        <div className='display-options'>
           <div>
             <h4>Type of Muscle</h4>
             <select className="input-field" onChange={handleMuscleChange} value={selectedMuscleValue}>
@@ -169,7 +184,7 @@ export const SelectScreen = () => {
             </select>
           </div>
           <div>
-            <h4>Type of Training</h4>
+            <h4>Type of Workout</h4>
             <select className="input-field" onChange={(e) => setSelectedWorkoutValue(e.target.value)} value={selectedWorkoutValue} disabled={!selectedMuscleValue}>
               <option value=""></option>
               {availableWorkouts.map((workout) => (
@@ -180,7 +195,7 @@ export const SelectScreen = () => {
             </select>
           </div>
           <div>
-            <h4>Gewicht in kg</h4>
+            <h4>Weight in kg</h4>
             <div className="input-field">
               <input type="number" value={weightValue} onChange={(e) => setWeightValue(e.target.value)} />
             </div>
@@ -194,7 +209,7 @@ export const SelectScreen = () => {
           <div>
             <h4>Sets</h4>
             <div className="input-field">
-              <input type="number" value={setsValue} onChange={(e) => setSetsValue(e.target.value)}/>
+              <input type="number" value={setsValue} onChange={(e) => setSetsValue(e.target.value)} />
             </div>
           </div>
 
@@ -203,7 +218,6 @@ export const SelectScreen = () => {
               const isValid = checkIfFieldEmpty(); notify(isValid);
               if (isValid)
                 handleAddWorkout();
-              // notifyWorkoutAdded();              
             }}>
             <span>Add to!</span>
           </a>
@@ -233,7 +247,7 @@ export const SelectScreen = () => {
   return (
     <>
       <h2>Add Workout</h2>
-      <div>
+      <div className='training-type-selector'>
         <h4>What did you do</h4>
         <select onChange={(e) => handleTypeChange(e.target.value)} value={typeOfTraining || ""}>
           <option value="">-</option>
