@@ -181,14 +181,3 @@ label{
   }
 
 }
-@media (min-width: 1024px){
-
-  .responsive-add-btn{
-    display: none;
-  }
-
-  .add-btn{
-    display: block;
-  }
-
-}

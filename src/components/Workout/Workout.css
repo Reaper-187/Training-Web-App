@@ -17,14 +17,15 @@ h2 {
 }
 
 .workout-card-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Cards nebeneinander */
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem; /* Abstand zwischen den Cards */
 }
 
 .workout-card {
   border: solid 1px black;
   padding: 1rem;
+  width: 20vw;
   border-radius: 10px;
   transition: ease-in 0.1s;
   background-color: var(--secondary-color);
@@ -88,12 +89,6 @@ h2 {
   margin: 0; /* Anpassung für das Grid-Layout */
 }
 
-/* Responsive Anpassungen */
-@media (min-width: 768px) {
-  .workouts-container {
-    grid-template-columns: 1fr 2fr; /* Zwei Spalten: Kalender und Cards */
-  }
-}
 
 @media (max-width: 425px) {
 
@@ -104,6 +99,23 @@ h2 {
   .cards:hover > .workout-card:not(:hover) {
     filter: none;
     transform: none;
+  }
+
+  .workout-card{
+    width: unset;
+  }
+}
+
+@media (min-width: 426px) and (max-width: 1024px) {
+
+  .workout-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Cards nebeneinander */
+    gap: 1.5rem; /* Abstand zwischen den Cards */
+  }
+
+  .workout-card{
+    width: unset;
   }
 }
 

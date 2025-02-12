@@ -72,8 +72,7 @@ export const PieChart = () => {
     // maintainAspectRatio: false,
   };
   return (
-    <div>
-      <Pie className='chart pie-chart' key={JSON.stringify(data)} data={data} options={options} />
-    </div>
+    
+    <Pie className='chart pie-chart' key={JSON.stringify(data)} data={data} options={options} />
   );
 };

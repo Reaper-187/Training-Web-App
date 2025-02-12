@@ -132,13 +132,15 @@ export const SelectScreen = () => {
           </div>
           
           <div>
-            <h4>Time (minutes)</h4>
-            <input
-              type="number"
-              value={timeValue}
-              onChange={(e) => setTimeValue(e.target.value)}
-              className="cardioTrainings"
-            />
+            <div className='input-field'>
+              <h4>Time (minutes)</h4>
+              <input
+                type="number"
+                value={timeValue}
+                onChange={(e) => setTimeValue(e.target.value)}
+                className="cardioTrainings"
+                />
+            </div>
           </div>
 
           <a className='addWorkoutBtn'
@@ -172,9 +174,9 @@ export const SelectScreen = () => {
 
       return (
         <div className='display-options'>
-          <div>
+          <div className='select-field'>
             <h4>Type of Muscle</h4>
-            <select className="input-field" onChange={handleMuscleChange} value={selectedMuscleValue}>
+            <select onChange={handleMuscleChange} value={selectedMuscleValue}>
               <option value=""></option>
               {Object.keys(muscleGroupOptions).map((muscle) => (
                 <option key={muscle} value={muscle}>
@@ -185,7 +187,7 @@ export const SelectScreen = () => {
           </div>
           <div>
             <h4>Type of Workout</h4>
-            <select className="input-field" onChange={(e) => setSelectedWorkoutValue(e.target.value)} value={selectedWorkoutValue} disabled={!selectedMuscleValue}>
+            <select onChange={(e) => setSelectedWorkoutValue(e.target.value)} value={selectedWorkoutValue} disabled={!selectedMuscleValue}>
               <option value=""></option>
               {availableWorkouts.map((workout) => (
                 <option key={workout} value={workout}>
@@ -195,20 +197,20 @@ export const SelectScreen = () => {
             </select>
           </div>
           <div>
-            <h4>Weight in kg</h4>
             <div className="input-field">
+              <h4>Weight in kg</h4>
               <input type="number" value={weightValue} onChange={(e) => setWeightValue(e.target.value)} />
             </div>
           </div>
           <div>
-            <h4>Reps</h4>
             <div className="input-field">
+              <h4>Reps</h4>
               <input type="number" value={repsValue} onChange={(e) => setRepsValue(e.target.value)} />
             </div>
           </div>
           <div>
-            <h4>Sets</h4>
             <div className="input-field">
+              <h4>Sets</h4>
               <input type="number" value={setsValue} onChange={(e) => setSetsValue(e.target.value)} />
             </div>
           </div>
@@ -248,15 +250,13 @@ export const SelectScreen = () => {
     <>
       <h2>Add Workout</h2>
       <div className='training-type-selector'>
-        <h4>What did you do</h4>
+          <h4>What did you do</h4>
         <select onChange={(e) => handleTypeChange(e.target.value)} value={typeOfTraining || ""}>
-          <option value="">-</option>
+          <option value="">------</option>
           <option value="Cardio">Cardio</option>
           <option value="Krafttraining">Krafttraining</option>
         </select>
-
         {displayOptions()}
-
       </div>
     </>
   )

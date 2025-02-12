@@ -110,7 +110,7 @@ export const BarChart = () => {
 
 
   return (
-    <div>
+    <div className='bar-chart-div'>
       <Bar
         className='chart bar-chart'
         data={data}
