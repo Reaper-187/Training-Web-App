@@ -72,7 +72,7 @@ export const Login = () => {
     }
   };
 
-  
+
   return (
     <div className="structure-form">
       <div className="login-form"></div>
@@ -91,19 +91,22 @@ export const Login = () => {
               <h1>{formSwitch}</h1>
 
               {formSwitch === "Registration" && (
-                <div>
-                  <Field type="text" id="name" name="name" placeholder="Enter Name" />
+                <div className="input-container">
+                  <Field type="text" id="name" name="name" required />
+                  <div className='lable-line'>Enter your Name</div>
                   <ErrorMessage name="name" component="div" className="error-message" />
                 </div>
               )}
 
-              <div>
-                <Field type="text" id="email" name="email" placeholder="Enter E-Mail" />
+              <div className="input-container">
+                <Field type="text" id="email" name="email" required />
+                <div className='lable-line'>Enter your E-Mail</div>
                 <ErrorMessage name="email" component="div" className="error-message" />
               </div>
 
-              <div>
-                <Field type="password" id="password" name="password" placeholder="Enter password" />
+              <div className="input-container">
+                <Field type="password" id="password" name="password" required />
+                <div className='lable-line'>Enter your password</div>
                 <ErrorMessage name="password" component="div" className="error-message" />
               </div>
 
