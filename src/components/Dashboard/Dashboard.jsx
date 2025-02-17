@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import './Dashboard.css'
 
 import { CaloriesBurnedCard } from './Stats/CaloriesCalc/CaloriesBurnedCard'
-import { WorkoutsCard } from './Stats/CaloriesCalc/WorkoutsCard'
+import { CaloriesPerDay } from './Stats/CaloriesCalc/CaloriesPerDay'
 import { CaloriesAverageBruned } from './Stats/CaloriesCalc/CaloriesAverageBruned'
 import { BarChart } from './Stats/BarChart'
 import { PieChart } from './Stats/PieChart'
@@ -27,22 +27,26 @@ export const Dashboard = () => {
   // Schließe die Navbar, wenn außerhalb geklickt wird
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (selectRef.current && !selectRef.current.contains(event.target) || event.key === "Escape") {
+      if (selectRef.current && !selectRef.current.contains(event.target)) {
         closeAddBtn();
       }
     };
-
-
-    // Event-Listener hinzufügen
+  
+    const handleEscapeKey = (event) => {
+      if (event.key === "Escape" || event.code === "Escape") {
+        closeAddBtn();
+      }
+    };
+  
     document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleClickOutside);
-
-    // Event-Listener aufräumen
+    document.addEventListener("keydown", handleEscapeKey);
+  
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscapeKey);
     };
   }, []);
+  
 
 
 
@@ -56,7 +60,7 @@ export const Dashboard = () => {
       </div>
 
       <div className='stat-card workout-streak'>
-        <WorkoutsCard />
+        <CaloriesPerDay />
       </div>
 
       <div className='stat-card calories-average-burned'>

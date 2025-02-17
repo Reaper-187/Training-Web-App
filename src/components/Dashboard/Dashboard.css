@@ -15,17 +15,28 @@
   border: solid 2px black;
   border-radius: 15px;
   opacity: 0;
-  animation: chartOnScroll ease 1s forwards;
+  animation: fadeStatsIn 1s forwards;
+  animation-delay: .4s;
   padding: 1rem;
 }
 
 .resp-graph {
   display: none;
+  animation-delay: .6s;
 }
 
-.pie-chart, .bar-chart {
+
+
+.bar-chart {
   align-items: center;
   justify-content: space-between;
+  animation-delay: .6s;
+}
+
+.pie-chart {
+  align-items: center;
+  justify-content: space-between;
+  animation-delay: .8s;
 }
 
 .bar-chart-div canvas{
@@ -35,33 +46,9 @@
 
 .add-btn-comp {
   align-items: center;
+  animation-delay: 1s;
 }
 
-
-
-@keyframes chartOnScrollMedia {
-  from {
-    scale: .8;
-  }
-
-  to {
-    opacity: 1;
-    scale: 1;
-  }
-
-}
-
-@keyframes chartOnScroll {
-  from {
-    transform: translateX(-20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0px);
-  }
-
-}
 
 
 @media (max-width: 425px) {
@@ -106,4 +93,17 @@
     justify-self: center;
 
   }
+}
+
+
+
+@keyframes fadeStatsIn {
+  from{
+    transform: translate(-30px,-20px);
+  }
+  to{
+    opacity: 1;
+    transform: translate(0px,0px);
+  }
+
 }

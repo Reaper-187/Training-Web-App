@@ -3,12 +3,14 @@
   animation: onLoad ease .5s forwards;
 }
 
-.calories-burned{
+.total-burned{
   animation-delay: .4s;
 }
-.workout-stack{
+
+.cb-today{
   animation-delay: .6s;
 }
+
 .average-cb{
   animation-delay: .8s;
 }
@@ -34,7 +36,6 @@
   gap: 1rem 0;
 }
 
-
 @keyframes onLoad {
   from{
     transform: translateY(-20px);
@@ -44,12 +45,6 @@
     transform: translateY(0px);
   }
 
-}
-
-
-@media (max-width: 425px)  {
-  
-  
 }
 
 @media (min-width: 426px) and (max-width: 768px) {
@@ -65,23 +60,3 @@
   }
 
 }
-
-
-
-
-
-
-
-/* @media (max-width: 1024px)  {
-
-  .card{
-    min-width:  60%;
-  }
-
-  .card-header{
-    flex-direction: column-reverse;
-  }
-
-
-
-} */

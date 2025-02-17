@@ -8,6 +8,8 @@ import { CheckAuthContext } from "../../CheckAuthContext";
 import * as Yup from 'yup';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import gymPic from '../../assets/img/form-banner-1.jpg'
+
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
 const register = import.meta.env.VITE_API_REGISTER
@@ -74,53 +76,56 @@ export const Login = () => {
 
 
   return (
-    <div className="structure-form">
-      <div className="login-form"></div>
-      <div className="regist-form">
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          enableReinitialize
-          onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values, { setSubmitting }, formSwitch === "Login"); // true für Login
-          }}
-        >
+    <div className={formSwitch === "Login" ? 'form-container login-form' : 'form-container regist-form'}>
+      {/* <div ></div> */}
+      {/* <div className="form-container"> */}
 
-          {({ isSubmitting }) => (
-            <Form className="client-data">
-              <h1>{formSwitch}</h1>
+      <img src={gymPic} alt="" className="form-banner" />
 
-              {formSwitch === "Registration" && (
-                <div className="input-container">
-                  <Field type="text" id="name" name="name" required />
-                  <div className='lable-line'>Enter your Name</div>
-                  <ErrorMessage name="name" component="div" className="error-message" />
-                </div>
-              )}
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        enableReinitialize
+        onSubmit={(values, { setSubmitting }) => {
+          handleSubmit(values, { setSubmitting }, formSwitch === "Login"); // true für Login
+        }}
+      >
 
+        {({ isSubmitting }) => (
+          <Form className="client-data">
+            <h1>{formSwitch}</h1>
+
+            {formSwitch === "Registration" && (
               <div className="input-container">
-                <Field type="text" id="email" name="email" required />
-                <div className='lable-line'>Enter your E-Mail</div>
-                <ErrorMessage name="email" component="div" className="error-message" />
+                <Field type="text" id="name" name="name" required />
+                <div className='lable-line'>Enter your Name</div>
+                <ErrorMessage name="name" component="div" className="error-message" />
               </div>
+            )}
 
-              <div className="input-container">
-                <Field type="password" id="password" name="password" required />
-                <div className='lable-line'>Enter your password</div>
-                <ErrorMessage name="password" component="div" className="error-message" />
-              </div>
+            <div className="input-container">
+              <Field type="text" id="email" name="email" required />
+              <div className='lable-line'>Enter your E-Mail</div>
+              <ErrorMessage name="email" component="div" className="error-message" />
+            </div>
 
-              <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                {formSwitch === "Login" ? "Login" : "Register"}
-              </button>
+            <div className="input-container">
+              <Field type="password" id="password" name="password" required />
+              <div className='lable-line'>Enter your password</div>
+              <ErrorMessage name="password" component="div" className="error-message" />
+            </div>
 
-              <a className="links-btn" onClick={() => setFormSwitch(formSwitch === "Login" ? "Registration" : "Login")}>
-                {formSwitch === "Login" ? "Switch to Registration" : "Switch to Login"}
-              </a>
-            </Form>
-          )}
-        </Formik>
-      </div>
+            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+              {formSwitch === "Login" ? "Login" : "Register"}
+            </button>
+
+            <a className="links-btn" onClick={() => setFormSwitch(formSwitch === "Login" ? "Registration" : "Login")}>
+              {formSwitch === "Login" ? "Switch to Registration" : "Switch to Login"}
+            </a>
+          </Form>
+        )}
+      </Formik>
+      {/* </div> */}
     </div>
   );
 };

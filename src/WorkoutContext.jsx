@@ -1,31 +1,107 @@
-import { createContext, useState, useEffect } from 'react';
-// import socket from "./socket";
-import axios from 'axios'
+import { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 
-const APP_URL = import.meta.env.VITE_API_URL
+const APP_URL = import.meta.env.VITE_API_URL;
 
+
+export const CaloriesContext = createContext();
 export const WorkoutContext = createContext();
 
 
-export const WorkoutProvider = ({ children }) => {
-  const [selectWorkouts, setSelectWorkouts] = useState([]);
+export const CaloriesProvider = ({ children }) => {
+  const [workouts, setWorkouts] = useState([]);
+  const [totalCalories, setTotalCalories] = useState(0);
+  const [caloriesBurnedPerDay, setCaloriesBurnedPerDay] = useState(0);
 
-
-  const addWorkout = (workout) => {
-    console.log("Workout wird hinzugefügt:", workout);
-    axios.post(APP_URL, workout)
-      .then(() => {
-        console.log("Workout erfolgreich gespeichert.");
-        setSelectWorkouts((prevWorkouts) => {
-          console.log("Aktuelle Workouts vor Update:", prevWorkouts);
-          return [...prevWorkouts, workout];
-        });
-      })
-      .catch((err) => {
-        console.error("Fehler beim Hinzufügen des Workouts:", err);
-      });
+  const fetchWorkouts = async () => {
+    try {
+      const response = await axios.get(APP_URL);
+      setWorkouts(response.data);
+    } catch (error) {
+      console.error("Fehler beim Abrufen der Workouts:", error);
+    }
   };
 
+  useEffect(() => {
+    fetchWorkouts();
+  }, []);
+
+  useEffect(() => {
+    const now = new Date();
+    const millisecondsUntilMidnight =
+      ((23 - now.getHours()) * 60 + (59 - now.getMinutes())) * 60 * 1000;
+
+    const dailyResetTimeout = setTimeout(() => {
+      setDailyCalories(0);
+      console.log("Tageskalorien zurückgesetzt!");
+    }, millisecondsUntilMidnight);
+
+    return () => clearTimeout(dailyResetTimeout);
+  }, []);
+
+  useEffect(() => {
+    const now = new Date();
+    const day = now.getDay();
+    const millisecondsUntilMidnight =
+      ((23 - now.getHours()) * 60 + (59 - now.getMinutes())) * 60 * 1000;
+
+    if (day === 0) {
+      const weeklyResetTimeout = setTimeout(() => {
+        setTotalCalories(0);
+        console.log("Wochenkalorien zurückgesetzt!");
+      }, millisecondsUntilMidnight);
+
+      return () => clearTimeout(weeklyResetTimeout);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    const total = workouts.reduce((sum, workout) => sum + workout.calories, 0);
+    setTotalCalories(total);
+
+    const today = new Date().toISOString().split("T")[0];
+
+    const caloriesBurnedPerDay =
+      workouts.filter((workout) => workout.date.split("T")[0] === today)
+        .reduce((sum, workout) => sum + workout.calories, 0);
+    setCaloriesBurnedPerDay(caloriesBurnedPerDay)
+
+  })
+
+
+  return (
+    <CaloriesContext.Provider value={{ workouts, totalCalories, caloriesBurnedPerDay, fetchWorkouts }}>
+      {children}
+    </CaloriesContext.Provider>
+  );
+};
+
+
+export const WorkoutProvider = ({ children }) => {
+  const { fetchWorkouts } = useContext(CaloriesContext);
+
+  const [selectWorkouts, setSelectWorkouts] = useState([]);
+
+  const addWorkout = async (workout) => {
+    try {
+      console.log("Workout wird hinzugefügt:", workout);
+
+      await axios.post(APP_URL, workout);
+
+      console.log("Workout erfolgreich gespeichert.");
+
+      setSelectWorkouts((prevWorkouts) => {
+        console.log("Aktuelle Workouts vor Update:", prevWorkouts);
+        return [...prevWorkouts, workout];
+      });
+
+      fetchWorkouts();
+
+    } catch (err) {
+      console.error("Fehler beim Hinzufügen des Workouts:", err);
+    }
+  };
 
   return (
     <WorkoutContext.Provider value={{ selectWorkouts, setSelectWorkouts, addWorkout }}>
@@ -34,44 +110,6 @@ export const WorkoutProvider = ({ children }) => {
   );
 };
 
-
-export const CaloriesContext = createContext()
-
-export const CaloriesProvider = ({ children }) => {
-  const [workouts, setWorkouts] = useState([]);
-
-  const [totalCalories, setTotalCalories] = useState(0);
-
-  // const resetCalories = new Date().getDay()
-
-  // useEffect(() => {
-  //     if (resetCalories === 1) {
-  //       totalCalories = 0
-  //     }
-  //   }, [resetCalories]);
-
-  useEffect(() => {
-    const fetchWorkouts = async () => {
-      try {
-        const response = await axios.get(APP_URL);
-        const data = response.data;
-        setWorkouts(data);
-        // Summe der Kalorien berechnen
-        const total = data.reduce((sum, workout) => sum + workout.calories, 0);        
-        setTotalCalories(total);
-      } catch (error) {
-        console.error('Fehler beim Abrufen der Workouts:', error);
-      }
-    };
-    fetchWorkouts();
-  }, [workouts]);
-
-  return (
-    <CaloriesContext.Provider value={{workouts, totalCalories }}>
-      {children}
-    </CaloriesContext.Provider>
-  );
-};
 
 
 export const BarChartContext = createContext();
@@ -93,7 +131,6 @@ export const BarChartProvider = ({ children }) => {
     const creatWorkoutDay = new Date().getDay(); //Wochentag wird hier ermittelt von 0 bis 6
     return week[creatWorkoutDay]; //mit Week wird der Wochentag in Tagesnamen übersetzt
   }
-
 
   const increaseBarCaloriesForDay = (cal) => {
     setDailyCalories((prevCalories) => {
@@ -120,7 +157,7 @@ export const BarChartProvider = ({ children }) => {
   };
 
   return (
-    <BarChartContext.Provider value={{ dailyCalories, setDailyCalories, increaseBarCaloriesForDay, decreaseBarCaloriesForDay }}>
+    <BarChartContext.Provider value={{ dailyCalories, setDailyCalories, increaseBarCaloriesForDay, decreaseBarCaloriesForDay, getCurrentDay }}>
       {children}
     </BarChartContext.Provider>
   )
