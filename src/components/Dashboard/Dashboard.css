@@ -25,7 +25,23 @@
   animation-delay: .6s;
 }
 
+.calories-target{
+  all: unset;
+  border: solid 1px var(--main-brand-color);
+  padding: .3rem;
+  border-radius: 10px;
+  transition: background-color ease-in-out .3s;
+    input{
+      all: unset;
+      field-sizing: content;
+      color: var(--main-brand-color);
+    }
+}
 
+.calories-target:hover{
+  background-color: rgba(245, 245, 245, 0.1);
+  cursor: pointer;
+}
 
 .bar-chart {
   align-items: center;

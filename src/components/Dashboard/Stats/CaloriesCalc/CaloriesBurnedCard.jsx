@@ -4,7 +4,7 @@ import { CaloriesContext } from '../../../../WorkoutContext'
 
 export const CaloriesBurnedCard = () => {
   
-  const { totalCalories, setTotalCalories } = useContext(CaloriesContext);
+  const { totalCalories } = useContext(CaloriesContext);
 
   return (
     <>

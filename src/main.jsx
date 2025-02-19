@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { CheckAuthContext, CheckAuthProvider } from './CheckAuthContext';
 import { App } from './App';
 import { Dashboard } from './components/Dashboard/Dashboard';
@@ -8,18 +8,19 @@ import { Workout } from './components/Workout/Workout';
 import { Blog } from './components/Blog';
 import { ErrorPage } from './components/ErrorPage';
 import { Login } from './components/Login/Login'
+import { Loader } from './components/Loader/Loader'
 
 // Zustand für Authentifizierung verwalten
 const ProtectedLayout = () => {
   const { isAuthenticated } = useContext(CheckAuthContext);
-  if (isAuthenticated === null) return <div>Loading...</div>;
+  if (isAuthenticated === null) return <Loader/>;
   return isAuthenticated ? <App /> : <Navigate to="/login" />;
 };
 
 
   const LoginRoute = () => {
     const { isAuthenticated } = useContext(CheckAuthContext);
-    if (isAuthenticated === null) return <div>Loading...</div>;
+    if (isAuthenticated === null) return <Loader/>;
     return isAuthenticated ? <Navigate to="/dashboard" /> : <Login />;
   };
 

@@ -2,17 +2,18 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { CaloriesContext } from '../../../WorkoutContext';
-
+import { getISOWeek } from '../../utils/dateUtils'
+import annotationPlugin from "chartjs-plugin-annotation";
 
 
 // Registrierung der Chart-Komponenten
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, annotationPlugin, Title, Tooltip, Legend);
 
 export const BarChart = () => {
 
   const [apiDataLoaded, setApiDataLoaded] = useState(false);
-  
-  const { workouts } = useContext(CaloriesContext);
+
+  const { workouts, currentWeek } = useContext(CaloriesContext);
 
   const [formattedData, setFormattedData] = useState({
     Sun: 0,
@@ -23,7 +24,7 @@ export const BarChart = () => {
     Fri: 0,
     Sat: 0,
   });
-  
+
   // Workouts zu Kalorien-Daten aggregieren
   useEffect(() => {
     const caloriesByDay = workouts.reduce((acc, workout) => {
@@ -41,40 +42,107 @@ export const BarChart = () => {
 
 
   // BarchartReset
-  const isNewWeek = new Date().getDay()
 
-  const [hasBarchartReset, setHasBarchartReset] = useState(() => {
-    //muss in Localstorage gespeichert werden weil => wenn Seite neu geladen wird, wird der State Auto. resetet
-    const storedValue = localStorage.getItem("hasBarchartReset");
-    return storedValue ? JSON.parse(storedValue) : false;
+  const today = new Date().toISOString().split("T")[0];
+
+  const [lastBarchartReset, setLastBarchartReset] = useState(() => {
+    return localStorage.getItem("lastBarchartReset") || today;
   });
 
+
+  const lastResetWeek = getISOWeek(lastBarchartReset);
+  
   useEffect(() => {
-    if (apiDataLoaded && !hasBarchartReset && isNewWeek === 1) {
+    if (apiDataLoaded && currentWeek !== lastResetWeek) {
       setFormattedData((prevData) =>
         Object.keys(prevData).reduce((newData, key) => {
           newData[key] = 0;
           return newData;
         }, {})
       );
-      setHasBarchartReset(true);
-      localStorage.setItem("hasBarchartReset", JSON.stringify(true));
+  
+      setLastBarchartReset(today);
+      localStorage.setItem("lastBarchartReset", today);
     }
-    
-    if (isNewWeek === 0) {
-      setHasBarchartReset(false);
-      localStorage.setItem("hasBarchartReset", JSON.stringify(false));
+  }, [apiDataLoaded, lastBarchartReset]);
+
+
+
+
+  const initialTarget = 1000;
+
+  const [currentTarget, setCurrentTarget] = useState(
+    () => Number(localStorage.getItem("targetCalories")) || initialTarget
+  );
+  const [isEditing, setIsEditing] = useState(false);
+  const [editOrSave, setEditOrSave] = useState("Current");
+
+  useEffect(() => {
+    localStorage.setItem("targetCalories", currentTarget);
+  }, [currentTarget]);
+
+  const handleCaloriesTarget = () => {
+    setIsEditing(true);
+    setEditOrSave("Save");
+  };
+
+  const handleInputChange = (event) => {
+    setCurrentTarget(event.target.value);
+  };
+
+  const handleBlur = () => {
+    if (currentTarget === "") {
+      setCurrentTarget(initialTarget);
     }
-  }, [apiDataLoaded, isNewWeek, hasBarchartReset]);
+    setIsEditing(false);
+    setEditOrSave("Current");
+  };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleBlur();
+    } else if (event.key === "Escape") {
+      setIsEditing(false);
+      setEditOrSave("Current");
+      setCurrentTarget(Number(localStorage.getItem("targetCalories")) || initialTarget);
+    }
+  };
 
-
-
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: true },
+      annotation: {
+        annotations: {
+          targetLine: {
+            type: "line",
+            yMin: currentTarget,
+            yMax: currentTarget,
+            borderColor: "green",
+            borderWidth: 2,
+            borderDash: [5, 5],
+            label: {
+              content: `Ziel: ${currentTarget} kcal`,
+              enabled: true,
+              position: "end",
+              backgroundColor: "rgba(0, 128, 0, 0.8)",
+            },
+          },
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: "Weekly CB" },
+      },
+    },
+  };
 
   const data = {
-
-  // labels: ['0',   '1',   '2',   '3',   '4',   '5',   '6'],
-    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',],
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
       {
         label: 'Burned Calories',
@@ -87,35 +155,42 @@ export const BarChart = () => {
           formattedData.Fri,
           formattedData.Sat,
         ],
-        backgroundColor: '#297AE3',
+        backgroundColor: (context) => {
+          const value = context.raw;
+          return value >= currentTarget ? "green" : '#297AE3';
+        },
         borderColor: 'black',
         borderWidth: 1,
       }
     ]
   };
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'bottom',
-      },
-      title: {
-        display: true,
-        text: 'Weekly CB',
-      },
-    },
-  };
-
-
   return (
-    <div className='bar-chart-div'>
-      <Bar
-        className='chart bar-chart'
-        data={data}
-        options={options}
-      />
-    </div>
+    <>
+      <div>
+        <button className='calories-target' onClick={handleCaloriesTarget}>
+          {editOrSave} Target{" "}
+          {isEditing ? (
+            <input
+              type="number"
+              value={currentTarget}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              autoFocus
+            />
+          ) : (
+            currentTarget
+          )}
+        </button>
+      </div>
+      <div className='bar-chart-div'>
+        <Bar
+          className='chart bar-chart'
+          data={data}
+          options={options}
+        />
+      </div>
+    </>
   )
 }

@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react';
+import { getISOWeek } from './components/utils/dateUtils';
 import axios from 'axios';
 
 const APP_URL = import.meta.env.VITE_API_URL;
@@ -26,52 +27,52 @@ export const CaloriesProvider = ({ children }) => {
     fetchWorkouts();
   }, []);
 
-  useEffect(() => {
+
+  useEffect(() => { // Reset für die Calories per day
     const now = new Date();
     const millisecondsUntilMidnight =
       ((23 - now.getHours()) * 60 + (59 - now.getMinutes())) * 60 * 1000;
 
     const dailyResetTimeout = setTimeout(() => {
-      setDailyCalories(0);
+      setCaloriesBurnedPerDay(0);
       console.log("Tageskalorien zurückgesetzt!");
     }, millisecondsUntilMidnight);
 
     return () => clearTimeout(dailyResetTimeout);
   }, []);
+  
+
+  const today = new Date().toISOString().split("T")[0];
+  const currentWeek = getISOWeek(today);
+
+  const [lastCaloriesReset, setLastCaloriesReset] = useState(() => {
+    return localStorage.getItem("lastCaloriesReset") || today;
+  });
+
+  const lastResetWeek = getISOWeek(lastCaloriesReset);
 
   useEffect(() => {
-    const now = new Date();
-    const day = now.getDay();
-    const millisecondsUntilMidnight =
-      ((23 - now.getHours()) * 60 + (59 - now.getMinutes())) * 60 * 1000;
-
-    if (day === 0) {
-      const weeklyResetTimeout = setTimeout(() => {
-        setTotalCalories(0);
-        console.log("Wochenkalorien zurückgesetzt!");
-      }, millisecondsUntilMidnight);
-
-      return () => clearTimeout(weeklyResetTimeout);
+    if (currentWeek !== lastResetWeek) {
+      setTotalCalories(0);
+      localStorage.setItem("lastCaloriesReset", today);
+      setLastCaloriesReset(today);
+      console.log("Wochenkalorien zurückgesetzt!");
     }
-  }, []);
+  }, [currentWeek, lastResetWeek, today]);
 
 
   useEffect(() => {
     const total = workouts.reduce((sum, workout) => sum + workout.calories, 0);
     setTotalCalories(total);
-
     const today = new Date().toISOString().split("T")[0];
-
     const caloriesBurnedPerDay =
       workouts.filter((workout) => workout.date.split("T")[0] === today)
-        .reduce((sum, workout) => sum + workout.calories, 0);
+              .reduce((sum, workout) => sum + workout.calories, 0);
     setCaloriesBurnedPerDay(caloriesBurnedPerDay)
-
   })
 
-
   return (
-    <CaloriesContext.Provider value={{ workouts, totalCalories, caloriesBurnedPerDay, fetchWorkouts }}>
+    <CaloriesContext.Provider value={{ workouts, totalCalories, caloriesBurnedPerDay, fetchWorkouts,currentWeek }}>
       {children}
     </CaloriesContext.Provider>
   );
@@ -85,19 +86,11 @@ export const WorkoutProvider = ({ children }) => {
 
   const addWorkout = async (workout) => {
     try {
-      console.log("Workout wird hinzugefügt:", workout);
-
       await axios.post(APP_URL, workout);
-
-      console.log("Workout erfolgreich gespeichert.");
-
       setSelectWorkouts((prevWorkouts) => {
-        console.log("Aktuelle Workouts vor Update:", prevWorkouts);
         return [...prevWorkouts, workout];
       });
-
       fetchWorkouts();
-
     } catch (err) {
       console.error("Fehler beim Hinzufügen des Workouts:", err);
     }

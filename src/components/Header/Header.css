@@ -133,7 +133,6 @@
 
 .word.active {
   color: var(--main-brand-color);
-  font-weight: bold;
 }
 
 
