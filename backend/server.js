@@ -22,7 +22,7 @@ const axios = require('axios')
 
 const SECRET_KEY = crypto.randomBytes(32).toString('hex');
 
-// const SECRET_KEY = process.env.SECRET_KEY || "default_secret_key";
+
 // Session-Konfiguration
 app.use(
   session({
@@ -31,8 +31,8 @@ app.use(
     saveUninitialized: false,
     store:  MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
     cookie: {
-      secure:  process.env.NODE_ENV === 'production', // Nur auf true setzen, wenn HTTPS verwendet wird
-      httpOnly: true, // Schutz vor JavaScript-Angriffen
+      secure:  process.env.NODE_ENV === 'production',
+      httpOnly: true, 
       // sameSite: 'None', // Für Cross-Site-Cookies
       maxAge: 1000 * 60 * 60 * 24,
     },
@@ -50,13 +50,6 @@ initializePassport(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-
-// const io = new Server(httpServer, {
-//   cors: {
-//     origin: '*',
-//     credentials: true,
-//   }
-// });
 
 // cros-origin-Anfragen erlauben weil Frontend auf != Backend {Port} läuft
 app.use(

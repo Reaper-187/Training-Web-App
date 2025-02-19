@@ -1,5 +1,5 @@
 import React from 'react';
-import './Blog.css'
+import './blog.css'
 import { Loader } from './Loader/Loader';
 
 export const Blog = () => {
