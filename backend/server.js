@@ -18,10 +18,9 @@ const User = require('./models/LoginAndValidation/UserLoginSchema');
 const flash = require('express-flash');
 const MongoStore = require('connect-mongo');
 const crypto = require('crypto');
-const axios = require('axios')
+const axios = require('axios');
 
 const SECRET_KEY = crypto.randomBytes(32).toString('hex');
-
 
 // Session-Konfiguration
 app.use(
@@ -29,11 +28,11 @@ app.use(
     secret: SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    store:  MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
     cookie: {
-      secure:  process.env.NODE_ENV === 'production',
-      httpOnly: true, 
-      // sameSite: 'None', // Für Cross-Site-Cookies
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
       maxAge: 1000 * 60 * 60 * 24,
     },
   })
@@ -51,23 +50,24 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-// cros-origin-Anfragen erlauben weil Frontend auf != Backend {Port} läuft
+// CORS-Konfiguration
 app.use(
   cors({
-    origin: ['http://localhost:5173'],
-    credentials: true
+    origin: ["https://training-web-app-drab.vercel.app", "http://localhost:5173"], // Erlaubte Domains
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
   })
 );
 
-app.use(express.json());
+app.options('*', cors()); // Preflight-Requests für alle Routen erlauben
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Proxy-Route für die Nutritionix-API
-// Damit ungehe ich die Cors-Origin NW Rechtlinie
 app.post('/api/calories', async (req, res) => {
-  const API_CALORIES_KEY = process.env.VITE_API_KEY
-  const API_CALORIES_ID = process.env.VITE_APP_ID
+  const API_CALORIES_KEY = process.env.VITE_API_KEY;
+  const API_CALORIES_ID = process.env.VITE_APP_ID;
   try {
     const response = await axios.post(
       'https://trackapi.nutritionix.com/v2/natural/exercise',
@@ -90,7 +90,6 @@ app.post('/api/calories', async (req, res) => {
 // DB-Verbindung herstellen
 connectDB();
 
-
 // Routen
 app.use('/api', workoutRoutes); // Route für Workouts
 app.use('/api', userRoute); // Route für User
@@ -99,7 +98,13 @@ app.get('/', (req, res) => {
   res.send('API läuft');
 });
 
-const PORT = 5000;
+// Globaler Error-Handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Etwas ist schiefgelaufen!' });
+});
+
+const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {
   console.log(`Server läuft auf Port ${PORT}`);
 });

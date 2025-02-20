@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000"); // Ersetze localhost mit deiner Server-Adresse, falls nötig
+const socket = io("https://calories-tracker-3opf.onrender.com");
 
 export default socket;

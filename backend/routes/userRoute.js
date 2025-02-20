@@ -56,7 +56,8 @@ router.post('/register', async (req, res) => {
 
     const savedUser = await newUser.save();
 
-    const verifyLink = `http://localhost:3000/verify?token=${verificationToken}`;
+  const verifyLink = `https://training-web-app-drab.vercel.app/verify?token=${verificationToken}`;
+
 
     // E-Mail versenden
     const transporter = nodemailer.createTransport({
