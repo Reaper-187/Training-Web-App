@@ -30,9 +30,9 @@ app.use(
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production', // Nur in der Produktion
       httpOnly: true,
-      sameSite: 'None',
+      sameSite: 'None', // Immer 'None' setzen
       maxAge: 1000 * 60 * 60 * 24,
     },
   })
@@ -55,7 +55,7 @@ app.use(
   cors({
     origin: ["https://training-web-app-drab.vercel.app", "http://localhost:5173"], // Erlaubte Domains
     methods: "GET,POST,PUT,DELETE",
-    credentials: true
+    credentials: true,
   })
 );
 

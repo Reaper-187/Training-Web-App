@@ -11,8 +11,8 @@ export const CheckAuthProvider = ({ children }) => {
   
   const checkAuth = async () => {
     try {
-      const response = await axios.get(authCheck, {}, {
-        withCredentials: true,
+      const response = await axios.get(authCheck, {
+        withCredentials: true, // Cookies mitsenden
       });
       console.log("CheckAuth-Antwort:", response.data); // Debugging
       setIsAuthenticated(response.data.loggedIn);
