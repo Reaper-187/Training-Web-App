@@ -57,8 +57,9 @@ export const Login = () => {
       const response = await axios.post(url, values);
       if (response.data.success) {
         console.log("CheckAuth aufgerufen.");
-        await checkAuth()
-        navigate('/dashboard')
+        await checkAuth();
+        console.log("Weiterleitung zum Dashboard..."); // Debugging
+        navigate('/dashboard');
       } else {
         console.log("Fehler: Login nicht erfolgreich.");
       }

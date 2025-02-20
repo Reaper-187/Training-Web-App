@@ -11,11 +11,14 @@ export const CheckAuthProvider = ({ children }) => {
   
   const checkAuth = async () => {
     try {
-      const response = await axios.post(authCheck);
+      const response = await axios.post(authCheck, {}, {
+        withCredentials: true,
+      });
+      console.log("CheckAuth-Antwort:", response.data); // Debugging
       setIsAuthenticated(response.data.loggedIn);
     } catch (error) {
-       setIsAuthenticated(false);
       console.error("Fehler beim Überprüfen der Session:", error);
+      setIsAuthenticated(false);
     }
   };
 
