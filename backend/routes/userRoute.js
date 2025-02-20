@@ -10,7 +10,7 @@ const crypto = require('crypto');
 const EMAIL_USER = process.env.EMAIL_USER
 const EMAIL_PASS = process.env.EMAIL_PASS
 
-// methode Override überschreibt die Funktion dann kommt action"/logut?_method=DELETE"
+
 router.get('/logout', (req, res) => {
   // Damit werden alle Daten die in der Sitzung gespeichert sind gelöscht
   req.session.destroy((err) => {
@@ -119,7 +119,6 @@ router.get('/verify', async (req, res) => {
     res.status(500).send('Interner Serverfehler.');
   }
 });
-
 
 
 router.post('/login', (req, res, next) => {

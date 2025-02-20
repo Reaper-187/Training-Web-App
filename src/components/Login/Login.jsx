@@ -52,9 +52,11 @@ export const Login = () => {
 
   const handleSubmit = async (values, { setSubmitting }, isLogin) => {
     const url = isLogin ? login : register;
-
+  
     try {
-      const response = await axios.post(url, values);
+      const response = await axios.post(url, values, {
+        withCredentials: true, // Cookies mitsenden
+      });
       if (response.data.success) {
         console.log("CheckAuth aufgerufen.");
         await checkAuth();
@@ -64,17 +66,11 @@ export const Login = () => {
         console.log("Fehler: Login nicht erfolgreich.");
       }
     } catch (error) {
-      // Prüfe, ob der Fehler die erwartete Struktur hat
-      if (error.response) {
-        console.error('Fehler bei der Anfrage:', error.response.data);
-      } else {
-        console.error('Fehler ohne response:', error);
-      }
+      console.error('Fehler bei der Anfrage:', error.response?.data || error.message);
     } finally {
       setSubmitting(false);
     }
   };
-
 
   return (
     <div className={formSwitch === "Login" ? 'form-container login-form' : 'form-container regist-form'}>
