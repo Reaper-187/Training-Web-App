@@ -104,6 +104,11 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Etwas ist schiefgelaufen!' });
 });
 
+app.use((req, res, next) => {
+  console.log("Session-Daten:", req.session); // Debugging
+  next();
+});
+
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {
   console.log(`Server läuft auf Port ${PORT}`);

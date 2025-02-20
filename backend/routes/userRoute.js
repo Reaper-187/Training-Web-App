@@ -145,6 +145,7 @@ router.post('/login', (req, res, next) => {
       }
 
       req.session.loggedIn = true;
+      console.log("Session nach dem Login:", req.session); // Debugging
       res.status(200).json({
         success: true,
         message: 'Login erfolgreich',
