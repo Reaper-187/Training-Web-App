@@ -30,7 +30,7 @@ app.use(
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
     cookie: {
-      secure: process.env.NODE_ENV === 'production', // Nur in der Produktion
+      secure: true, // Nur in der Produktion
       httpOnly: true,
       sameSite: 'None', // Immer 'None' setzen
       maxAge: 1000 * 60 * 60 * 24,
@@ -59,7 +59,7 @@ app.use(
   })
 );
 
-app.options('*', cors()); // Preflight-Requests für alle Routen erlauben
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -109,7 +109,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 httpServer.listen(PORT, () => {
   console.log(`Server läuft auf Port ${PORT}`);
 });
