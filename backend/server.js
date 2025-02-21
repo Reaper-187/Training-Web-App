@@ -57,6 +57,8 @@ app.use(
     origin: ["https://training-web-app-drab.vercel.app", "http://localhost:5173"], // Erlaubte Domains
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["Set-Cookie"], 
   })
 );
 

@@ -26,7 +26,6 @@ router.get('/logout', (req, res) => {
 // Prüft ob User eingeloggt ist   
 router.get('/auth/check', (req, res) => {
   if (req.session.passport && req.session.passport.user) {
-    console.log('req.session.passport',req.session.passport, 'req.session.passport.user',req.session.passport.user)
     res.status(200).json({ loggedIn: true });
     // console.log('lggedIn ist True', ({loggedIn: true}));
   } else {
