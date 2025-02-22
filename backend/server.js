@@ -20,6 +20,19 @@ const MongoStore = require('connect-mongo');
 const crypto = require('crypto');
 const axios = require('axios');
 
+
+// CORS-Konfiguration
+app.use(
+  cors({
+    origin: "https://training-web-app-drab.vercel.app",
+    // methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+    // allowedHeaders: ["Content-Type", "Authorization"],
+    // exposedHeaders: ["Set-Cookie"], // ← Das erlaubt den Zugriff auf den Set-Cookie-Header
+  })
+);
+
+
 const SECRET_RANDOM_KEY = crypto.randomBytes(32).toString('hex');
 
 // Session-Konfiguration
@@ -34,7 +47,7 @@ app.use(session({
     cookie: {
         httpOnly: true,
         secure: true, // Falls HTTPS genutzt wird, auf true setzen
-        sameSite: 'none', // Falls Frontend auf anderer Domain, 'none' verwenden
+        sameSite: 'None', // Falls Frontend auf anderer Domain, 'none' verwenden
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
@@ -52,16 +65,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-// CORS-Konfiguration
-app.use(
-  cors({
-    origin: "https://training-web-app-drab.vercel.app",
-    // methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-    // allowedHeaders: ["Content-Type", "Authorization"],
-    // exposedHeaders: ["Set-Cookie"], // ← Das erlaubt den Zugriff auf den Set-Cookie-Header
-  })
-);
+
 
 // app.use((req, res, next) => {
 //   res.on('finish', () => {

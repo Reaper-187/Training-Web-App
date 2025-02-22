@@ -25,6 +25,8 @@ router.get('/logout', (req, res) => {
 
 // Prüft ob User eingeloggt ist   
 router.get('/auth/check', (req, res) => {
+
+  console.log("📌 Session-Daten bei authCheck:", req.session);
   if (req.session.passport && req.session.passport.user) {
     console.log('Resp-AuthCheck')
     res.status(200).json({ loggedIn: true });
@@ -59,7 +61,7 @@ router.post('/register', async (req, res) => {
 
     const savedUser = await newUser.save();
 
-  const verifyLink = `https://training-web-app-drab.vercel.app/verify?token=${verificationToken}`;
+    const verifyLink = `https://training-web-app-drab.vercel.app/verify?token=${verificationToken}`;
 
 
     // E-Mail versenden
@@ -148,7 +150,7 @@ router.post('/login', (req, res, next) => {
       }
 
       req.session.loggedIn = true;
-      console.log("Session nach dem Login:", req.session); // Debugging
+      console.log("✅ Login erfolgreich, Session:", req.session);
       res.status(200).json({
         success: true,
         message: 'Login erfolgreich',
