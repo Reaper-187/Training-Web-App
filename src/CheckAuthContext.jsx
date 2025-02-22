@@ -8,17 +8,14 @@ export const CheckAuthContext = createContext();
 
 export const CheckAuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  
+
   const checkAuth = async () => {
     try {
-      const response = await axios.get(authCheck, {
-        withCredentials: true, // Cookies mitsenden
-      });
-      console.log("CheckAuth-Antwort:", response.data); // Debugging
+      const response = await axios.get(authCheck);
       setIsAuthenticated(response.data.loggedIn);
     } catch (error) {
-      console.error("Fehler beim Überprüfen der Session:", error);
       setIsAuthenticated(false);
+      console.error("Fehler beim Überprüfen der Session:", error);
     }
   };
 
@@ -32,7 +29,7 @@ export const CheckAuthProvider = ({ children }) => {
 
 
   return (
-    <CheckAuthContext.Provider value={{toggleAuthentication, isAuthenticated, checkAuth }}>
+    <CheckAuthContext.Provider value={{ toggleAuthentication, isAuthenticated, checkAuth }}>
       {children}
     </CheckAuthContext.Provider>
   );

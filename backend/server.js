@@ -20,24 +20,24 @@ const MongoStore = require('connect-mongo');
 const crypto = require('crypto');
 const axios = require('axios');
 
-const SECRET_KEY = crypto.randomBytes(32).toString('hex');
+const SECRET_RANDOM_KEY = crypto.randomBytes(32).toString('hex');
 
 // Session-Konfiguration
-app.use(
-  session({
-    secret: SECRET_KEY,
+app.use(session({
+    secret: process.env.SECRET_KEY || SECRET_RANDOM_KEY,
     resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    saveUninitialized: false, // Muss false sein, sonst wird leere Session gespeichert
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        collectionName: 'sessions'
+    }),
     cookie: {
-      domain: undefined, // ← Domain setzen
-      secure: true, // Muss TRUE sein, weil HTTPS
-      httpOnly: true,
-      sameSite: "None", // Muss "None" sein, weil CORS
-      maxAge: 1000 * 60 * 60 * 24, // 1 Tag
-    },
-  })
-);
+        httpOnly: true,
+        secure: true, // Falls HTTPS genutzt wird, auf true setzen
+        sameSite: 'none', // Falls Frontend auf anderer Domain, 'none' verwenden
+        maxAge: 1000 * 60 * 60 * 24
+    }
+}));
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -56,22 +56,22 @@ app.use(flash());
 app.use(
   cors({
     origin: "https://training-web-app-drab.vercel.app",
-    methods: "GET,POST,PUT,DELETE",
+    // methods: "GET,POST,PUT,DELETE",
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-    exposedHeaders: ["Set-Cookie"], // ← Das erlaubt den Zugriff auf den Set-Cookie-Header
+    // allowedHeaders: ["Content-Type", "Authorization"],
+    // exposedHeaders: ["Set-Cookie"], // ← Das erlaubt den Zugriff auf den Set-Cookie-Header
   })
 );
 
-app.use((req, res, next) => {
-  res.on('finish', () => {
-    console.log('Response Headers:', res.getHeaders());
-  });
-  next();
-});
+// app.use((req, res, next) => {
+//   res.on('finish', () => {
+//     console.log('Response Headers:', res.getHeaders());
+//   });
+//   next();
+// });
 
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
+// const cookieParser = require("cookie-parser");
+// app.use(cookieParser());
 
 
 app.use(express.json());
@@ -112,15 +112,15 @@ app.get('/', (req, res) => {
 });
 
 // Globaler Error-Handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Etwas ist schiefgelaufen!' });
-});
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).json({ message: 'Etwas ist schiefgelaufen!' });
+// });
 
-app.use((req, res, next) => {
-  console.log("Session-Daten:", req.session); // Debugging
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log("Session-Daten:", req.session); // Debugging
+//   next();
+// });
 
 const PORT = 5000;
 httpServer.listen(PORT, () => {
