@@ -126,58 +126,40 @@ router.get('/verify', async (req, res) => {
 });
 
 
-// router.post('/login', (req, res, next) => {
-//   passport.authenticate('local', async (err, user, info) => {
-//     if (err) {
-//       return res.status(500).json({ success: false, message: 'Serverfehler' });
-//     }
-//     if (!user) {
-//       return res.status(401).json({ success: false, message: 'Ungültige Anmeldedaten' });
-//     }
-
-//     // Überprüfung, ob der Benutzer verifiziert ist
-//     if (!user.isVerified) {
-//       return res.status(403).json({
-//         success: false,
-//         message: 'Bitte bestätige zuerst deine E-Mail-Adresse, um dich einzuloggen.',
-//       });
-//     }
-
-//     req.logIn(user, err => {
-//       if (err) {
-//         console.log('Fehler beim Login:', err);
-//         return res.status(500).json({ success: false, message: 'Anmeldung fehlgeschlagen' });
-//       }
-
-//       req.session.loggedIn = true;
-//       console.log("✅ Login erfolgreich, Session:", req.session);
-//       res.status(200).json({
-//         success: true,
-//         message: 'Login erfolgreich',
-//         user: { email: user.email }
-//       });
-//     });
-//   })(req, res, next);
-// });
-
-
-
 router.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err);
-    if (!user) return res.status(401).json({ message: "Login fehlgeschlagen" });
+  passport.authenticate('local', async (err, user, info) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: 'Serverfehler' });
+    }
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Ungültige Anmeldedaten' });
+    }
 
-    req.logIn(user, (err) => {
-      if (err) return next(err);
-      
-      req.session.save(err => { // 👈 Erzwinge das Speichern der Session
-        if (err) return next(err);
-        console.log("✅ Session nach Speicherung:", req.session);
-        return res.json({ message: "Login erfolgreich", user });
+    // Überprüfung, ob der Benutzer verifiziert ist
+    if (!user.isVerified) {
+      return res.status(403).json({
+        success: false,
+        message: 'Bitte bestätige zuerst deine E-Mail-Adresse, um dich einzuloggen.',
+      });
+    }
+
+    req.logIn(user, err => {
+      if (err) {
+        console.log('Fehler beim Login:', err);
+        return res.status(500).json({ success: false, message: 'Anmeldung fehlgeschlagen' });
+      }
+
+      req.session.loggedIn = true;
+      console.log("✅ Login erfolgreich, Session:", req.session);
+      res.status(200).json({
+        success: true,
+        message: 'Login erfolgreich',
+        user: { email: user.email }
       });
     });
   })(req, res, next);
 });
+
 
 
 router.get('/dashboard', isAuthenticated, (req, res) => {

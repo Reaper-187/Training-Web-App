@@ -55,12 +55,11 @@ export const Login = () => {
   
     try {
       const response = await axios.post(url, values, {
-        withCredentials: true, // Cookies mitsenden
-      });
+        withCredentials: true,
+      })
       if (response.data.success) {
         console.log("CheckAuth aufgerufen.");
         await checkAuth();
-        console.log("Weiterleitung zum Dashboard..."); // Debugging
         navigate('/dashboard');
       } else {
         console.log("Fehler: Login nicht erfolgreich.");
