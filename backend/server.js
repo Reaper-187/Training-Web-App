@@ -30,14 +30,15 @@ app.use(
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
     cookie: {
-      secure: true, // Nur in der Produktion = "Produktion"
+      domain: undefined, // ← Domain setzen
+      secure: true, // Muss TRUE sein, weil HTTPS
       httpOnly: true,
-      SameSite: "None",
-      domain: ".onrender.com",
-      maxAge: 1000 * 60 * 60 * 24,
+      sameSite: "None", // Muss "None" sein, weil CORS
+      maxAge: 1000 * 60 * 60 * 24, // 1 Tag
     },
   })
 );
+
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -54,13 +55,20 @@ app.use(flash());
 // CORS-Konfiguration
 app.use(
   cors({
-    origin: ["https://training-web-app-drab.vercel.app", "http://localhost:5173"], // Erlaubte Domains
+    origin: ["https://training-web-app-drab.vercel.app", "http://localhost:5173"],
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
-    exposedHeaders: ["Set-Cookie"], 
+    exposedHeaders: ["Set-Cookie"], // ← Das erlaubt den Zugriff auf den Set-Cookie-Header
   })
 );
+
+app.use((req, res, next) => {
+  res.on('finish', () => {
+    console.log('Response Headers:', res.getHeaders());
+  });
+  next();
+});
 
 
 
