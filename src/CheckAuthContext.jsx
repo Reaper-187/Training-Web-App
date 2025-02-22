@@ -11,7 +11,9 @@ export const CheckAuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const response = await axios.get(authCheck);
+      const response = await axios.get(authCheck, {
+        withCredentials: true,
+      });
       setIsAuthenticated(response.data.loggedIn);
     } catch (error) {
       setIsAuthenticated(false);

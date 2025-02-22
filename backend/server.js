@@ -20,11 +20,12 @@ const MongoStore = require('connect-mongo');
 const crypto = require('crypto');
 const axios = require('axios');
 
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 // CORS-Konfiguration
 app.use(
   cors({
-    origin: "https://training-web-app-drab.vercel.app",
+    origin: FRONTEND_URL,
     // methods: "GET,POST,PUT,DELETE",
     credentials: true,
     // allowedHeaders: ["Content-Type", "Authorization"],
@@ -47,12 +48,13 @@ app.use(session({
     cookie: {
         httpOnly: true,
         secure: true, // Falls HTTPS genutzt wird, auf true setzen
-        sameSite: 'None', // Falls Frontend auf anderer Domain, 'none' verwenden
+        sameSite: 'none', // Falls Frontend auf anderer Domain, 'none' verwenden
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
 
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 initializePassport(
@@ -65,21 +67,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-
-
-// app.use((req, res, next) => {
-//   res.on('finish', () => {
-//     console.log('Response Headers:', res.getHeaders());
-//   });
-//   next();
-// });
-
-// const cookieParser = require("cookie-parser");
-// app.use(cookieParser());
-
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Proxy-Route für die Nutritionix-API
 app.post('/api/calories', async (req, res) => {
@@ -115,16 +102,6 @@ app.get('/', (req, res) => {
   res.send('API läuft');
 });
 
-// Globaler Error-Handler
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).json({ message: 'Etwas ist schiefgelaufen!' });
-// });
-
-// app.use((req, res, next) => {
-//   console.log("Session-Daten:", req.session); // Debugging
-//   next();
-// });
 
 const PORT = 5000;
 httpServer.listen(PORT, () => {
