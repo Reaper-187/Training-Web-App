@@ -55,7 +55,7 @@ app.use(flash());
 // CORS-Konfiguration
 app.use(
   cors({
-    origin: ["https://training-web-app-drab.vercel.app", "http://localhost:5173"],
+    origin: "https://training-web-app-drab.vercel.app",
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -70,6 +70,8 @@ app.use((req, res, next) => {
   next();
 });
 
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 
 app.use(express.json());
