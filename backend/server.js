@@ -104,8 +104,8 @@ app.post('/api/calories', async (req, res) => {
 connectDB();
 
 // Routen
-app.use('/', workoutRoutes); // Route für Workouts
-app.use('/', userRoute); // Route für User
+app.use('/api', workoutRoutes); // Route für Workouts
+app.use('/api', userRoute); // Route für User
 
 app.get('/', (req, res) => {
   res.send('API läuft');
