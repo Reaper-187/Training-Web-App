@@ -3,6 +3,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const express = require("express");
+const app = express();
 const connectDB = require('./db');
 const workoutRoutes = require('./routes/workoutRoutes');
 const userRoute = require('./routes/userRoute');
@@ -18,7 +19,7 @@ const flash = require('express-flash');
 const MongoStore = require('connect-mongo');
 const crypto = require('crypto');
 const axios = require('axios');
-const app = express();
+
 
 app.set('trust proxy', 1); // Vertraue dem ersten Proxy
 
