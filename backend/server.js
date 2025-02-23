@@ -3,7 +3,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const express = require("express");
-const app = express();
 const connectDB = require('./db');
 const workoutRoutes = require('./routes/workoutRoutes');
 const userRoute = require('./routes/userRoute');
@@ -19,17 +18,16 @@ const flash = require('express-flash');
 const MongoStore = require('connect-mongo');
 const crypto = require('crypto');
 const axios = require('axios');
+const app = express();
 
-const FRONTEND_URL = process.env.FRONTEND_URL;
+app.set('trust proxy', 1); // Vertraue dem ersten Proxy
 
 // CORS-Konfiguration
+const FRONTEND_URLS = process.env.FRONTEND_URLS.split(',');
 app.use(
   cors({
-    origin: FRONTEND_URL,
-    // methods: "GET,POST,PUT,DELETE",
+    origin: FRONTEND_URLS, // Array von erlaubten URLs
     credentials: true,
-    // allowedHeaders: ["Content-Type", "Authorization"],
-    // exposedHeaders: ["Set-Cookie"], // ← Das erlaubt den Zugriff auf den Set-Cookie-Header
   })
 );
 
@@ -47,7 +45,7 @@ app.use(session({
   }),
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== 'production', // Falls HTTPS genutzt wird, auf true setzen
+    secure: true, // Falls HTTPS genutzt wird, auf true setzen
     sameSite: 'none', // Falls Frontend auf anderer Domain, 'none' verwenden
     maxAge: 1000 * 60 * 60 * 24
   }
