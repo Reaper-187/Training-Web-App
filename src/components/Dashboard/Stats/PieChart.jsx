@@ -30,9 +30,11 @@ export const PieChart = () => {
     const getDataForPieChart = async () => {
       try {
         const response = await axios.get(APP_URL);
+        
         const workoutsForCurrentDay = response.data.filter(
           (filteredPieData) => filteredPieData.date.slice(0, 10) === currentDate
         );
+        
         const updatedPieCount = workoutsForCurrentDay.reduce((acc, findTypeOfTrain) => {
           const key = findTypeOfTrain.name || "Cardio";
           acc[key] = (acc[key] || 0) + 1;

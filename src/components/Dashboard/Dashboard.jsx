@@ -31,22 +31,22 @@ export const Dashboard = () => {
         closeAddBtn();
       }
     };
-  
+
     const handleEscapeKey = (event) => {
       if (event.key === "Escape" || event.code === "Escape") {
         closeAddBtn();
       }
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscapeKey);
-  
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscapeKey);
     };
   }, []);
-  
+
 
 
 
@@ -81,17 +81,20 @@ export const Dashboard = () => {
         <StatsSlider />
       </div>
 
-      <div className='stat-card add-btn-comp'>
+      {/* stat-card add-btn-comp */}
+      <div className='stat-card add-btn-comp circle'>
         <span onClick={openAddBtn}>
           <OpenAdd />
         </span>
       </div>
 
-      <div className={`add-container ${openAddWorkout ? 'active' : ''}`} ref={selectRef}>
-        <div className='closeBtn' onClick={closeAddBtn} >
-          <CloseAdd />
+      <div className={`select-screen-container ${openAddWorkout ? 'active' : ''}`}>
+        <div className='add-container'  ref={selectRef}>
+          <div className='closeBtn' onClick={closeAddBtn} >
+            <CloseAdd />
+          </div>
+          <SelectScreen />
         </div>
-        <SelectScreen />
       </div>
     </div>
   )

@@ -1,12 +1,24 @@
-.add-container{
+.select-screen-container {
   display: none;
 }
 
-.add-container.active{
+.select-screen-container.active {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  background-color: rgba(71, 71, 71, 0.596);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+}
+
+.add-container {
   display: block;
   position: absolute;
   top: 30%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   padding: 1.5rem;
   width: 67.3vw;
   height: 45vh;
@@ -23,8 +35,6 @@
   justify-content: space-between;
   align-items: center;
   margin: 5rem 0;
-  opacity: 0;
-  animation: display-options .7s ease-in-out .7s forwards;
 }
 
 .input-field {
@@ -39,7 +49,6 @@
   border: unset;
   border-bottom: solid 1px black;
   background-color: unset;
-  
 }
 
 select {
@@ -51,15 +60,14 @@ select {
   min-width: max-content;
 }
 
-.select-field{
+.select-field {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.training-type-selector{
-  width: 100%;
+.training-type-selector {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -71,62 +79,112 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0;
 }
 
+.strengh-inputs {
+
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.summarize-container{
+  display: flex;
+  flex-wrap: wrap;
+  min-width: fit-content;
+  /* width: 25%; */
+}
+.summarize-value {
+  border: solid var(--main-brand-color) 2px;
+  width: fit-content;
+  padding: .2rem;
+  border-radius: 5px;
+  margin: .5rem;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.top-options {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+}
+
+.ops {
+  height: 100%;
+}
+
+.forward-backward-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+
 @media (max-width: 425px) {
-  .add-container.active {
+  .add-container{
     display: flex;
     flex-direction: column;
     align-items: center;
     height: fit-content;
+    top: 15%;
   }
+
   .display-options {
     margin: unset;
     flex-direction: column;
   }
 
-  .training-type-selector{
+  .training-type-selector {
     width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
   }
-  
-  .input-field input{
+
+  .input-field input {
     min-width: 4vw;
     margin: .8rem;
   }
-}
 
-@media (min-width: 768px) and (max-width: 1024px)  { 
 
-  .add-container.active{
-    transform: none;
-    height: auto;
-    min-height: 40vh;
-    display: flex;
-    flex-direction: column;
+  
+
+  .forward-backward-btn {
     align-items: center;
+    flex-direction: column-reverse;
+    justify-content: center;
+    margin: 2.5rem 0 1rem 0;
   }
 
 
-  .display-options{
+
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+  .display-options {
     flex-direction: column;
     gap: 2rem;
     opacity: 0;
-    
+
   }
 
+  .forward-backward-btn {
+    justify-content: center;
+  }
 
-} 
+}
 
-@media (min-width: 1440px){ 
-  .display-options{
+@media (min-width: 1440px) {
+  .display-options {
     margin: 2rem 0;
     justify-content: space-evenly;
     align-items: baseline;
     width: 100%;
   }
 
-} 
+
+
+}
 
 
 @keyframes addWorkoutAnimation {
@@ -137,16 +195,6 @@ input[type=number]::-webkit-outer-spin-button {
 
   to {
     transform: translate(0px, 5px);
-    opacity: 1;
-  }
-}
-
-@keyframes display-options {
-  from {
-    opacity: 0;
-  }
-
-  to {
     opacity: 1;
   }
 }

@@ -20,6 +20,12 @@
   padding: 1rem;
 }
 
+/* .circle {
+  position: fixed;
+  right: 5%;
+  bottom: 10%;
+} */
+
 .resp-graph {
   display: none;
   animation-delay: .6s;
@@ -110,8 +116,6 @@
 
   }
 }
-
-
 
 @keyframes fadeStatsIn {
   from{

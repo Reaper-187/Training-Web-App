@@ -173,11 +173,28 @@ label{
 @media (max-width: 425px){
 
   .responsive-btn{
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--main-brand-color);
+    padding: 1rem;
+    border-radius: 50%;
   }
 
   .add-btn{
     display: none;
   }
 
+  .close-container{
+    top: -20px;
+  }
+
+}
+
+
+@media (min-width: 768px){
+
+  .close-container{
+    top: -15px;
+  }
 }

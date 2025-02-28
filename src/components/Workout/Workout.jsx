@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './Workout.css'
 import { Calender } from './Calender'
-import { WorkoutContext, BarChartContext } from '../../WorkoutContext'
+import { WorkoutContext, CaloriesContext } from '../../WorkoutContext'
 import axios from 'axios'
 
 
@@ -10,19 +10,17 @@ const APP_URL = import.meta.env.VITE_API_URL
 export const Workout = () => {
 
   const WorkoutList = () => {
-
-    const { decreaseBarCaloriesForDay } = useContext(BarChartContext)
     const { selectWorkouts, setSelectWorkouts } = useContext(WorkoutContext);
+    const { fetchWorkouts} = useContext(CaloriesContext);
 
     function deleteWorkoutCard(_id) {
       const workoutToDelete = selectWorkouts.find((workout) => workout._id === _id);
       if (workoutToDelete) {
-        const caloriesToSubtract = workoutToDelete.calories;
         axios.delete(APP_URL + '/' + workoutToDelete._id)
           .then(() => {
             const newList = selectWorkouts.filter((workout) => workout._id !== _id);
             setSelectWorkouts(newList);
-            decreaseBarCaloriesForDay(caloriesToSubtract)
+            fetchWorkouts()
           })
           .catch((err) => {
             console.error('Lösung konnte nicht durchgeführt werden', err);

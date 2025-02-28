@@ -1,12 +1,68 @@
-import React, { useState, useContext } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
-import { WorkoutContext, BarChartContext } from '../../../../../WorkoutContext';
+import React, { useState, useContext, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import { Stepper, Step, StepLabel, Button } from "@mui/material";
+import { motion, AnimatePresence } from "framer-motion";
+import { WorkoutContext } from '../../../../../WorkoutContext';
 import { fetchCalories } from '../../../../../apiService';
 import { calculateStrengthCalories } from '../../../../../strengthService';
 import 'react-toastify/dist/ReactToastify.css';
-import './SelectScreen.css'
+import './SelectScreen.css';
+import { WorkoutTypeSelect } from './WorkoutTypeSelect/WorkoutTypeSelect';
+import { CardioSelect } from './MuscleSelect/CardioSelect';
+import { StrengthSelect } from './MuscleSelect/StrengthSelect';
+import { InputField } from './InputField/InputField';
+
+
+const steps = ["Workout-Typ", "Excirsize", "Details", "Add-Workout"];
+
+
+const stepVariants = {
+  hidden: (direction) => ({
+    opacity: 0,
+    x: direction > 0 ? 100 : -100, // Kommt von rechts, wenn `direction > 0`, sonst von links
+  }),
+  visible: { opacity: 1, x: 0 },
+  exit: (direction) => ({
+    opacity: 0,
+    x: direction > 0 ? -100 : 100, // Verlassen nach links oder rechts
+  }),
+};
+
 
 export const SelectScreen = () => {
+
+  const [activeStep, setActiveStep] = useState(0);
+  const [summarizeValue, setSummarizeValue] = useState(null);
+  const [direction, setDirection] = useState(1); // 1 = vorwärts, -1 = zurück
+
+  const handleNext = () => {
+    if (activeStep === 2) {
+      // Daten für die Zusammenfassung setzen, wenn der User auf "Weiter" klickt
+      const newWorkoutData = {
+        type: typeOfTraining,
+        name: selectedMuscleValue,
+        exsize: selectedWorkoutValue,
+        weight: weightValue || null,
+        sets: setsValue || null,
+        reps: repsValue || null,
+        time: timeValue || null,
+      };
+
+      console.log("Workout-Daten für Zusammenfassung:", newWorkoutData);
+      setDirection(1);
+      setSummarizeValue(newWorkoutData);
+    }
+
+    setActiveStep((prevStep) => prevStep + 1);
+  };
+
+  const handleBack = () => {
+    if (activeStep === 3) {
+      setSummarizeValue(null);
+    }
+    setDirection(-1);
+    setActiveStep((prevStep) => prevStep - 1);
+  };
 
   const notify = (isValid) => {
     if (isValid) {
@@ -29,235 +85,165 @@ export const SelectScreen = () => {
     }
   }
 
-  const [typeOfTraining, setTypeOfTraining] = useState(null);
-  const [selectedMuscleValue, setSelectedMuscleValue] = useState("");
-  const { addWorkout } = useContext(WorkoutContext);
-  const { increaseBarCaloriesForDay } = useContext(BarChartContext);
-
-
-  const muscleGroupOptions = {
-    Chest: ["Bench Press", "Incline Bench Press", "Chest Press", "Butterfly"],
-    Back: ["Pull-Ups", "Lat Pulldown", "Rowing"],
-    Biceps: ["Bicep Curls", "Hammer Curls", "Scott Curls"],
-    Triceps: ["Tricep Dips", "Tricep Pushdowns", "Overhead Extensions"],
-    Legs: ["Squats", "Leg Press", "Lunges"],
-    Shoulders: ["Shoulder Press", "Lateral Raises", "Front Raises"],
-    Booty: ["Hip Thrust", "Glute Bridge"],
-    Abs: ["Crunches", "Plank", "Russian Twists"],
-  };
-
-
+  const [typeOfTraining, setTypeOfTraining] = useState("");
   const [selectedWorkoutValue, setSelectedWorkoutValue] = useState("");
+  const [timeValue, setTimeValue] = useState("");
+  const [selectedMuscleValue, setSelectedMuscleValue] = useState("");
+  const [weightValue, setWeightValue] = useState("");
   const [setsValue, setSetsValue] = useState("");
   const [repsValue, setRepsValue] = useState("");
-  const [weightValue, setWeightValue] = useState("");
-  const [timeValue, setTimeValue] = useState("")
 
-
-
-
-  const handleMuscleChange = (e) => {
-    setSelectedMuscleValue(e.target.value);
-    setSelectedWorkoutValue(""); // Reset the workout selection
-  };
-
-  const handleAddWorkout = async () => {
-    const workoutData = {
-      type: typeOfTraining,
-      name: selectedMuscleValue,
-      exsize: selectedWorkoutValue,
-      weight: weightValue || '-',
-      sets: setsValue,
-      reps: repsValue,
-      time: timeValue || '-',
-    };
-
-
-    let cardioCaloriesData;
-    let strengthCaloriesData;
-
-
-    if (typeOfTraining === 'Cardio') {
-      // debugger
-      cardioCaloriesData = await fetchCalories(`${selectedWorkoutValue} for ${timeValue} minutes.`);
-      const cardioApiCalBurned = cardioCaloriesData.exercises[0].nf_calories;
-      workoutData.calories = cardioApiCalBurned;
-      increaseBarCaloriesForDay(cardioApiCalBurned)
-    } else {
-      strengthCaloriesData = calculateStrengthCalories(
-        selectedWorkoutValue,
-        weightValue,
-        setsValue,
-        repsValue,
-      );
-      const strengthCaloBurned = strengthCaloriesData.burnedCalories;
-      workoutData.calories = strengthCaloBurned
-      increaseBarCaloriesForDay(strengthCaloBurned);
-    }
-
-    if (cardioCaloriesData || strengthCaloriesData) {
-      addWorkout(workoutData);
-      console.log(workoutData)
-      console.log('Workout hinzugefügt');
-    } else {
-      console.log('Fehler bei Kalorienberechnung');
-    }
-  };
-
-  function displayOptions() {
-    if (typeOfTraining === "Cardio") {
-      const checkIfFieldEmpty = () => {
-        if (timeValue !== "") {
-          return true;
-        } else {
-          return false;
-        }
-      };
-      return (
-        <div className="display-options">
-          <div>
-            <h4>Type of Workout</h4>
-            <select
-              className="cardioTrainings"
-              onChange={(e) => setSelectedWorkoutValue(e.target.value)}
-              value={selectedWorkoutValue}
-            >
-              <option value=""></option>
-              {["running", "stepper", "jump-rope", "cycling", "rowing"].map((workout) => (
-                <option key={workout} value={workout}>
-                  {workout}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          <div>
-            <div className='input-field'>
-              <h4>Time (minutes)</h4>
-              <input
-                type="number"
-                value={timeValue}
-                onChange={(e) => setTimeValue(e.target.value)}
-                className="cardioTrainings"
-                />
-            </div>
-          </div>
-
-          <a className='addWorkoutBtn'
-            onClick={() => {
-              const isValid = checkIfFieldEmpty(); notify(isValid);
-              if (isValid)
-                handleAddWorkout();
-            }}>
-            <span>Add to!</span>
-          </a>
-          <ToastContainer />
-
-        </div>
-      );
-    } else if (typeOfTraining === 'Krafttraining') {
-
-      const checkIfFieldEmpty = () => {
-        if (
-          selectedWorkoutValue !== "" &&
-          (typeOfTraining === "Krafttraining" ? (weightValue !== "" && repsValue !== "" && setsValue !== "" && selectedMuscleValue !== "") : true)
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      };
-
-      const availableWorkouts = selectedMuscleValue && muscleGroupOptions[selectedMuscleValue]
-        ? muscleGroupOptions[selectedMuscleValue] : [];
-
-
-      return (
-        <div className='display-options'>
-          <div className='select-field'>
-            <h4>Type of Muscle</h4>
-            <select onChange={handleMuscleChange} value={selectedMuscleValue}>
-              <option value=""></option>
-              {Object.keys(muscleGroupOptions).map((muscle) => (
-                <option key={muscle} value={muscle}>
-                  {muscle}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <h4>Type of Workout</h4>
-            <select onChange={(e) => setSelectedWorkoutValue(e.target.value)} value={selectedWorkoutValue} disabled={!selectedMuscleValue}>
-              <option value=""></option>
-              {availableWorkouts.map((workout) => (
-                <option key={workout} value={workout}>
-                  {workout}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <div className="input-field">
-              <h4>Weight in kg</h4>
-              <input type="number" value={weightValue} onChange={(e) => setWeightValue(e.target.value)} />
-            </div>
-          </div>
-          <div>
-            <div className="input-field">
-              <h4>Reps</h4>
-              <input type="number" value={repsValue} onChange={(e) => setRepsValue(e.target.value)} />
-            </div>
-          </div>
-          <div>
-            <div className="input-field">
-              <h4>Sets</h4>
-              <input type="number" value={setsValue} onChange={(e) => setSetsValue(e.target.value)} />
-            </div>
-          </div>
-
-          <a className='addWorkoutBtn'
-            onClick={() => {
-              const isValid = checkIfFieldEmpty(); notify(isValid);
-              if (isValid)
-                handleAddWorkout();
-            }}>
-            <span>Add to!</span>
-          </a>
-          <ToastContainer />
-        </div>
-      );
-    }
-
-    return null; //wenn nichts dann nichts
-  }
+  const { addWorkout } = useContext(WorkoutContext);
 
   const handleTypeChange = (newType) => {
     setTypeOfTraining(newType);
 
     if (newType === "Cardio") {
-      // Zurücksetzen der Krafttraining-spezifischen Felder
+      // Zurücksetzen der Strength-spezifischen Werte
       setSelectedMuscleValue("");
       setWeightValue("");
       setSetsValue("");
       setRepsValue("");
-    } else if (newType === "Krafttraining") {
-      // Zurücksetzen der Cardio-spezifischen Felder
+    } else if (newType === "Strength") {
+      // Zurücksetzen der Cardio-spezifischen Werte
       setTimeValue("");
     }
   };
 
+  const handleAddWorkout = async () => {
+    if (!summarizeValue) return;
+
+    let caloriesBurned = 0;
+
+    if (summarizeValue.type === 'Cardio') {
+      const cardioCaloriesData = await fetchCalories(`${summarizeValue.exsize} for ${summarizeValue.time} minutes.`);
+      caloriesBurned = cardioCaloriesData.exercises[0].nf_calories;
+    } else {
+      const strengthCaloriesData = calculateStrengthCalories(
+        summarizeValue.exsize,
+        summarizeValue.weight,
+        summarizeValue.sets,
+        summarizeValue.reps
+      );
+      caloriesBurned = strengthCaloriesData.burnedCalories;
+    }
+
+    const workoutToSave = { ...summarizeValue, calories: caloriesBurned };
+
+    addWorkout(workoutToSave);
+    notify(true);
+  };
+
+  useEffect(() => {
+    if (activeStep === 3) {
+      setSummarizeValue({
+        type: typeOfTraining,
+        name: selectedMuscleValue || "",
+        exsize: selectedWorkoutValue,
+        weight: weightValue || null,
+        sets: setsValue || null,
+        reps: repsValue || null,
+        time: timeValue || null,
+      });
+    }
+  }, [activeStep, typeOfTraining, selectedMuscleValue, selectedWorkoutValue, weightValue, setsValue, repsValue, timeValue]);
+
+
   return (
-    <>
-      <h2>Add Workout</h2>
-      <div className='training-type-selector'>
-          <h4>What did you do</h4>
-        <select onChange={(e) => handleTypeChange(e.target.value)} value={typeOfTraining || ""}>
-          <option value="">------</option>
-          <option value="Cardio">Cardio</option>
-          <option value="Krafttraining">Krafttraining</option>
-        </select>
-        {displayOptions()}
+    
+    <div className='top-options'>
+      <div className='ops'>
+        <Stepper activeStep={activeStep} alternativeLabel>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={activeStep}
+            variants={stepVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            custom={direction}
+            transition={{ duration: 0.3 }}
+          >
+            {activeStep === 0 && <WorkoutTypeSelect typeOfTraining={typeOfTraining} handleTypeChange={handleTypeChange} />}
+
+            {activeStep === 1 && (
+              typeOfTraining === "Cardio" ? (
+                <CardioSelect
+                  selectedWorkoutValue={selectedWorkoutValue}
+                  setSelectedWorkoutValue={setSelectedWorkoutValue}
+                />
+              ) : typeOfTraining === "Strength" ? (
+                <StrengthSelect
+                  selectedMuscleValue={selectedMuscleValue}
+                  setSelectedMuscleValue={setSelectedMuscleValue}
+                  selectedWorkoutValue={selectedWorkoutValue}
+                  setSelectedWorkoutValue={setSelectedWorkoutValue}
+                />
+              ) : null
+            )}
+
+            {activeStep === 2 && (
+              <InputField
+                typeOfTraining={typeOfTraining}
+                weightValue={weightValue} setWeightValue={setWeightValue}
+                setsValue={setsValue} setSetsValue={setSetsValue}
+                repsValue={repsValue} setRepsValue={setRepsValue}
+                timeValue={timeValue} setTimeValue={setTimeValue}
+              />
+            )}
+
+            {summarizeValue && (
+              <div>
+                <ul className='summarize-container'>
+                <h3>Summarize</h3>
+                  {Object.entries(summarizeValue).map(([key, value]) =>
+                    value ? <li className='summarize-value' key={key}><strong>{key}:</strong> {value}</li> : null
+                  )}
+                </ul>
+              </div>
+            )}
+
+          </motion.div>
+        </AnimatePresence>
       </div>
-    </>
-  )
+      
+      <div className='forward-backward-btn'>
+        <Button disabled={activeStep === 0} onClick={handleBack}>
+          Zurück
+        </Button>
+
+
+        {
+          activeStep < steps.length - 1 ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleNext}
+              disabled={
+                (activeStep === 0 && !typeOfTraining) ||
+                (activeStep === 1 && !selectedWorkoutValue) ||
+                (activeStep === 2 && typeOfTraining === "Strength" && (!weightValue || !setsValue || !repsValue))
+              }
+            >
+              {activeStep === steps.length - 1 ? "Abschließen" : "Weiter"}
+            </Button>
+
+          ) : (
+
+            <a className="addWorkoutBtn" onClick={handleAddWorkout}>
+              <span>Add to!</span>
+            </a>
+          )
+        }
+      </div>
+      <ToastContainer />
+    </div >
+  );
 };

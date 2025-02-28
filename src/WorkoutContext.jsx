@@ -72,7 +72,7 @@ export const CaloriesProvider = ({ children }) => {
   })
 
   return (
-    <CaloriesContext.Provider value={{ workouts, totalCalories, caloriesBurnedPerDay, fetchWorkouts,currentWeek }}>
+    <CaloriesContext.Provider value={{ workouts, totalCalories, caloriesBurnedPerDay, fetchWorkouts, currentWeek }}>
       {children}
     </CaloriesContext.Provider>
   );
@@ -102,58 +102,5 @@ export const WorkoutProvider = ({ children }) => {
     </WorkoutContext.Provider>
   );
 };
-
-
-
-export const BarChartContext = createContext();
-
-export const BarChartProvider = ({ children }) => {
-
-  const [dailyCalories, setDailyCalories] = useState({
-    Sun: 0,
-    Mon: 0,
-    Tue: 0,
-    Wed: 0,
-    Thu: 0,
-    Fri: 0,
-    Sat: 0
-  });
-
-  const getCurrentDay = () => {
-    const week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    const creatWorkoutDay = new Date().getDay(); //Wochentag wird hier ermittelt von 0 bis 6
-    return week[creatWorkoutDay]; //mit Week wird der Wochentag in Tagesnamen übersetzt
-  }
-
-  const increaseBarCaloriesForDay = (cal) => {
-    setDailyCalories((prevCalories) => {
-      const day = getCurrentDay();
-      const updatedCalories = { ...prevCalories };
-      updatedCalories[day] = (updatedCalories[day] || 0) + cal;
-      console.log('Increase der BARCHART Funktioniert wie es soll', updatedCalories); // Debug-Ausgabe
-      return updatedCalories;
-    });
-  };
-
-  const decreaseBarCaloriesForDay = (cal) => {
-    setDailyCalories((prevCalories) => {
-      const day = getCurrentDay();
-      if (prevCalories[day] >= cal) {
-        const updatedCalories = { ...prevCalories };
-        updatedCalories[day] -= cal;
-        console.log('deIncrease der BARCHART Funktioniert wie es soll', updatedCalories); // Debug-Ausgabe
-        return updatedCalories;
-      } else {
-        return prevCalories;
-      }
-    });
-  };
-
-  return (
-    <BarChartContext.Provider value={{ dailyCalories, setDailyCalories, increaseBarCaloriesForDay, decreaseBarCaloriesForDay, getCurrentDay }}>
-      {children}
-    </BarChartContext.Provider>
-  )
-}
 
 

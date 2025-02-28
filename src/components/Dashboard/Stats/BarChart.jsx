@@ -34,10 +34,10 @@ export const BarChart = () => {
       return acc;
     }, {});
 
-    setFormattedData((prevData) => ({
-      ...prevData,
-      ...caloriesByDay,
-    }));
+    console.log('Das sind die Calories für den Heutigen Tag',caloriesByDay);
+    
+    setFormattedData(caloriesByDay);
+    
   }, [workouts]);
 
 

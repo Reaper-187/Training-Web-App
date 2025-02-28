@@ -39,3 +39,17 @@
   11% , 21% ,41% , 61% , 71% , 91% , 99%
   { height: 18px}
 }
+
+
+
+@media (max-width: 1024px) {
+
+  .loader-container {
+    transform: translate(30%, -50%);
+  }
+  .loader{
+    width: unset;
+  }
+
+
+}
