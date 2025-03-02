@@ -47,7 +47,9 @@
   min-width: 1vw;
   field-sizing: content;
   border: unset;
-  border-bottom: solid 1px black;
+  font-size: 1.2vw;
+  color: var(--text-color);
+  border-bottom: solid 1px var(--text-color);
   background-color: unset;
 }
 
@@ -89,7 +91,6 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex;
   flex-wrap: wrap;
   min-width: fit-content;
-  /* width: 25%; */
 }
 .summarize-value {
   border: solid var(--main-brand-color) 2px;

@@ -16,6 +16,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem; /* Abstand zwischen den Cards */
+  width: fit-content;
 }
 
 .workout-card {

@@ -82,7 +82,7 @@ export const Dashboard = () => {
       </div>
 
       {/* stat-card add-btn-comp */}
-      <div className='stat-card add-btn-comp circle'>
+      <div className='stat-card add-btn-comp'>
         <span onClick={openAddBtn}>
           <OpenAdd />
         </span>

@@ -8,7 +8,8 @@ import { CheckAuthContext } from "../../CheckAuthContext";
 import * as Yup from 'yup';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
-import gymPic from '../../assets/img/form-banner-1.jpg'
+import loginPic from '../../assets/img/loginPic.png'
+import gymPic from '../../assets/img/registerPic.jpg'
 
 
 axios.defaults.withCredentials = true; // damit erlaube ich das senden von cookies
@@ -50,33 +51,39 @@ export const Login = () => {
 
   const navigate = useNavigate();
 
+  const [serverError, setServerError] = useState("");
+
   const handleSubmit = async (values, { setSubmitting }, isLogin) => {
     const url = isLogin ? login : register;
-  
+
     try {
-      const response = await axios.post(url, values, {
-        withCredentials: true,
-      })
+      const response = await axios.post(url, values, { withCredentials: true });
+
       if (response.data.success) {
-        console.log("CheckAuth aufgerufen.");
         await checkAuth();
         navigate('/dashboard');
       } else {
-        console.log("Fehler: Login nicht erfolgreich.");
+        setServerError(response.data.message || "Ungültige Anmeldedaten");
       }
     } catch (error) {
-      console.error('Fehler bei der Anfrage:', error.response?.data || error.message);
+      console.error("Fehler:", error.response?.data || error.message);
+      setServerError(error.response?.data?.message || "Ein unerwarteter Fehler ist aufgetreten.");
     } finally {
       setSubmitting(false);
     }
   };
+
+
+
 
   return (
     <div className={formSwitch === "Login" ? 'form-container login-form' : 'form-container regist-form'}>
       {/* <div ></div> */}
       {/* <div className="form-container"> */}
 
-      <img src={gymPic} alt="" className="form-banner" />
+      <div className="form-banner">
+        <img src={formSwitch === "Login" ? loginPic : gymPic} alt="" />
+      </div>
 
       <Formik
         initialValues={initialValues}
@@ -110,14 +117,22 @@ export const Login = () => {
               <div className='lable-line'>Enter your password</div>
               <ErrorMessage name="password" component="div" className="error-message" />
             </div>
+            {serverError && <div className="error-message">{serverError}</div>}
 
-            <button type="submit" className="submit-btn" disabled={isSubmitting}>
-              {formSwitch === "Login" ? "Login" : "Register"}
-            </button>
+            <div class="box-3">
+              <div type="submit" className="btn btn-three submit-btn" disabled={isSubmitting}>
+                <span>{formSwitch === "Login" ? "Login" : "Register"}</span>
+              </div>
+            </div>
+            
+            <br />
 
-            <a className="links-btn" onClick={() => setFormSwitch(formSwitch === "Login" ? "Registration" : "Login")}>
-              {formSwitch === "Login" ? "Switch to Registration" : "Switch to Login"}
-            </a>
+            <div class="box-3">
+              <div type="submit" className="btn btn-three submit-btn " onClick={() => setFormSwitch(formSwitch === "Login" ? "Registration" : "Login")}>
+                <span>{formSwitch === "Login" ? "Switch to Registration" : "Switch to Login"}</span>
+              </div>
+            </div>
+
           </Form>
         )}
       </Formik>
