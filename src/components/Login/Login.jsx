@@ -75,16 +75,12 @@ export const Login = () => {
 
 
 
-
   return (
     <div className={formSwitch === "Login" ? 'form-container login-form' : 'form-container regist-form'}>
-      {/* <div ></div> */}
-      {/* <div className="form-container"> */}
-
       <div className="form-banner">
-        <img src={formSwitch === "Login" ? loginPic : gymPic} alt="" />
+        <img src={formSwitch === "Login" ? loginPic : gymPic} alt="Form Banner" />
       </div>
-
+  
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -93,11 +89,10 @@ export const Login = () => {
           handleSubmit(values, { setSubmitting }, formSwitch === "Login"); // true für Login
         }}
       >
-
         {({ isSubmitting }) => (
           <Form className="client-data">
             <h1>{formSwitch}</h1>
-
+  
             {formSwitch === "Registration" && (
               <div className="input-container">
                 <Field type="text" id="name" name="name" required />
@@ -105,38 +100,37 @@ export const Login = () => {
                 <ErrorMessage name="name" component="div" className="error-message" />
               </div>
             )}
-
+  
             <div className="input-container">
               <Field type="text" id="email" name="email" required />
               <div className='lable-line'>Enter your E-Mail</div>
               <ErrorMessage name="email" component="div" className="error-message" />
             </div>
-
+  
             <div className="input-container">
               <Field type="password" id="password" name="password" required />
               <div className='lable-line'>Enter your password</div>
               <ErrorMessage name="password" component="div" className="error-message" />
             </div>
+  
             {serverError && <div className="error-message">{serverError}</div>}
-
-            <div class="box-3">
-              <div type="submit" className="btn btn-three submit-btn" disabled={isSubmitting}>
+  
+            <div className="box-3">
+              <button type="submit" className="btn btn-three" disabled={isSubmitting}>
                 <span>{formSwitch === "Login" ? "Login" : "Register"}</span>
-              </div>
+              </button>
             </div>
-            
+  
             <br />
-
-            <div class="box-3">
-              <div type="submit" className="btn btn-three submit-btn " onClick={() => setFormSwitch(formSwitch === "Login" ? "Registration" : "Login")}>
+  
+            <div className="box-3">
+              <button type="button" className="btn btn-three" onClick={() => setFormSwitch(formSwitch === "Login" ? "Registration" : "Login")}>
                 <span>{formSwitch === "Login" ? "Switch to Registration" : "Switch to Login"}</span>
-              </div>
+              </button>
             </div>
-
           </Form>
         )}
       </Formik>
-      {/* </div> */}
     </div>
   );
 };

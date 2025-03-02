@@ -319,16 +319,19 @@ h1 {
 
 
 
-.btn-three {
+.btn-three { 
   color: #FFF;
   transition: all 0.5s;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block; 
+  text-align: center;
   font-size: 1.5rem;
-  width: 65%;
+  width: 75%;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
+
+
 .btn-three::before {
   content: '';
   position: absolute;
@@ -361,3 +364,14 @@ h1 {
   opacity: 1;
   transform: scale(1,1);
 }
+
+
+
+
+
+
+
+
+
+
+
