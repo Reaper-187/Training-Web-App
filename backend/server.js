@@ -46,7 +46,7 @@ app.use(session({
   }),
   cookie: {
     httpOnly: true,
-    secure: true, // Falls HTTPS genutzt wird, auf true setzen
+    secure: true, // Falls HTTPS genutzt wird, auf true setzen.
     sameSite: 'none', // Falls Frontend auf anderer Domain, 'none' verwenden
     maxAge: 1000 * 60 * 60 * 24
   }
