@@ -118,7 +118,7 @@ router.get('/verify', async (req, res) => {
     user.tokenExpires = undefined; // Ablaufdatum entfernen
     await user.save();
 
-    res.status(200).send('E-Mail erfolgreich verifiziert! Du kannst dich jetzt einloggen.');
+    res.status(200).json({ success: true, message: 'E-Mail erfolgreich verifiziert! Du kannst dich jetzt einloggen.' });
   } catch (err) {
     console.error('Fehler bei der Verifizierung:', err);
     res.status(500).send('Interner Serverfehler.');
