@@ -61,7 +61,7 @@ router.post('/register', async (req, res) => {
 
     const savedUser = await newUser.save();
 
-    const verifyLink = `https://training-web-app-drab.vercel.app/verify?token=${verificationToken}`;
+    const verifyLink = `${process.env.FRONTEND_URLS}/verify?token=${verificationToken}`;
 
 
     // E-Mail versenden

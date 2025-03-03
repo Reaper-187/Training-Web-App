@@ -54,16 +54,20 @@ export const Login = () => {
   const [serverError, setServerError] = useState("");
 
   const handleSubmit = async (values, { setSubmitting }, isLogin) => {
-    const url = isLogin ? login : register;
-
+    setServerError("");
     try {
+      const url = isLogin ? login : register;
       const response = await axios.post(url, values, { withCredentials: true });
 
       if (response.data.success) {
-        await checkAuth();
-        navigate('/dashboard');
+        if (isLogin) {
+          await checkAuth();
+          navigate('/dashboard');
+        } else {
+          setServerError(response.data.message || "Registrierung erfolgreich! Bitte überprüfe deine E-Mails.");
+        }
       } else {
-        setServerError(response.data.message || "Ungültige Anmeldedaten");
+        setServerError(response.data.message || "Ein Fehler ist aufgetreten.");
       }
     } catch (error) {
       console.error("Fehler:", error.response?.data || error.message);
@@ -75,12 +79,13 @@ export const Login = () => {
 
 
 
+
   return (
     <div className={formSwitch === "Login" ? 'form-container login-form' : 'form-container regist-form'}>
       <div className="form-banner">
         <img src={formSwitch === "Login" ? loginPic : gymPic} alt="Form Banner" />
       </div>
-  
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -92,7 +97,7 @@ export const Login = () => {
         {({ isSubmitting }) => (
           <Form className="client-data">
             <h1>{formSwitch}</h1>
-  
+
             {formSwitch === "Registration" && (
               <div className="input-container">
                 <Field type="text" id="name" name="name" required />
@@ -100,29 +105,31 @@ export const Login = () => {
                 <ErrorMessage name="name" component="div" className="error-message" />
               </div>
             )}
-  
+
             <div className="input-container">
               <Field type="text" id="email" name="email" required />
               <div className='lable-line'>Enter your E-Mail</div>
               <ErrorMessage name="email" component="div" className="error-message" />
             </div>
-  
+
             <div className="input-container">
               <Field type="password" id="password" name="password" required />
               <div className='lable-line'>Enter your password</div>
               <ErrorMessage name="password" component="div" className="error-message" />
             </div>
-  
-            {serverError && <div className="error-message">{serverError}</div>}
-  
+
+            {serverError && <div className={serverError.includes("erfolgreich") ? "info-message" : "error-message"}>
+              {serverError}
+            </div>}
+            
             <div className="box-3">
               <button type="submit" className="btn btn-three" disabled={isSubmitting}>
                 <span>{formSwitch === "Login" ? "Login" : "Register"}</span>
               </button>
             </div>
-  
+
             <br />
-  
+
             <div className="box-3">
               <button type="button" className="btn btn-three" onClick={() => setFormSwitch(formSwitch === "Login" ? "Registration" : "Login")}>
                 <span>{formSwitch === "Login" ? "Switch to Registration" : "Switch to Login"}</span>

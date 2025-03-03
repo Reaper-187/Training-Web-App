@@ -9,6 +9,7 @@ import { Blog } from './components/Blog';
 import { ErrorPage } from './components/ErrorPage';
 import { Login } from './components/Login/Login';
 import { Loader } from './components/Loader/Loader';
+import { VerifyPage } from './components/VerifyPage';
 
 // Zustand für Authentifizierung verwalten
 const ProtectedLayout = () => {
@@ -26,6 +27,11 @@ const LoginRoute = () => {
 // Router-Konfiguration
 const router = createBrowserRouter(
   [
+    {
+      path: "/verify",
+      element: <VerifyPage />,
+      errorElement: <ErrorPage />
+    },
     {
       path: "/login",
       element: <LoginRoute />,

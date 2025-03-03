@@ -109,86 +109,63 @@ h1 {
 
 }
 
-
-
-
-
-.links-btn {
-  position: relative;
-  padding-block: 1em;
-  /* top and bottom padding */
-  padding-inline-start: 2em;
-  /* left padding */
-  padding-inline-end: 1em;
-  /*right padding */
+.btn-three { 
+  color: #FFF;
+  transition: all 0.5s;
+  display: block; 
+  text-align: center;
+  font-size: 1.5rem;
+  width: 75%;
   border: none;
-  border-radius: .25em;
-  background-color: transparent;
-  font-size: 1em;
+  background: none;
   cursor: pointer;
-  transition: padding 250ms ease, background-color 250ms ease;
-  color: #f2f2f2;
 }
 
 
-.links-btn::before {
+.btn-three::before {
+  content: '';
   position: absolute;
-  content: '➡';
-  font-size: 2rem;
-  background-size: 1em;
-  inset-block-start: 50%;
-  inset-inline-start: 0em;
-  /* wo der Content startet */
-  transform: translateY(-50%);
-  line-height: 1;
-  transition: inset-inline-start 250ms ease;
-}
-
-
-.links-btn:hover {
-  padding-inline-start: 1em;
-  /* left padding */
-  padding-inline-end: 2em;
-  /* right padding */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
   background-color: #6FC6FF;
-  /* color: rgb(190, 101, 0); */
-  color: #f2f2f2;
+  transition: all 0.3s;
+}
+.btn-three:hover::before {
+  opacity: 0 ;
+  transform: scale(0.5,0.5);
+}
+.btn-three::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
+  transition: all 0.3s;
+  border: 1px solid #6FC6FF;
+  transform: scale(1.2,1.2);
+}
+.btn-three:hover::after {
+  opacity: 1;
+  transform: scale(1,1);
 }
 
-
-.links-btn:hover::before {
-  inset-inline-start: calc(100% - 1em);
-}
-
-.login-form {
-  .links-btn::before {
-    position: absolute;
-    content: '⬅';
-    /* Pfeil nach rechts */
-    inset-inline-start: calc(100% - 2em);
-    /* Pfeil startet rechts */
-    transition: inset-inline-start 250ms ease;
-  }
-
-  .links-btn:hover::before {
-    inset-inline-start: 1em;
-    /* Pfeil bewegt sich nach links */
-  }
-}
-
-.links-btn {
-  display: grid;
-  place-items: center;
-  text-decoration: none;
+.info-message {
+  color: #2e8b57; /* Grün für Erfolg */
+  font-weight: bold;
+  margin-top: 10px;
 }
 
 .error-message {
-  color: red;
-  padding: 3rem 0 0 0.5rem;
+  color: #b92828; /* Grün für Erfolg */
+  font-weight: bold;
+  margin-top: 10px;
 }
-
-
-
 
 
 @keyframes stretchMoveLeft {
@@ -277,22 +254,7 @@ h1 {
   
   .regist-form .client-data {
     animation: unset;
-  }
-
-  .submit-btn, 
-  .links-btn {
-    padding: 1rem 2em 1rem 0;
-  }
-
-  .submit-btn::before, 
-  .links-btn::before {
-    content: none;
-  }
-
-  .login-form .links-btn::before{
-    content: none;
-  }
-  
+  }  
 }
 
 @media (min-width: 768px) and (max-width: 1024px){
@@ -304,74 +266,4 @@ h1 {
   .client-data{
     padding: 1rem 0 0 1rem;
   }
-
-  .login-form{
-
-    .links-btn::before {
-      inset-inline-start: calc(100% - 1em);
-    }
-    .links-btn:hover::before {
-      inset-inline-start: 0.5em;
-    }
-  }
 }
-
-
-
-
-.btn-three { 
-  color: #FFF;
-  transition: all 0.5s;
-  display: block; 
-  text-align: center;
-  font-size: 1.5rem;
-  width: 75%;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-
-.btn-three::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background-color: #6FC6FF;
-  transition: all 0.3s;
-}
-.btn-three:hover::before {
-  opacity: 0 ;
-  transform: scale(0.5,0.5);
-}
-.btn-three::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  opacity: 0;
-  transition: all 0.3s;
-  border: 1px solid #6FC6FF;
-  transform: scale(1.2,1.2);
-}
-.btn-three:hover::after {
-  opacity: 1;
-  transform: scale(1,1);
-}
-
-
-
-
-
-
-
-
-
-
-
