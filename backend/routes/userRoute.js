@@ -61,7 +61,7 @@ router.post('/register', async (req, res) => {
 
     const savedUser = await newUser.save();
 
-    const verifyLink = `${process.env.FRONTEND_URLS}/verify?token=${verificationToken}`;
+    const verifyLink = `${process.env.FRONTEND_URL_PROD}/verify?token=${verificationToken}`;
 
 
     // E-Mail versenden

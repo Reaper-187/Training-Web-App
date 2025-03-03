@@ -24,10 +24,11 @@ const axios = require('axios');
 app.set('trust proxy', 1); // Vertraue dem ersten Proxy
 
 // CORS-Konfiguration
-const FRONTEND_URLS = process.env.FRONTEND_URLS.split(',');
+const FRONTEND_URL = process.env.FRONTEND_URL_PROD;
+
 app.use(
   cors({
-    origin: FRONTEND_URLS, // Array von erlaubten URLs
+    origin: FRONTEND_URL, // Array von erlaubten URLs
     credentials: true,
   })
 );
