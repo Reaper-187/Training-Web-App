@@ -25,17 +25,13 @@ router.get('/logout', (req, res) => {
 
 // Prüft ob User eingeloggt ist   
 router.get('/auth/check', (req, res) => {
-
-  console.log("📌 Session-Daten bei authCheck:", req.session);
   if (req.session.passport && req.session.passport.user) {
     console.log('Resp-AuthCheck')
     res.status(200).json({ loggedIn: true });
-    // console.log('lggedIn ist True', ({loggedIn: true}));
   } else {
-    console.log('Resp-AuthCheck hat nicht Funktioniert',req.session.passport)
-    console.log('Resp-AuthCheck hat nicht Funktioniert2',req.session.passport.user)
+    console.log('Resp-AuthCheck hat nicht Funktioniert', req.session.passport)
+    console.log('Resp-AuthCheck hat nicht Funktioniert2', req.session.passport.user)
     res.status(200).json({ loggedIn: false });
-    // console.log('loggedIn bleibt Fasle',({loggedIn: false}));
   }
 });
 
@@ -49,6 +45,10 @@ router.post('/register', async (req, res) => {
     // Token generieren
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const tokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 Stunden gültig
+
+
+    console.log("Generated Token:", verificationToken);
+    console.log("Token Expiry:", new Date(tokenExpires)); // Datum lesbar ausgeben
 
     const newUser = new User({
       name: req.body.name,
@@ -99,6 +99,9 @@ router.post('/register', async (req, res) => {
 
 
 router.get('/verify', async (req, res) => {
+
+  console.log("Verifizierung gestartet. Token erhalten:", token);
+
   const { token } = req.query;
 
   try {
@@ -150,7 +153,6 @@ router.post('/login', (req, res, next) => {
       }
 
       req.session.loggedIn = true;
-      console.log("✅ Login erfolgreich, Session:", req.session);
       res.status(200).json({
         success: true,
         message: 'Login erfolgreich',
