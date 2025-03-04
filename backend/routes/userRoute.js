@@ -7,6 +7,9 @@ const passport = require('passport');
 const nodemailer = require('nodemailer')
 const crypto = require('crypto');
 
+console.log("User Schema Paths:", User.schema.paths);
+
+
 const EMAIL_USER = process.env.EMAIL_USER
 const EMAIL_PASS = process.env.EMAIL_PASS
 
@@ -58,8 +61,15 @@ router.post('/register', async (req, res) => {
       verificationToken,
       tokenExpires
     });
+    
 
-    const savedUser = await newUser.save();
+    try {
+      const savedUser = await newUser.save();
+      console.log("Saved User:", savedUser);
+    } catch (err) {
+      console.error("Fehler beim Speichern:", err);
+    }
+    
 
     const verifyLink = `${process.env.FRONTEND_URL_PROD}/verify?token=${verificationToken}`;
 
@@ -100,10 +110,10 @@ router.post('/register', async (req, res) => {
 
 router.get('/verify', async (req, res) => {
 
-  console.log("Verifizierung gestartet. Token erhalten:", token);
-
+  
   const { token } = req.query;
-
+  
+  console.log("Verifizierung gestartet. Token erhalten:", token);
   try {
     // Benutzer mit dem Token finden
     const user = await User.findOne({
