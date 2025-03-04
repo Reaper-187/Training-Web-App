@@ -14,7 +14,7 @@ export const VerifyPage = () => {
     const verifyEmail = async () => {
       try {
         const response = await axios.get(`${API_VERIFY}?token=${token}`);
-        const data = await response.text();
+        const data = await response.json();
         if (response.ok) {
           setMessage("E-Mail erfolgreich verifiziert! Du kannst dich jetzt einloggen.");
         } else{
