@@ -56,13 +56,9 @@ router.post('/register', async (req, res) => {
     });
     
 
-    try {
-      const savedUser = await newUser.save();
-      console.log("Saved User:", savedUser);
-    } catch (err) {
-      console.error("Fehler beim Speichern:", err);
-    }
+    const savedUser = await newUser.save();
     
+    console.log("Saved User:", savedUser);
 
     const verifyLink = `${process.env.FRONTEND_URL_PROD}/verify?token=${verificationToken}`;
 
