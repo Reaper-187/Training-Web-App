@@ -1,8 +1,6 @@
 import React, { useState, useContext } from 'react';
 import './Login.css'
 import 'material-symbols';
-// import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-// import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { CheckAuthContext } from "../../CheckAuthContext";
 import * as Yup from 'yup';
@@ -17,7 +15,6 @@ const register = import.meta.env.VITE_API_REGISTER
 const login = import.meta.env.VITE_API_LOGIN
 
 export const Login = () => {
-
 
   const { checkAuth } = useContext(CheckAuthContext);
 
@@ -76,9 +73,6 @@ export const Login = () => {
       setSubmitting(false);
     }
   };
-
-
-
 
   return (
     <div className={formSwitch === "Login" ? 'form-container login-form' : 'form-container regist-form'}>
