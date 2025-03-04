@@ -25,17 +25,11 @@ router.get('/logout', (req, res) => {
 
 // Prüft ob User eingeloggt ist   
 router.get('/auth/check', (req, res) => {
-
-  console.log("📌 Session-Daten bei authCheck:", req.session);
   if (req.session.passport && req.session.passport.user) {
     console.log('Resp-AuthCheck')
     res.status(200).json({ loggedIn: true });
-    // console.log('lggedIn ist True', ({loggedIn: true}));
   } else {
-    console.log('Resp-AuthCheck hat nicht Funktioniert',req.session.passport)
-    console.log('Resp-AuthCheck hat nicht Funktioniert2',req.session.passport.user)
     res.status(200).json({ loggedIn: false });
-    // console.log('loggedIn bleibt Fasle',({loggedIn: false}));
   }
 });
 
@@ -60,9 +54,7 @@ router.post('/register', async (req, res) => {
     });
 
     const savedUser = await newUser.save();
-
     const verifyLink = `${process.env.FRONTEND_URL_PROD}/verify?token=${verificationToken}`;
-
 
     // E-Mail versenden
     const transporter = nodemailer.createTransport({
@@ -148,9 +140,7 @@ router.post('/login', (req, res, next) => {
         console.log('Fehler beim Login:', err);
         return res.status(500).json({ success: false, message: 'Anmeldung fehlgeschlagen' });
       }
-
       req.session.loggedIn = true;
-      console.log("✅ Login erfolgreich, Session:", req.session);
       res.status(200).json({
         success: true,
         message: 'Login erfolgreich',

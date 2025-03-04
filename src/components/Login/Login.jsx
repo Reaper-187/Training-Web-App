@@ -96,6 +96,7 @@ export const Login = () => {
               <div className="input-container">
                 <Field type="text" id="name" name="name" required />
                 <div className='lable-line'>Enter your Name</div>
+                <br />
                 <ErrorMessage name="name" component="div" className="error-message" />
               </div>
             )}
@@ -103,12 +104,14 @@ export const Login = () => {
             <div className="input-container">
               <Field type="text" id="email" name="email" required />
               <div className='lable-line'>Enter your E-Mail</div>
+              <br />
               <ErrorMessage name="email" component="div" className="error-message" />
             </div>
 
             <div className="input-container">
               <Field type="password" id="password" name="password" required />
               <div className='lable-line'>Enter your password</div>
+              <br />
               <ErrorMessage name="password" component="div" className="error-message" />
             </div>
 
@@ -121,8 +124,6 @@ export const Login = () => {
                 <span>{formSwitch === "Login" ? "Login" : "Register"}</span>
               </button>
             </div>
-
-            <br />
 
             <div className="box-3">
               <button type="button" className="btn btn-three" onClick={() => setFormSwitch(formSwitch === "Login" ? "Registration" : "Login")}>
