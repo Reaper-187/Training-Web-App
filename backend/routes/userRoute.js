@@ -7,9 +7,6 @@ const passport = require('passport');
 const nodemailer = require('nodemailer')
 const crypto = require('crypto');
 
-console.log("User Schema Paths:", User.schema.paths);
-
-
 const EMAIL_USER = process.env.EMAIL_USER
 const EMAIL_PASS = process.env.EMAIL_PASS
 
@@ -38,30 +35,34 @@ router.get('/auth/check', (req, res) => {
 
 router.post('/register', async (req, res) => {
   try {
+    console.log("⏳ Registrierung gestartet für:", req.body.email);
+
     await validateUser(req.body);
+    console.log("✅ User-Daten validiert.");
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    console.log("🔐 Passwort gehasht.");
 
     // Token generieren
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const tokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 Stunden gültig
 
+    console.log("🆕 Token generiert:", verificationToken);
+
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
       password: hashedPassword,
-      isVerified: false, // wird temporär gespeichert bis Email Verfy ist !!!
+      isVerified: false, 
       verificationToken,
       tokenExpires
     });
-    
 
     const savedUser = await newUser.save();
-    
-    console.log("Saved User:", savedUser);
+    console.log("💾 Benutzer gespeichert:", savedUser);
 
     const verifyLink = `${process.env.FRONTEND_URL_PROD}/verify?token=${verificationToken}`;
-
+    console.log("🔗 Verifizierungslink erstellt:", verifyLink);
 
     // E-Mail versenden
     const transporter = nodemailer.createTransport({
@@ -83,7 +84,8 @@ router.post('/register', async (req, res) => {
              <a href="${verifyLink}">${verifyLink}</a>`
     });
 
-    // Antwort erst nach erfolgreichem E-Mail-Versand senden
+    console.log("📧 E-Mail erfolgreich gesendet an:", req.body.email);
+
     res.status(201).json({
       success: true,
       message: 'Registrierung erfolgreich! Bitte überprüfe deine E-Mails zur Verifizierung.',
@@ -91,9 +93,11 @@ router.post('/register', async (req, res) => {
     });
 
   } catch (err) {
-    res.status(400).json({ success: false, message: err.message }); // Fehlerfall mit success: false
+    console.error("❌ Fehler bei der Registrierung:", err); // Detaillierter Fehler
+    res.status(400).json({ success: false, message: err.message }); 
   }
 });
+
 
 
 
@@ -129,6 +133,7 @@ router.get('/verify', async (req, res) => {
     res.status(500).json({ success: false, message: 'Interner Serverfehler.' });
   }
 });
+
 
 
 
