@@ -29,11 +29,8 @@ router.get('/logout', (req, res) => {
 // Prüft ob User eingeloggt ist   
 router.get('/auth/check', (req, res) => {
   if (req.session.passport && req.session.passport.user) {
-    console.log('Resp-AuthCheck')
     res.status(200).json({ loggedIn: true });
   } else {
-    console.log('Resp-AuthCheck hat nicht Funktioniert', req.session.passport)
-    console.log('Resp-AuthCheck hat nicht Funktioniert2', req.session.passport.user)
     res.status(200).json({ loggedIn: false });
   }
 });
@@ -48,10 +45,6 @@ router.post('/register', async (req, res) => {
     // Token generieren
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const tokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 Stunden gültig
-
-
-    console.log("Generated Token:", verificationToken);
-    console.log("Token Expiry:", new Date(tokenExpires)); // Datum lesbar ausgeben
 
     const newUser = new User({
       name: req.body.name,
@@ -109,11 +102,9 @@ router.post('/register', async (req, res) => {
 
 
 router.get('/verify', async (req, res) => {
-
-  
   const { token } = req.query;
-  
-  console.log("Verifizierung gestartet. Token erhalten:", token);
+  console.log("Erhaltenes Token aus Anfrage:", token); // Logge das erhaltene Token
+
   try {
     // Benutzer mit dem Token finden
     const user = await User.findOne({
@@ -121,8 +112,11 @@ router.get('/verify', async (req, res) => {
       tokenExpires: { $gt: Date.now() } // Token darf nicht abgelaufen sein
     });
 
+    console.log("Gefundener User vor der Änderung:", user);
+
     if (!user) {
-      return res.status(400).send('Token ist ungültig oder abgelaufen.');
+      console.log("Fehler: Token ungültig oder abgelaufen.");
+      return res.status(400).json({ success: false, message: 'Token ist ungültig oder abgelaufen.' });
     }
 
     // Benutzer verifizieren
@@ -131,12 +125,15 @@ router.get('/verify', async (req, res) => {
     user.tokenExpires = undefined; // Ablaufdatum entfernen
     await user.save();
 
-    res.status(200).json({ success: true, message: 'E-Mail erfolgreich verifiziert! Du kannst dich jetzt einloggen.' });
+    console.log("User erfolgreich verifiziert:", user);
+
+    return res.status(200).json({ success: true, message: 'E-Mail erfolgreich verifiziert! Du kannst dich jetzt einloggen.' });
   } catch (err) {
-    console.error('Fehler bei der Verifizierung:', err);
-    res.status(500).send('Interner Serverfehler.');
+    console.error("Fehler bei der Verifizierung:", err);
+    res.status(500).json({ success: false, message: 'Interner Serverfehler.' });
   }
 });
+
 
 
 router.post('/login', (req, res, next) => {
