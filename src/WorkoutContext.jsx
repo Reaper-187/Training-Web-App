@@ -38,30 +38,30 @@ export const CaloriesProvider = ({ children }) => {
     //TagesCalo werden berechent
     const caloriesBurnedPerDay =
       workouts.filter((workout) => workout.date.split("T")[0] === today)
-              .reduce((sum, workout) => sum + (workout.calories || 0), 0);
+        .reduce((sum, workout) => sum + (workout.calories || 0), 0);
     setCaloriesBurnedPerDay(caloriesBurnedPerDay)
   }, [workouts])
 
 
 
+  const currentWeek = getISOWeek(today);
+  const today = new Date().toISOString().split("T")[0];
+  
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    const currentWeek = getISOWeek(today);
+    const [lastCaloriesReset, setLastCaloriesReset] = useState(() => {
+      return localStorage.getItem("lastCaloriesReset") || today;
+    });
 
-  const [lastCaloriesReset, setLastCaloriesReset] = useState(() => {
-    return localStorage.getItem("lastCaloriesReset") || today;
-  });
+    const lastResetWeek = getISOWeek(lastCaloriesReset);
 
-  const lastResetWeek = getISOWeek(lastCaloriesReset);
-
-  useEffect(() => {
-    if (currentWeek !== lastResetWeek) {
-      setTotalCalories(0);
-      localStorage.setItem("lastCaloriesReset", today);
-      setLastCaloriesReset(today);
-      console.log("Wochenkalorien zurückgesetzt!");
-    }
-  }, [currentWeek, lastResetWeek, today]);
+    useEffect(() => {
+      if (currentWeek !== lastResetWeek) {
+        setTotalCalories(0);
+        localStorage.setItem("lastCaloriesReset", today);
+        setLastCaloriesReset(today);
+        console.log("Wochenkalorien zurückgesetzt!");
+      }
+    }, [currentWeek, lastResetWeek, today]);
 
   })
 
