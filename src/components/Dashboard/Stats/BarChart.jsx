@@ -68,7 +68,6 @@ export const BarChart = () => {
 
 
 
-
   const initialTarget = 1000;
 
   const [currentTarget, setCurrentTarget] = useState(

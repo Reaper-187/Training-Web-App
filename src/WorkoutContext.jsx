@@ -44,26 +44,23 @@ export const CaloriesProvider = ({ children }) => {
 
 
 
-  const currentWeek = getISOWeek(today);
   const today = new Date().toISOString().split("T")[0];
-  
+  const currentWeek = getISOWeek(today);
+
+  const [lastCaloriesReset, setLastCaloriesReset] = useState(() => {
+    return localStorage.getItem("lastCaloriesReset") || today;
+  });
+
+  const lastResetWeek = getISOWeek(lastCaloriesReset);
+
   useEffect(() => {
-    const [lastCaloriesReset, setLastCaloriesReset] = useState(() => {
-      return localStorage.getItem("lastCaloriesReset") || today;
-    });
-
-    const lastResetWeek = getISOWeek(lastCaloriesReset);
-
-    useEffect(() => {
-      if (currentWeek !== lastResetWeek) {
-        setTotalCalories(0);
-        localStorage.setItem("lastCaloriesReset", today);
-        setLastCaloriesReset(today);
-        console.log("Wochenkalorien zurückgesetzt!");
-      }
-    }, [currentWeek, lastResetWeek, today]);
-
-  })
+    if (currentWeek !== lastResetWeek) {
+      setTotalCalories(0);
+      localStorage.setItem("lastCaloriesReset", today);
+      setLastCaloriesReset(today);
+      console.log("Wochenkalorien zurückgesetzt!");
+    }
+  }, [currentWeek, lastResetWeek, today]); 
 
   return (
     <CaloriesContext.Provider value={{ workouts, totalCalories, caloriesBurnedPerDay, fetchWorkouts, currentWeek }}>
