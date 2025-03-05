@@ -13,7 +13,7 @@ export const BarChart = () => {
 
   const [apiDataLoaded, setApiDataLoaded] = useState(false);
 
-  const { workouts, currentWeek } = useContext(CaloriesContext);
+  const { workouts } = useContext(CaloriesContext);
 
   const [formattedData, setFormattedData] = useState({
     Sun: 0,
@@ -42,18 +42,14 @@ export const BarChart = () => {
 
 
   // BarchartReset
-
-  const today = new Date().toISOString().split("T")[0];
-
-  const [lastBarchartReset, setLastBarchartReset] = useState(() => {
-    return localStorage.getItem("lastBarchartReset") || today;
-  });
-
-
-  const lastResetWeek = getISOWeek(lastBarchartReset);
-  
   useEffect(() => {
-    if (apiDataLoaded && currentWeek !== lastResetWeek) {
+    const today = new Date().toISOString().split("T")[0];
+    // const currentWeek = getISOWeek(today);
+  
+    const lastBarchartReset = localStorage.getItem("lastBarchartReset") || today;
+    const lastResetWeek = getISOWeek(lastBarchartReset);
+  
+    if (apiDataLoaded !== lastResetWeek) {
       setFormattedData((prevData) =>
         Object.keys(prevData).reduce((newData, key) => {
           newData[key] = 0;
@@ -61,10 +57,11 @@ export const BarChart = () => {
         }, {})
       );
   
-      setLastBarchartReset(today);
       localStorage.setItem("lastBarchartReset", today);
+      console.log("Barchart wurde zurückgesetzt!");
     }
-  }, [apiDataLoaded, lastBarchartReset]);
+  }, [apiDataLoaded]);
+  
 
 
 

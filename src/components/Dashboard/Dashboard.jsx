@@ -52,7 +52,6 @@ export const Dashboard = () => {
 
 
   return (
-
     <div className='dashboard-container'>
 
       <div className="stat-card calories-burned">
@@ -72,6 +71,12 @@ export const Dashboard = () => {
         <BarChart />
       </div>
 
+      <div className='stat-card add-btn-comp'>
+        <span onClick={openAddBtn}>
+          <OpenAdd />
+        </span>
+      </div>
+
       <div className='stat-card pie-chart'>
         <h4>Workout Categories</h4>
         <PieChart />
@@ -80,14 +85,7 @@ export const Dashboard = () => {
       <div className='stat-card resp-graph'>
         <StatsSlider />
       </div>
-
-      {/* stat-card add-btn-comp */}
-      <div className='stat-card add-btn-comp'>
-        <span onClick={openAddBtn}>
-          <OpenAdd />
-        </span>
-      </div>
-
+      
       <div className={`select-screen-container ${openAddWorkout ? 'active' : ''}`}>
         <div className='add-container'  ref={selectRef}>
           <div className='closeBtn' onClick={closeAddBtn} >
@@ -96,6 +94,7 @@ export const Dashboard = () => {
           <SelectScreen />
         </div>
       </div>
+
     </div>
   )
 }

@@ -27,23 +27,26 @@ export const CaloriesProvider = ({ children }) => {
     fetchWorkouts();
   }, []);
 
+  // CaloFetchPerDay
+  useEffect(() => {
+    if (workouts.length === 0) return;
 
-  useEffect(() => { // Reset für die Calories per day
-    const now = new Date();
-    const millisecondsUntilMidnight =
-      ((23 - now.getHours()) * 60 + (59 - now.getMinutes())) * 60 * 1000;
+    const today = new Date().toISOString().split("T")[0];
 
-    const dailyResetTimeout = setTimeout(() => {
-      setCaloriesBurnedPerDay(0);
-      console.log("Tageskalorien zurückgesetzt!");
-    }, millisecondsUntilMidnight);
+    const total = workouts.reduce((sum, workout) => sum + workout.calories, 0);
+    setTotalCalories(total);
+    //TagesCalo werden berechent
+    const caloriesBurnedPerDay =
+      workouts.filter((workout) => workout.date.split("T")[0] === today)
+              .reduce((sum, workout) => sum + (workout.calories || 0), 0);
+    setCaloriesBurnedPerDay(caloriesBurnedPerDay)
+  }, [workouts])
 
-    return () => clearTimeout(dailyResetTimeout);
-  }, []);
-  
 
-  const today = new Date().toISOString().split("T")[0];
-  const currentWeek = getISOWeek(today);
+
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0];
+    const currentWeek = getISOWeek(today);
 
   const [lastCaloriesReset, setLastCaloriesReset] = useState(() => {
     return localStorage.getItem("lastCaloriesReset") || today;
@@ -60,15 +63,6 @@ export const CaloriesProvider = ({ children }) => {
     }
   }, [currentWeek, lastResetWeek, today]);
 
-
-  useEffect(() => {
-    const total = workouts.reduce((sum, workout) => sum + workout.calories, 0);
-    setTotalCalories(total);
-    const today = new Date().toISOString().split("T")[0];
-    const caloriesBurnedPerDay =
-      workouts.filter((workout) => workout.date.split("T")[0] === today)
-              .reduce((sum, workout) => sum + workout.calories, 0);
-    setCaloriesBurnedPerDay(caloriesBurnedPerDay)
   })
 
   return (
