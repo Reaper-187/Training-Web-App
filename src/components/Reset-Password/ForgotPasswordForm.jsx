@@ -9,16 +9,21 @@ const RESETUPW = import.meta.env.VITE_API_RESETUPW;
 
 export const ForgotPasswordForm = ({ onBackToLogin }) => {
   const [serverMessage, setServerMessage] = useState("");
-  const [isCodeSent, setIsCodeSent] = useState(false); 
-  const [isCodeVerified, setIsCodeVerified] = useState(false); 
-  const [email, setEmail] = useState(""); 
-  const [resetCode, setResetCode] = useState(""); 
-  const [newPassword, setNewPassword] = useState(""); 
+  const [isCodeSent, setIsCodeSent] = useState(false);
+  const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [email, setEmail] = useState("");
+  const [resetCode, setResetCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   const handleEmailSubmit = async (values, { setSubmitting }) => {
     setServerMessage("");
     try {
+      console.log("Sending reset code to email:", values.email);
+
       const response = await axios.post(ONETIMEOTP, { email: values.email });
+
+      console.log("Server response:", response.data);
+
 
       setServerMessage(response.data.message || "Falls deine E-Mail existiert, wurde ein Reset-Link gesendet.");
       setIsCodeSent(true);
@@ -36,17 +41,26 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
         email,
         resetCode: values.resetCode,
       });
-
+      console.log("Reset Code:", values.resetCode);
+  
       setServerMessage(response.data.message || "Code verifiziert. Du kannst nun dein Passwort ändern.");
       setIsCodeVerified(true);
+      setResetCode(values.resetCode);  
     } catch (error) {
       setServerMessage(error.response?.data?.message || "Ein Fehler ist aufgetreten.");
     }
     setSubmitting(false);
   };
+  
 
   const handlePasswordSubmit = async (values, { setSubmitting }) => {
     setServerMessage("");
+    console.log('Daten, die gesendet werden:', {
+      email,
+      resetCode,  // Sollte im Zustand gespeichert sein
+      newPassword: values.newPassword
+    });
+    
     try {
       const response = await axios.post(RESETUPW, {
         email,
@@ -56,10 +70,14 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
 
       setServerMessage(response.data.message || "Passwort erfolgreich geändert.");
     } catch (error) {
+      console.log('Fehler beim Passwort-Reset:', error.response);  // Zeigt detaillierte Fehlerantwort
       setServerMessage(error.response?.data?.message || "Ein Fehler ist aufgetreten.");
     }
     setSubmitting(false);
   };
+  
+  
+
 
   return (
     <div className="reset-form form-container">

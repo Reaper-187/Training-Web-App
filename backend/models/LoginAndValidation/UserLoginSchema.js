@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
   verificationToken: { type: String, required: false },
   tokenExpires: { type: Date, required: false },
   createdOn: { type: Date, default: Date.now },
+  resetCode: { type: Number },
+  resetCodeExpires: { type: Date },
 });
 
 module.exports = mongoose.model('User', userSchema);

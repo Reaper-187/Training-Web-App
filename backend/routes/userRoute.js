@@ -76,7 +76,6 @@ router.post('/register', async (req, res) => {
              <a href="${verifyLink}">${verifyLink}</a>`
     });
 
-    // Antwort erst nach erfolgreichem E-Mail-Versand senden
     res.status(201).json({
       success: true,
       message: 'Registrierung erfolgreich! Bitte überprüfe deine E-Mails zur Verifizierung.',
@@ -150,10 +149,6 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-
-
-
-
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
 
@@ -174,14 +169,13 @@ router.post("/forgot-password", async (req, res) => {
       return res.status(400).json({ message: "Ein Reset-Code wurde bereits gesendet. Bitte warte, bis der Code abläuft." });
     }
 
-    // 4-stelligen Code generieren
     const resetCode = Math.floor(1000 + Math.random() * 9000); // 4-stelliger Code
 
     // Reset-Code und Ablaufdatum speichern
     user.resetCode = resetCode;
     user.resetCodeExpires = Date.now() + 600000; // Code 10 Minuten gültig
-    await user.save();
 
+    await user.save();
     // Code per E-Mail senden
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -210,24 +204,27 @@ router.post("/forgot-password", async (req, res) => {
 
 router.post("/verify-reset-code", async (req, res) => {
   const { email, resetCode } = req.body;
-
   try {
+    const resetCodeInt = parseInt(resetCode);
     const user = await User.findOne({
       email,
-      resetCode,
+      resetCode: resetCodeInt,
       resetCodeExpires: { $gt: Date.now() },
     });
 
-    if (!user) {
-      return res.status(400).json({ message: "Ungültiger oder abgelaufener Code." });
+    if (user && user.resetCode === resetCodeInt && user.resetCodeExpires > Date.now()) {
+      res.json({ message: "Code verifiziert. Du kannst nun dein Passwort ändern." });
+    } else {
+      res.status(400).json({ message: "Ungültiger oder abgelaufener Code." });
     }
 
-    res.json({ message: "Code verifiziert. Du kannst nun dein Passwort ändern." });
   } catch (error) {
     console.error("Fehler bei der Code-Verifikation:", error);
     res.status(500).json({ message: "Serverfehler" });
   }
 });
+
+
 
 
 router.post("/reset-password", async (req, res) => {
@@ -241,12 +238,18 @@ router.post("/reset-password", async (req, res) => {
     });
 
     if (!user) {
+      console.log("Code is invalid or expired.");
       return res.status(400).json({ message: "Ungültiger oder abgelaufener Code." });
     }
 
-    // Passwort aktualisieren (sicher verschlüsseln)
+    // Überprüfen, ob das neue Passwort mit dem alten übereinstimmt
+    const isSamePassword = await bcrypt.compare(newPassword, user.password);
+    if (isSamePassword) {
+      return res.status(400).json({ message: "Das neue Passwort darf nicht mit dem alten übereinstimmen." });
+    }
+
     user.password = await bcrypt.hash(newPassword, 10);
-    user.resetCode = undefined; 
+    user.resetCode = undefined;
     user.resetCodeExpires = undefined;
 
     await user.save();
