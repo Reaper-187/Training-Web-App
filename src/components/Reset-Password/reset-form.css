@@ -1,0 +1,11 @@
+.reset-headline{
+  position: absolute;
+  top: -30%;
+  left: 15%;
+}
+
+.reset-form{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

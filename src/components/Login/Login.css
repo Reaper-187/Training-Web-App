@@ -48,7 +48,6 @@ h1 {
   position: absolute;
   display: flex;
   flex-direction: column;
-  width: 40%;
   gap: 20px;
 }
 
@@ -56,11 +55,13 @@ h1 {
 .login-form .client-data {
   animation: fadeOut 3s cubic-bezier(0.77, 0, 0.175, 1) forwards;
   padding: 1rem 0 0 1rem;
+  width: 40%;
 }
 
 .regist-form .client-data {
-  padding: 1rem 0 0 3rem;
   animation: fadeIn 3s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  padding: 1rem 0 0 3rem;
+  width: 35%;
 }
 
 
@@ -69,8 +70,18 @@ h1 {
   padding: 1rem 0;
   height: 50px;
   line-height: 50px;
+  width: 90%;
 }
 
+.show-password{
+  position: absolute;
+  right: 0;
+  z-index: 5;
+}
+
+.password-icon{
+  color: var(--text-color)!important;
+}
 
 .input-container input {
   position: absolute;
@@ -80,29 +91,28 @@ h1 {
   line-height: 50px;
   border-radius: 10px;
   transition: 0.3s ease;
-  background-color: transparent !important;
+  background-color: transparent;
   z-index: 5;
+  width: 100%;
 }
 
 .lable-line {
   position: absolute;
   padding: 0 .8em 0 .8em;
-  margin: 0 .1em;
   transition: .3s ease;
   color: #f2f2f2;
-
 }
 
 .input-container input:focus,
 .input-container input:valid {
-  border: solid 4px var(--main-brand-color);
+  border: solid 5px var(--main-brand-color);
   color: var(--text-color);
 }
 
 .input-container input:focus+.lable-line,
 .input-container input:valid+.lable-line {
   height: 10px;
-  line-height: 10px;
+  line-height: 0px;
   transform: translate(0px, -3px) scale(.88);
   z-index: 56;
   background-color: var(--primary-color);
@@ -157,16 +167,90 @@ h1 {
 }
 
 .info-message {
-  color: #2e8b57; /* Grün für Erfolg */
+  color: #2e8b57;
   font-weight: bold;
   margin-top: 10px;
 }
 
 .error-message {
-  color: #b92828; /* Grün für Erfolg */
+  color: #b92828;
   font-weight: bold;
   margin-top: 10px;
 }
+
+.forgot-password{
+  cursor: pointer;
+}
+
+
+@media (max-width: 767px) {
+  .form-container{
+    align-items: center;
+    width: 90%;
+    height: 70%;
+    
+  }
+
+  .form-banner{
+    display: none;
+  }
+
+  .input-container {
+    position: relative;
+    padding: 1rem 0;
+    height: 50px;
+    line-height: 50px;
+  }
+  
+  .input-container input {
+    width: 70%;
+  }
+
+  .client-data{
+    width: 100%;
+  }
+
+  .regist-form .client-data,
+  .login-form .client-data {
+    animation: unset;
+  }
+
+  .error-message{
+    font-size: .8rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px){
+  
+  .form-container{
+    width: 95%;
+    height: 70dvh;
+  }
+  
+  .client-data{
+    padding: 1rem 0 0 1rem;
+  }
+
+  .btn-three{
+    font-size: larger;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1440px){
+
+  .btn-three{
+    font-size: larger;
+    width: 100%;
+  }
+}
+
+
+
+
+
+
+
 
 
 @keyframes stretchMoveLeft {
@@ -224,47 +308,5 @@ h1 {
   100% {
     opacity: 1;
     transform: translateX(130%);
-  }
-}
-
-
-@media (max-width: 767px) {
-  .form-container{
-    
-    align-items: center;
-    width: 90%;
-    height: 90%;
-    
-  }
-
-  .form-banner{
-    display: none;
-  }
-
-  .input-container input{
-    width: 80%;
-  }
-
-  .client-data{
-    width: 100%;
-  }
-
-  .login-form .client-data {
-    animation: unset;
-  }
-  
-  .regist-form .client-data {
-    animation: unset;
-  }  
-}
-
-@media (min-width: 768px) and (max-width: 1024px){
-  .form-container{
-    width: 95%;
-    height: 70dvh;
-  }
-
-  .client-data{
-    padding: 1rem 0 0 1rem;
   }
 }

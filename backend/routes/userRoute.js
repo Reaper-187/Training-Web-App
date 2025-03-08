@@ -152,6 +152,116 @@ router.post('/login', (req, res, next) => {
 
 
 
+
+
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  // E-Mail Validierung
+  const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: "Ungültige E-Mail-Adresse." });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "E-Mail nicht gefunden." });
+    }
+
+    // Überprüfen, ob der Code noch nicht abgelaufen ist
+    if (user.resetCodeExpires > Date.now()) {
+      return res.status(400).json({ message: "Ein Reset-Code wurde bereits gesendet. Bitte warte, bis der Code abläuft." });
+    }
+
+    // 4-stelligen Code generieren
+    const resetCode = Math.floor(1000 + Math.random() * 9000); // 4-stelliger Code
+
+    // Reset-Code und Ablaufdatum speichern
+    user.resetCode = resetCode;
+    user.resetCodeExpires = Date.now() + 600000; // Code 10 Minuten gültig
+    await user.save();
+
+    // Code per E-Mail senden
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASS
+      }
+    });
+
+    await transporter.sendMail({
+      from: 'abdulcheik3@gmail.com',
+      to: req.body.email,
+      subject: 'Passwort-Reset-Code',
+      text: `Dein 4-stelliger Code zum Zurücksetzen des Passworts lautet: ${resetCode}. Dieser Code ist 10 Minuten gültig.`,
+    });
+
+    res.json({ message: "Code zum Zurücksetzen gesendet." });
+  } catch (error) {
+    console.error("Fehler beim Senden des Codes:", error);
+    res.status(500).json({ message: "Serverfehler" });
+  }
+});
+
+
+router.post("/verify-reset-code", async (req, res) => {
+  const { email, resetCode } = req.body;
+
+  try {
+    const user = await User.findOne({
+      email,
+      resetCode,
+      resetCodeExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Ungültiger oder abgelaufener Code." });
+    }
+
+    res.json({ message: "Code verifiziert. Du kannst nun dein Passwort ändern." });
+  } catch (error) {
+    console.error("Fehler bei der Code-Verifikation:", error);
+    res.status(500).json({ message: "Serverfehler" });
+  }
+});
+
+
+router.post("/reset-password", async (req, res) => {
+  const { email, resetCode, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({
+      email,
+      resetCode,
+      resetCodeExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Ungültiger oder abgelaufener Code." });
+    }
+
+    // Passwort aktualisieren (sicher verschlüsseln)
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetCode = undefined; 
+    user.resetCodeExpires = undefined;
+
+    await user.save();
+
+    res.json({ message: "Passwort erfolgreich geändert." });
+  } catch (error) {
+    console.error("Fehler beim Zurücksetzen des Passworts:", error);
+    res.status(500).json({ message: "Serverfehler" });
+  }
+});
+
+
+
+
+
 router.get('/dashboard', isAuthenticated, (req, res) => {
   res.send('Willkommen im Dashboard');
 });
