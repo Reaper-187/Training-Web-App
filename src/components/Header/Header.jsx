@@ -72,7 +72,7 @@ export const Header = () => {
             </div>
           </Link>
 
-          <Link to="/blog" onClick={closeMenu}>
+          {/* <Link to="/blog" onClick={closeMenu}>
             <div className="btn nav-btn">
               <span className={`word ${location.pathname === '/blog' ? 'active' : ''}`} data-text="Blog">Blog</span>
             </div>
@@ -82,7 +82,7 @@ export const Header = () => {
             <div className="btn nav-btn">
               <span className={`word ${location.pathname === '/contact' ? 'active' : ''}`} data-text="Contact">Contact</span>
             </div>
-          </Link>
+          </Link> */}
 
           <Logout />
 

@@ -4,7 +4,7 @@ import { CaloriesContext } from '../../../../WorkoutContext'
 
 export const CaloriesBurnedCard = () => {
   
-  const { totalCalories } = useContext(CaloriesContext);
+  const { totalCaloriesThisWeek  } = useContext(CaloriesContext);
 
   return (
     <>
@@ -15,7 +15,7 @@ export const CaloriesBurnedCard = () => {
       </div>
       
       <div className='card-info'>
-        <p>{Math.floor(totalCalories)} kcal </p>
+        <p>{Math.floor(totalCaloriesThisWeek)} kcal </p>
         <p>For Week</p>
       </div>
     </div>

@@ -23,7 +23,6 @@ export const fetchCalories = async (query) => {
 
   try {
     const response = await axios.post(url, body);
-    console.log('Daten der Calories API', response.data);
     return response.data;
   } catch (error) {
     console.error('API Fehler:', error);

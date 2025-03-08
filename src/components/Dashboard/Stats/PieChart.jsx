@@ -27,12 +27,13 @@ export const PieChart = () => {
 
 
   useEffect(() => {
+
     const getDataForPieChart = async () => {
       try {
         const response = await axios.get(APP_URL);
         
-        const workoutsForCurrentDay = response.data.filter(
-          (filteredPieData) => filteredPieData.date.slice(0, 10) === currentDate
+        const workoutsForCurrentDay = response.data.eachWorkout.filter(
+          (filteredPieData) => filteredPieData.date === currentDate
         );
         
         const updatedPieCount = workoutsForCurrentDay.reduce((acc, findTypeOfTrain) => {
@@ -40,6 +41,7 @@ export const PieChart = () => {
           acc[key] = (acc[key] || 0) + 1;
           return acc;
         }, {});
+        
         setNewPieCount(updatedPieCount);
       } catch (err) {
         console.error("Fehler beim Abrufen der Pie-Chart-Daten:", err);

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import './SelectScreen.css';
 
 export const WorkoutStepControll = () => {
   const [step, setStep] = useState(1); // Speichert den aktuellen Step

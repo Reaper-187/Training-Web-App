@@ -48,7 +48,6 @@ export const SelectScreen = () => {
         time: timeValue || null,
       };
 
-      console.log("Workout-Daten für Zusammenfassung:", newWorkoutData);
       setDirection(1);
       setSummarizeValue(newWorkoutData);
     }
@@ -132,6 +131,17 @@ export const SelectScreen = () => {
 
     addWorkout(workoutToSave);
     notify(true);
+
+    //reset zu step 0 und der Felder
+    setActiveStep(0);
+    setSummarizeValue(null);
+    setTypeOfTraining("");
+    setSelectedWorkoutValue("");
+    setTimeValue("");
+    setSelectedMuscleValue("");
+    setWeightValue("");
+    setSetsValue("");
+    setRepsValue("");
   };
 
   useEffect(() => {

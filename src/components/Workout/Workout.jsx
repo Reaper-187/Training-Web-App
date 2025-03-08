@@ -31,7 +31,7 @@ export const Workout = () => {
       const GetWorkoutsData = async () => {
         try {
           const response = await axios.get(APP_URL)
-          setSelectWorkouts(response.data)
+          setSelectWorkouts(response.data.eachWorkout)
         } catch (err) {
           console.error('GET-Data not found', err);
         }

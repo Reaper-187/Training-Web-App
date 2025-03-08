@@ -48,8 +48,6 @@ export const Login = () => {
   // Dynamisch initialisieren basierend auf formSwitch
   const initialValues = formSwitch === "Registration" ? registrationInitialValues : loginInitialValues;
 
-  console.log("Initial Values:", initialValues);
-
   const navigate = useNavigate();
 
   const [serverError, setServerError] = useState("");

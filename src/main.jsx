@@ -5,7 +5,7 @@ import { CheckAuthContext, CheckAuthProvider } from './CheckAuthContext';
 import { App } from './App';
 import { Dashboard } from './components/Dashboard/Dashboard';
 import { Workout } from './components/Workout/Workout';
-import { Blog } from './components/Blog';
+// import { Blog } from './components/Blog';
 import { ErrorPage } from './components/ErrorPage';
 import { Login } from './components/Login/Login';
 import { Loader } from './components/Loader/Loader';
@@ -47,7 +47,7 @@ const router = createBrowserRouter(
       children: [
         { path: "dashboard", element: <Dashboard /> },
         { path: "workout", element: <Workout /> },
-        { path: "blog", element: <Blog /> },
+        // { path: "blog", element: <Blog /> },
       ]
     },
   ],

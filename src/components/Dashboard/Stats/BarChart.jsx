@@ -25,24 +25,21 @@ export const BarChart = () => {
     Sat: 0,
   });
 
-  // Workouts zu Kalorien-Daten aggregieren
   useEffect(() => {
+    // Aggregiere Kalorien pro Wochentag
     const caloriesByDay = workouts.reduce((acc, workout) => {
       const day = new Date(workout.date).toLocaleString("en-US", { weekday: "short" });
       acc[day] = (acc[day] || 0) + workout.calories;
-      setApiDataLoaded(true);
       return acc;
-    }, {});
-
-    console.log('Das sind die Calories für den Heutigen Tag',caloriesByDay);
-    
+    }, { Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 });
+  
     setFormattedData(caloriesByDay);
-    
   }, [workouts]);
 
 
-  // BarchartReset
+  
 
+  // BarchartReset
   const today = new Date().toISOString().split("T")[0];
 
   const [lastBarchartReset, setLastBarchartReset] = useState(() => {
@@ -51,7 +48,7 @@ export const BarChart = () => {
 
 
   const lastResetWeek = getISOWeek(lastBarchartReset);
-  
+
   useEffect(() => {
     if (apiDataLoaded && currentWeek !== lastResetWeek) {
       setFormattedData((prevData) =>
@@ -60,7 +57,7 @@ export const BarChart = () => {
           return newData;
         }, {})
       );
-  
+
       setLastBarchartReset(today);
       localStorage.setItem("lastBarchartReset", today);
     }
