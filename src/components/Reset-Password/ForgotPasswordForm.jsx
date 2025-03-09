@@ -80,7 +80,7 @@ export const ForgotPasswordForm = ({ onBackToLogin }) => {
 
 
   return (
-    <div className="reset-form form-container">
+    <div className="reset-form">
       <Formik
         initialValues={{ email: email, resetCode: "", newPassword: "" }}
         onSubmit={isCodeVerified ? handlePasswordSubmit : isCodeSent ? handleCodeSubmit : handleEmailSubmit}

@@ -99,9 +99,9 @@ export const Workout = () => {
               className="workout-card"
               key={index}
               style={{ '--delay': `${index * 0.2}s` }}
+              date = {workout.date}
               >
               <div className="topElements">
-                {workout.date}
                 <span>{workout.type}</span>
                 <svg
                   onClick={() => deleteWorkoutCard(workout._id)}
