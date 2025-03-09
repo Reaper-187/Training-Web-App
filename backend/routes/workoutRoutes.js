@@ -8,12 +8,16 @@ router.get('/workouts', async (req, res) => {
   try {
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = Sonntag, 1 = Montag, ..., 6 = Samstag
-
+    
+    // Berechnung des Start- und Enddatums für die Woche (Montag bis Sonntag)
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)); // Montag als Start
-
+    startOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+    startOfWeek.setHours(0, 0, 0, 0); // Sicherstellen, dass der Startpunkt um Mitternacht ist
+    
     const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6); // Sonntag als Ende
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999); // Sicherstellen, dass das Ende um 23:59:59 ist
+    
 
     const userId = new mongoose.Types.ObjectId(req.session.passport.user);
 

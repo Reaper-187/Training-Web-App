@@ -127,7 +127,7 @@ export const SelectScreen = () => {
       caloriesBurned = strengthCaloriesData.burnedCalories;
     }
 
-    const workoutToSave = { ...summarizeValue, calories: caloriesBurned };
+    const workoutToSave = { ...summarizeValue, calories: caloriesBurned  };
 
     addWorkout(workoutToSave);
     notify(true);
@@ -160,7 +160,7 @@ export const SelectScreen = () => {
 
 
   return (
-    
+
     <div className='top-options'>
       <div className='ops'>
         <Stepper activeStep={activeStep} alternativeLabel>
@@ -212,7 +212,7 @@ export const SelectScreen = () => {
             {summarizeValue && (
               <div>
                 <ul className='summarize-container'>
-                <h3>Summarize</h3>
+                  <h3>Summarize</h3>
                   {Object.entries(summarizeValue).map(([key, value]) =>
                     value ? <li className='summarize-value' key={key}><strong>{key}:</strong> {value}</li> : null
                   )}
@@ -223,7 +223,7 @@ export const SelectScreen = () => {
           </motion.div>
         </AnimatePresence>
       </div>
-      
+
       <div className='forward-backward-btn'>
         <Button disabled={activeStep === 0} onClick={handleBack}>
           Zurück

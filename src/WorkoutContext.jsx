@@ -55,8 +55,6 @@ export const WorkoutProvider = ({ children }) => {
   const addWorkout = async (workout) => {
     try {
       await axios.post(APP_URL, workout);
-      // setSelectWorkouts(selectWorkouts.eachWorkout);
-
       setSelectWorkouts((prevWorkouts) => {
         return [...prevWorkouts, workout];  // Workout zu den vorhandenen Workouts hinzufügen
       });

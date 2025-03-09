@@ -91,16 +91,17 @@ export const Workout = () => {
             { label: 'Count', value: workout.sets && workout.reps ? `${workout.sets} sets x ${workout.reps} reps` : null },
             { label: 'Weight', value: workout.weight ? `${workout.weight} kg` : null },
             { label: 'Time', value: workout.time ? `${workout.time} min` : null },
-            { label: 'Burned-Calories', value: workout.calories ? workout.calories : null }
-          ].filter(detail => detail.value !== null); // 🏆 Entfernt alle null-Werte
+            { label: 'Burned-Calories', value: workout.calories ? workout.calories : null },
+          ].filter(detail => detail.value !== null);
 
           return (
             <div
               className="workout-card"
               key={index}
               style={{ '--delay': `${index * 0.2}s` }}
-            >
+              >
               <div className="topElements">
+                {workout.date}
                 <span>{workout.type}</span>
                 <svg
                   onClick={() => deleteWorkoutCard(workout._id)}
