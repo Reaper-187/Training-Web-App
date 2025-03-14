@@ -1,6 +1,6 @@
 .openNav {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background-color: var(--secondary-color);
   margin: 0;

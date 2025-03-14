@@ -11,7 +11,6 @@ export const PieChart = () => {
 
   const { selectWorkouts } = useContext(WorkoutContext);
 
-  const currentDate = new Date().toISOString().slice(0, 10);
 
   const [newPieCount, setNewPieCount] = useState({
     Chest: 0,
@@ -31,16 +30,23 @@ export const PieChart = () => {
     const getDataForPieChart = async () => {
       try {
         const response = await axios.get(APP_URL);
-        
+
+        const currentDate = new Date().toISOString().split('T')[0];
+
+        // Filtere Workouts für den aktuellen Tag
         const workoutsForCurrentDay = response.data.eachWorkout.filter(
-          (filteredPieData) => filteredPieData.date === currentDate
+          (filteredPieData) => filteredPieData.date.split('T')[0] === currentDate
         );
         
+        // Zähle die Workouts nach Typ
         const updatedPieCount = workoutsForCurrentDay.reduce((acc, findTypeOfTrain) => {
           const key = findTypeOfTrain.name || "Cardio";
           acc[key] = (acc[key] || 0) + 1;
           return acc;
         }, {});
+        
+        console.log(updatedPieCount);
+        
         
         setNewPieCount(updatedPieCount);
       } catch (err) {

@@ -14,15 +14,15 @@ export const InputField = ({
         <>
           <div className="input-field">
             <h4>Weight in kg</h4>
-            <input type="number" value={weightValue} onChange={(e) => setWeightValue(e.target.value)} />
+            <input type="number" min="0" value={weightValue}   onChange={(e) => setWeightValue(Math.max(0, e.target.value))} />
           </div>
           <div className="input-field">
             <h4>Reps</h4>
-            <input type="number" value={repsValue} onChange={(e) => setRepsValue(e.target.value)} />
+            <input type="number" min="0" value={repsValue} onChange={(e) => setRepsValue(Math.max(0, e.target.value))} />
           </div>
           <div className="input-field">
             <h4>Sets</h4>
-            <input type="number" value={setsValue} onChange={(e) => setSetsValue(e.target.value)} />
+            <input type="number" min="0" value={setsValue} onChange={(e) => setSetsValue(Math.max(0, e.target.value))} />
           </div>
         </>
       )}
@@ -30,7 +30,7 @@ export const InputField = ({
       {typeOfTraining === "Cardio" && (
         <div className="input-field">
           <h4>Time in minutes</h4>
-          <input type="number" value={timeValue} onChange={(e) => setTimeValue(e.target.value)} />
+          <input type="number" min="0" value={timeValue} onChange={(e) => setTimeValue(Math.max(0, e.target.value))} />
         </div>
       )}
     </div>

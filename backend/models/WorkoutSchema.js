@@ -35,9 +35,6 @@ const workoutSchema = new mongoose.Schema({
   calories: {
     type: Number,
   },
-  weeklyCalories: {
-    type: Number,
-  },
   date: {
     type: Date,
     default: Date.now,

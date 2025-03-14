@@ -13,25 +13,28 @@ export const CaloriesProvider = ({ children }) => {
   const [workouts, setWorkouts] = useState([]);
   const [eachWorkout, setEachWorkout] = useState({});
   const [totalCaloriesThisWeek, setTotalCaloriesThisWeek] = useState(0);
-  
+
   const fetchWorkouts = async () => {
     try {
-      const response = await axios.get(APP_URL);  // API-Aufruf zum Abrufen der Workouts
-      setWorkouts(response.data.eachWorkout);      
-      const groupedCalories = response.data.eachWorkout.reduce((acc, workout) => {
-        acc[workout.date] = (acc[workout.date] || 0) + workout.calories;
-        return acc;
-      }, {});
-  
-      setEachWorkout(groupedCalories);
-      setTotalCaloriesThisWeek(response.data.totalCaloriesThisWeek); // Setze die wöchentlichen Kalorien
+      const response = await axios.get(APP_URL);
+
+      setWorkouts(response.data.eachWorkout);
+
+      const today = new Date().toISOString().split('T')[0];
+      const caloriesForToday = response.data.eachWorkout
+        .filter(workout => workout.date.split('T')[0] === today) // Stellt sicher, dass der Vergleich im gleichen Format stattfindet
+        .reduce((acc, workout) => acc + workout.calories, 0);
+      
+      setEachWorkout(caloriesForToday);
+      setTotalCaloriesThisWeek(response.data.totalCaloriesThisWeek);
+      console.log('response.data.totalCaloriesThisWeek',response.data.totalCaloriesThisWeek);
     } catch (error) {
       console.error("Fehler beim Abrufen der Workouts:", error);
     }
   };
 
   useEffect(() => {
-    fetchWorkouts(); // Rufe die Workouts beim Laden der Komponente ab
+    fetchWorkouts();
   }, []);
 
   return (

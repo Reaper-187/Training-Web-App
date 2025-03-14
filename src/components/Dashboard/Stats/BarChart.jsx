@@ -11,23 +11,30 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, annotationPlugin, Title
 
 export const BarChart = () => {
 
-  const [apiDataLoaded, setApiDataLoaded] = useState(false);
-
-  const { workouts, currentWeek } = useContext(CaloriesContext);
+  const { workouts } = useContext(CaloriesContext);
 
   const [formattedData, setFormattedData] = useState({
-    Sun: 0,
-    Mon: 0,
-    Tue: 0,
-    Wed: 0,
-    Thu: 0,
-    Fri: 0,
-    Sat: 0,
+    Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0,
   });
-
+  
   useEffect(() => {
-    // Aggregiere Kalorien pro Wochentag
-    const caloriesByDay = workouts.reduce((acc, workout) => {
+    if (workouts.length === 0) {
+      setFormattedData({ Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 });
+      return;
+    }
+  
+    // Aktuelle Woche berechnen
+    const now = new Date();
+    const currentWeek = getISOWeek(now.toISOString());
+  
+    // Filtert nur Workouts der aktuellen Woche
+    const weeklyWorkouts = workouts.filter(workout => {
+      const workoutWeek = getISOWeek(new Date(workout.date).toISOString());
+      return workoutWeek === currentWeek;
+    });
+  
+    // Berechnet Kalorien pro Tag für diese Woche
+    const caloriesByDay = weeklyWorkouts.reduce((acc, workout) => {
       const day = new Date(workout.date).toLocaleString("en-US", { weekday: "short" });
       acc[day] = (acc[day] || 0) + workout.calories;
       return acc;
@@ -35,36 +42,10 @@ export const BarChart = () => {
   
     setFormattedData(caloriesByDay);
   }, [workouts]);
-
-
   
-
-  // BarchartReset
-  const today = new Date().toISOString().split("T")[0];
-
-  const [lastBarchartReset, setLastBarchartReset] = useState(() => {
-    return localStorage.getItem("lastBarchartReset") || today;
-  });
-
-
-  const lastResetWeek = getISOWeek(lastBarchartReset);
-
-  useEffect(() => {
-    if (apiDataLoaded && currentWeek !== lastResetWeek) {
-      setFormattedData((prevData) =>
-        Object.keys(prevData).reduce((newData, key) => {
-          newData[key] = 0;
-          return newData;
-        }, {})
-      );
-
-      setLastBarchartReset(today);
-      localStorage.setItem("lastBarchartReset", today);
-    }
-  }, [apiDataLoaded, lastBarchartReset]);
-
-
-
+  
+  
+  
   const initialTarget = 1000;
 
   const [currentTarget, setCurrentTarget] = useState(
@@ -138,18 +119,18 @@ export const BarChart = () => {
   };
 
   const data = {
-    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
         label: 'Burned Calories',
         data: [
-          formattedData.Sun,
           formattedData.Mon,
           formattedData.Tue,
           formattedData.Wed,
           formattedData.Thu,
           formattedData.Fri,
           formattedData.Sat,
+          formattedData.Sun,
         ],
         backgroundColor: (context) => {
           const value = context.raw;

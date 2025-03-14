@@ -82,7 +82,6 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .strengh-inputs {
-
   display: flex;
   justify-content: space-evenly;
 }
@@ -143,11 +142,9 @@ input[type=number]::-webkit-outer-spin-button {
 
   .input-field input {
     min-width: 4vw;
+    font-size: 5vw;
     margin: .8rem;
   }
-
-
-  
 
   .forward-backward-btn {
     align-items: center;
@@ -155,8 +152,6 @@ input[type=number]::-webkit-outer-spin-button {
     justify-content: center;
     margin: 2.5rem 0 1rem 0;
   }
-
-
 
 }
 

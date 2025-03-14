@@ -1,95 +1,70 @@
 const express = require('express');
 const Workout = require('../models/WorkoutSchema');
+const User = require('../models/LoginAndValidation/UserLoginSchema');
 const mongoose = require('mongoose');
 
 const router = express.Router();
 
 router.get('/workouts', async (req, res) => {
   try {
-    const today = new Date();
-    const dayOfWeek = today.getDay(); // 0 = Sonntag, 1 = Montag, ..., 6 = Samstag
-    
-    // Berechnung des Start- und Enddatums für die Woche (Montag bis Sonntag)
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-    startOfWeek.setHours(0, 0, 0, 0); // Sicherstellen, dass der Startpunkt um Mitternacht ist
-    
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6);
-    endOfWeek.setHours(23, 59, 59, 999); // Sicherstellen, dass das Ende um 23:59:59 ist
-    
-
     const userId = new mongoose.Types.ObjectId(req.session.passport.user);
 
-    // MongoDB Aggregation, um tägliche und wöchentliche Kalorien zu berechnen
-    const workouts = await Workout.aggregate([
-      {
-        $match: { // $_match: Filtern die Workouts des Benutzers und der aktuellen Woche.
-          userId: userId,
-          date: { $gte: startOfWeek, $lte: endOfWeek } // Filtere Workouts der aktuellen Woche
-        }
-      },
-      {
-        $group: { // $_group: Berechnen die Gesamtzahl der Kalorien in der Woche und die täglichen Kalorien pro Datum.
-          _id: null,
-          totalCaloriesThisWeek: { $sum: "$calories" }, // Wöchentliche Gesamtkalorien
-          eachWorkout: {
-            $push: {
-              _id: "$_id",
-              date: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
-              type: "$type",
-              name: "$name",
-              exsize: "$exsize",
-              sets: "$sets",
-              reps: "$reps",
-              weight: "$weight",
-              time: "$time",
-              calories: "$calories"
-            }
-          }
-        }
-      }
-    ]);
+    // `weeklyCalories` direkt abrufen
+    const user = await User.findOne({ _id: userId }).select("weeklyCalories");
 
-    const eachWorkout = workouts.length > 0 ? workouts[0].eachWorkout : [];
-    const totalCaloriesThisWeek = workouts.length > 0 ? workouts[0].totalCaloriesThisWeek : 0;
+    const totalCaloriesThisWeek = Math.max(0, Math.round(user?.weeklyCalories || 0));
 
-    // Rückgabe der Workouts und wöchentlichen Kalorien
+    // const totalCaloriesThisWeek = 0;
+
+    // Alle Workouts des Users abrufen
+    const eachWorkout = await Workout.find({ userId });
+
     res.json({
-      eachWorkout,        // Tägliche Kalorien
-      totalCaloriesThisWeek // Wöchentliche Kalorien
+      eachWorkout,
+      totalCaloriesThisWeek,
     });
 
   } catch (err) {
-    console.error('Error in /workouts route:', err); // Fehlerlog für den Fall, dass etwas schief geht
-
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Fehler beim Abrufen der Workouts", error: err });
   }
 });
+
+
 
 // POST-Route, um ein neues Workout hinzuzufügen
 router.post('/workouts', async (req, res) => {
   try {
-    const { name, type } = req.body;
+    const { name, type, calories } = req.body;
 
-    // Backend Validierung für Cardio Workouts im Frontend
     if (!name && type === 'Cardio') {
       req.body.name = 'Cardio';
     }
 
-    // Workout mit der userId aus der Session des angemeldeten Benutzers erstellen
     const workout = new Workout({
       ...req.body,
-      userId: req.session.passport.user, // userId aus der Session (anstatt aus req.body)
+      userId: req.session.passport.user,
     });
 
-    console.log('Das ist das Workout:', workout);
-
-    // Workout in der DB speichern
+    // Workout speichern
     const savedWorkout = await workout.save();
 
-    // Erfolgreiche Antwort zurückgeben
-    res.status(201).json(savedWorkout);
+    // Aktuellen Kalorienstand holen
+    const user = await User.findOne({ _id: req.session.passport.user }).select("weeklyCalories");
+
+    // Berechnung der neuen wöchentlichen Kalorien
+    const newCalories = Math.max(0, savedWorkout.calories);  // Stellen sicher, dass keine negativen Kalorien gespeichert werden
+    const previousCalories = user?.weeklyCalories || 0;      // Falls null, dann 0 setzen
+    const newWeeklyCalories = previousCalories + newCalories; // Aufsummieren
+
+    // weeklyCalories sicher updaten
+    await User.updateOne(
+      { _id: req.session.passport.user },
+      { $set: { weeklyCalories: Math.max(0, newWeeklyCalories) } } // Negative Werte auf 0 setzen
+    );
+    
+
+    res.status(201).json({ savedWorkout, newWeeklyCalories });
+
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -99,10 +74,25 @@ router.post('/workouts', async (req, res) => {
 
 
 
+
+
+
 router.delete('/workouts/:id', getWorkouts, async (req, res) => {
   try {
-    await Workout.findByIdAndDelete(req.params.id);
-    res.status(204).send();
+    const userId = req.session.passport.user;
+    const workout = await Workout.findOneAndDelete({ _id: req.params.id, userId });
+
+    if (!workout) {
+      return res.status(404).json({ message: "Workout nicht gefunden" });
+    }
+
+    // weeklyCalories aktualisieren (abziehen)
+    await User.updateOne(
+      { _id: userId },
+      { $inc: { weeklyCalories: -workout.calories } }
+    );
+
+    res.json({ message: "Workout erfolgreich gelöscht", deletedWorkout: workout });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

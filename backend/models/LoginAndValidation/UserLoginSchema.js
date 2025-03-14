@@ -11,6 +11,11 @@ const userSchema = new mongoose.Schema({
   createdOn: { type: Date, default: Date.now },
   resetCode: { type: Number },
   resetCodeExpires: { type: Date },
+  
+  // Speichert die wöchentlichen Kalorien eines Nutzers separat,
+  // Vorteil: Die Berechnung ist nicht von einzelnen Workouts abhängig,
+  // was Probleme beim Löschen oder Zurücksetzen vermeidet.
+  weeklyCalories: { type: Number, default: 0, min: 0},
 });
 
 module.exports = mongoose.model('User', userSchema);

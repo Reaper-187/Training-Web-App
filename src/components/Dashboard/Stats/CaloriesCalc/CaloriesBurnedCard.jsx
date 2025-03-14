@@ -15,7 +15,7 @@ export const CaloriesBurnedCard = () => {
       </div>
       
       <div className='card-info'>
-        <p>{Math.floor(totalCaloriesThisWeek)} kcal </p>
+        <p>{Math.floor(Math.max(0, totalCaloriesThisWeek))} kcal </p>
         <p>For Week</p>
       </div>
     </div>
