@@ -7,7 +7,7 @@
 
 .not-found-card {
   padding: 2rem;
-  box-shadow: 0px 0px 5px 0px var(--text-color);
+  border: solid 2px white;
   border-radius: 10px;
   background-color: var(--secondary-color);
 }
@@ -20,9 +20,9 @@
 }
 
 .workout-card {
-  box-shadow: 0px 0px 5px 0px #000000;
+  border: solid 1px black;
   padding: 1rem;
-  width: 15vw;
+  width: 20vw;
   border-radius: 10px;
   transition: ease-in 0.1s;
   background-color: var(--secondary-color);
@@ -98,7 +98,7 @@
   }
 
   .workout-card{
-    width: 90%;
+    width: unset;
   }
 }
 
@@ -106,13 +106,12 @@
 
   .workout-card-container {
     display: grid;
-    justify-self: center;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Cards nebeneinander */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Cards nebeneinander */
     gap: 1.5rem; /* Abstand zwischen den Cards */
   }
 
   .workout-card{
-    width: 50vw;
+    width: unset;
   }
 }
 

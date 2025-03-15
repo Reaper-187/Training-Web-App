@@ -47,7 +47,7 @@
   min-width: 1vw;
   field-sizing: content;
   border: unset;
-  font-size: 1.4rem;
+  font-size: 1.2vw;
   color: var(--text-color);
   border-bottom: solid 1px var(--text-color);
   background-color: unset;
@@ -142,6 +142,7 @@ input[type=number]::-webkit-outer-spin-button {
 
   .input-field input {
     min-width: 4vw;
+    font-size: 5vw;
     margin: .8rem;
   }
 
