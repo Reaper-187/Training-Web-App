@@ -127,7 +127,21 @@ export const SelectScreen = () => {
       caloriesBurned = strengthCaloriesData.burnedCalories;
     }
 
-    const workoutToSave = { ...summarizeValue, calories: caloriesBurned  };
+    const localDate = new Date();
+    localDate.setHours(0, 0, 0, 0); // Setzt auf Mitternacht in lokaler Zeit
+
+    // In UTC konvertieren sonst werden die Workouts aufgrund der Zeitverschiebung Falsch Deklariert und gesaved
+    const utcDate = new Date(
+      Date.UTC(localDate.getFullYear(), localDate.getMonth(), localDate.getDate(), 0, 0, 0)
+    );
+
+    console.log("UTC Date:", utcDate);
+
+    const workoutToSave = {
+      ...summarizeValue,
+      calories: caloriesBurned,
+      date: utcDate
+    };
 
     addWorkout(workoutToSave);
     notify(true);

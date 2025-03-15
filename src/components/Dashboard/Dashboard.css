@@ -111,14 +111,16 @@
   }
 }
 
-@media (min-width: 426px) and (max-width: 768px) {
+@media (min-width: 1024px) and (max-width: 1440px) {
 
   .add-btn-comp {
-    grid-row-start: 1;
-    width: 50%;
+    grid-row-start: 2;
+    grid-column-start: 2;
     justify-self: center;
     width: 90%;
+
   }
+  
 }
 
 @keyframes fadeStatsIn {

@@ -199,18 +199,18 @@ h1 {
 
   .input-container {
     position: relative;
-    padding: 1rem 0;
+    width: 100%;
     height: 50px;
     line-height: 50px;
   }
   
   .input-container input {
-    width: 95%;
+    width: 80%;
   }
 
   .show-password{
     position: absolute;
-    right: 3%;
+    right: 20%;
     z-index: 5;
   }
 
@@ -232,7 +232,8 @@ h1 {
     transition: all 0.5s;
     display: block; 
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    width: 80%;
   }
 
   .forgot-password{
@@ -242,31 +243,30 @@ h1 {
 
 }
 
-@media (min-width: 768px) and (max-width: 1024px){
+@media (min-width: 768px) and (max-width: 1440px){
   
   .form-container{
-    width: 95%;
-    height: 70dvh;
+    width: 85%;
+    height: 75dvh;
   }
   
   .client-data{
-    padding: 1rem 0 0 1rem;
+    padding: 0 0 0 1rem;
   }
 
+
+  .input-container {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+  }
+  
   .btn-three{
     font-size: larger;
     width: 100%;
   }
 }
-
-@media (min-width: 1440px){
-
-  .btn-three{
-    font-size: larger;
-    width: 100%;
-  }
-}
-
 
 
 
