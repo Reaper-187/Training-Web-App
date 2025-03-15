@@ -8,15 +8,8 @@ const router = express.Router();
 router.get('/workouts', async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.session.passport.user);
-
-    // `weeklyCalories` direkt abrufen
     const user = await User.findOne({ _id: userId }).select("weeklyCalories");
-
     const totalCaloriesThisWeek = Math.max(0, Math.round(user?.weeklyCalories || 0));
-
-    // const totalCaloriesThisWeek = 0;
-
-    // Alle Workouts des Users abrufen
     const eachWorkout = await Workout.find({ userId });
 
     res.json({
@@ -43,25 +36,20 @@ router.post('/workouts', async (req, res) => {
     const workout = new Workout({
       ...req.body,
       userId: req.session.passport.user,
+      date: new Date(req.body.date)
     });
 
-    // Workout speichern
     const savedWorkout = await workout.save();
-
-    // Aktuellen Kalorienstand holen
     const user = await User.findOne({ _id: req.session.passport.user }).select("weeklyCalories");
+    const newCalories = Math.max(0, savedWorkout.calories);
+    const previousCalories = user?.weeklyCalories || 0;
+    const newWeeklyCalories = previousCalories + newCalories;
 
-    // Berechnung der neuen wöchentlichen Kalorien
-    const newCalories = Math.max(0, savedWorkout.calories);  // Stellen sicher, dass keine negativen Kalorien gespeichert werden
-    const previousCalories = user?.weeklyCalories || 0;      // Falls null, dann 0 setzen
-    const newWeeklyCalories = previousCalories + newCalories; // Aufsummieren
-
-    // weeklyCalories sicher updaten
     await User.updateOne(
       { _id: req.session.passport.user },
       { $set: { weeklyCalories: Math.max(0, newWeeklyCalories) } } // Negative Werte auf 0 setzen
     );
-    
+
 
     res.status(201).json({ savedWorkout, newWeeklyCalories });
 
@@ -86,7 +74,7 @@ router.delete('/workouts/:id', getWorkouts, async (req, res) => {
       return res.status(404).json({ message: "Workout nicht gefunden" });
     }
 
-    // weeklyCalories aktualisieren (abziehen)
+    // weeklyCalories aktualisieren (subtra)
     await User.updateOne(
       { _id: userId },
       { $inc: { weeklyCalories: -workout.calories } }
